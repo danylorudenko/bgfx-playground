@@ -14,6 +14,8 @@ target_sources(bgfx-application PUBLIC
 	src/main.cpp
 	src/Windows/Window.h
 	src/Windows/Window.cpp
+	src/entity.h
+	src/entity.cpp
 )
 
 # ========== ASSIMP SUBMODULE ==========
