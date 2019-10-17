@@ -54,7 +54,8 @@ endif()
 
 
 # =========== GLM SUBMODULE =========
-set(GLM_TEST_ENABLE_CXX_17 ON)
+set(GLM_TEST_ENABLE_CXX_17 ON CACHE BOOL "C++17 is a MUST nowadays")
+set(GLM_TEST_ENABLE OFF CACHE BOOL "There are too many test projects, makes it too laggy.")
 add_subdirectory(submodules/glm)
 target_link_libraries(bgfx-application PUBLIC glm_static)
 
