@@ -1,2 +1,2 @@
 cd submodules/bgfx
-..\bx\tools\bin\windows\genie vs2017
+..\bx\tools\bin\windows\genie --with-shared-lib vs2017

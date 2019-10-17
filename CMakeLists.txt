@@ -18,25 +18,11 @@ target_link_libraries(bgfx-application PUBLIC assimp)
 
 
 target_include_directories(bgfx-application PUBLIC submodules/bgfx/include)
+target_include_directories(bgfx-application PUBLIC submodules/bx/include)
+target_include_directories(bgfx-application PUBLIC submodules/bimg/include)
 
+add_library(bgfx SHARED IMPORTED)
+set_target_properties(bgfx PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bgfx-shared-libDebug.dll)
+set_target_properties(bgfx PROPERTIES IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bgfx-shared-libDebug.lib)
 
-#bgfx and it's dependecies
-add_library(bgfx-interface INTERFACE)
-
-add_library(bgfx STATIC IMPORTED)
-set_target_properties(bgfx PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bgfxDebug.lib)
-target_link_libraries(bgfx-interface INTERFACE bgfx)
-
-add_library(bx STATIC IMPORTED)
-set_target_properties(bx PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bxDebug.lib)
-target_link_libraries(bgfx-interface INTERFACE bx)
-
-add_library(bimg STATIC IMPORTED)
-set_target_properties(bimg PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bimgDebug.lib)
-target_link_libraries(bgfx-interface INTERFACE bimg)
-
-add_library(bimg_decode STATIC IMPORTED)
-set_target_properties(bimg_decode PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bimg_decodeDebug.lib)
-target_link_libraries(bgfx-interface INTERFACE bimg_decode)
-
-target_link_libraries(bgfx-application PUBLIC bgfx-interface)
+target_link_libraries(bgfx-application PUBLIC bgfx)
