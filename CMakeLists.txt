@@ -27,10 +27,23 @@ target_include_directories(bgfx-application PUBLIC submodules/bx/include)
 target_include_directories(bgfx-application PUBLIC submodules/bimg/include)
 
 if(WIN32)
-	add_library(bgfx SHARED IMPORTED)
-	set_target_properties(bgfx PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bgfx-shared-libDebug.dll)
-	set_target_properties(bgfx PROPERTIES IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/submodules/bgfx/.build/win64_vs2017/bin/bgfx-shared-libDebug.lib)
-	target_link_libraries(bgfx-application PUBLIC bgfx)
+	add_library(bgfxDebug SHARED IMPORTED)
+	add_library(bgfxRelease SHARED IMPORTED)
+	
+	set_target_properties(bgfxDebug PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libDebug.dll")
+	set_target_properties(bgfxDebug PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libDebug.lib")
+	
+	set_target_properties(bgfxRelease PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libRelease.dll")
+	set_target_properties(bgfxRelease PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libRelease.lib")
+	
+	target_link_libraries(bgfx-application PUBLIC debug bgfxDebug)
+	target_link_libraries(bgfx-application PUBLIC optimized bgfxRelease)
+	
+	add_custom_command(TARGET bgfx-application POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		"${CMAKE_CURRENT_SOURCE_DIR}/libs"
+		"$<TARGET_FILE_DIR:bgfx-application>"
+	)
 else()
 	message(FATAL_ERROR "Only Win64 platfrom is currently supported.")
 endif()
