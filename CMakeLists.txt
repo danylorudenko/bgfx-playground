@@ -18,12 +18,14 @@ target_sources(bgfx-application PUBLIC
 	src/entity.cpp
 )
 
+
 # ========== ASSIMP SUBMODULE ==========
 add_subdirectory(submodules/assimp)
 target_include_directories(bgfx-application PUBLIC submodules/assimp/inlcude)
 target_link_libraries(bgfx-application PUBLIC assimp)
 
-# # ========== BGFX MODULE ==========
+
+# ========== BGFX MODULE ==========
 target_include_directories(bgfx-application PUBLIC submodules/bgfx/include)
 target_include_directories(bgfx-application PUBLIC submodules/bx/include)
 target_include_directories(bgfx-application PUBLIC submodules/bimg/include)
@@ -49,3 +51,12 @@ if(WIN32)
 else()
 	message(FATAL_ERROR "Only Win64 platfrom is currently supported.")
 endif()
+
+
+# =========== GLM SUBMODULE =========
+set(GLM_TEST_ENABLE_CXX_17 ON)
+add_subdirectory(submodules/glm)
+target_link_libraries(bgfx-application PUBLIC glm_static)
+
+
+
