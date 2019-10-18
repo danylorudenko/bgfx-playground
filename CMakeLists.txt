@@ -12,10 +12,14 @@ target_include_directories(bgfx-application PUBLIC include src)
 target_compile_features(bgfx-application PUBLIC cxx_std_17)
 target_sources(bgfx-application PUBLIC
 	src/main.cpp
-	src/Windows/Window.h
-	src/Windows/Window.cpp
+	src/globals.h
+	src/globals.cpp
 	src/entity.h
 	src/entity.cpp
+	src/struct_helpers.h
+	src/struct_helpers.cpp
+	src/Windows/Window.h
+	src/Windows/Window.cpp
 )
 
 
@@ -28,24 +32,23 @@ target_link_libraries(bgfx-application PUBLIC assimp)
 # ========== BGFX MODULE ==========
 target_include_directories(bgfx-application PUBLIC submodules/bgfx/include)
 target_include_directories(bgfx-application PUBLIC submodules/bx/include)
-target_include_directories(bgfx-application PUBLIC submodules/bimg/include)
 
 if(WIN32)
 	add_library(bgfxDebug SHARED IMPORTED)
 	add_library(bgfxRelease SHARED IMPORTED)
 	
-	set_target_properties(bgfxDebug PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libDebug.dll")
-	set_target_properties(bgfxDebug PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libDebug.lib")
+	set_target_properties(bgfxDebug PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx/bgfx-shared-libDebug.dll")
+	set_target_properties(bgfxDebug PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx/bgfx-shared-libDebug.lib")
 	
-	set_target_properties(bgfxRelease PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libRelease.dll")
-	set_target_properties(bgfxRelease PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx-shared-libRelease.lib")
+	set_target_properties(bgfxRelease PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx/bgfx-shared-libRelease.dll")
+	set_target_properties(bgfxRelease PROPERTIES IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx/bgfx-shared-libRelease.lib")
 	
 	target_link_libraries(bgfx-application PUBLIC debug bgfxDebug)
 	target_link_libraries(bgfx-application PUBLIC optimized bgfxRelease)
 	
 	add_custom_command(TARGET bgfx-application POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		"${CMAKE_CURRENT_SOURCE_DIR}/libs"
+		"${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx"
 		"$<TARGET_FILE_DIR:bgfx-application>"
 	)
 else()
@@ -57,6 +60,7 @@ endif()
 set(GLM_TEST_ENABLE_CXX_17 ON CACHE BOOL "C++17 is a MUST nowadays")
 set(GLM_TEST_ENABLE OFF CACHE BOOL "There are too many test projects, makes it too laggy.")
 add_subdirectory(submodules/glm)
+target_include_directories(bgfx-application PUBLIC submodules/glm)
 target_link_libraries(bgfx-application PUBLIC glm_static)
 
 

@@ -4,10 +4,10 @@
 #include <assimp/Importer.hpp>
 #include <bgfx/c99/bgfx.h>
 
+#include <globals.h>
 #include <Windows/Window.h>
 #include <entity.h>
-
-Window g_MainWindow;
+#include <struct_helpers.h>
 
 LRESULT MyProcHandler(HWND handle, UINT message, WPARAM wparam, LPARAM lparam)
 {
@@ -24,41 +24,19 @@ LRESULT MyProcHandler(HWND handle, UINT message, WPARAM wparam, LPARAM lparam)
 void mainLoop();
 void mainUpdate();
 
+Entity testEntity;
 int main()
 {
-    Entity testEntity{};
-    
     HINSTANCE hInstance = GetModuleHandleA(NULL);
-
     g_MainWindow = Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr };
 
-    bgfx_init_t initStruct;
-    initStruct.type = BGFX_RENDERER_TYPE_COUNT;
-    initStruct.vendorId = BGFX_PCI_ID_NONE;
-    initStruct.deviceId = 0;
-    initStruct.debug = true;
-    initStruct.profile = true;
-
-    initStruct.platformData.ndt = nullptr;
-    initStruct.platformData.nwh = g_MainWindow.NativeHandle();
-    initStruct.platformData.context = nullptr;
-    initStruct.platformData.backBuffer = nullptr;
-    initStruct.platformData.backBufferDS = nullptr;
-
-    initStruct.resolution.width = 800;
-    initStruct.resolution.height = 600;
-    initStruct.resolution.format = BGFX_TEXTURE_FORMAT_RGBA8;
-    initStruct.resolution.numBackBuffers = 2;
-
-    initStruct.limits.maxEncoders = 4;
-    initStruct.limits.transientVbSize = 1024 * 1024 * 16;
-    initStruct.limits.transientIbSize = 1024 * 1024 * 8;
-
-    initStruct.callback = nullptr;
-    initStruct.allocator = nullptr;
-
+    bgfx_init_t initStruct = bgfx_init_t_default();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
+
+
+    //bgfx_create_s
+
 
     mainLoop();
 

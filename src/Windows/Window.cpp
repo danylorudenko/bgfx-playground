@@ -1,4 +1,5 @@
 #include <Windows/Window.h>
+#include <cassert>
 
 WindowClass::WindowClass()
     : name_{}
@@ -132,6 +133,7 @@ Window::~Window()
 
 Window::NativeWindowHandle Window::NativeHandle() const
 {
+    assert(handle_ != NULL && "Taking NativeHandle from uninitialized Windows is undefined.");
     return handle_;
 }
 

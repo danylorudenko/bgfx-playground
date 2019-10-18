@@ -5,15 +5,18 @@
 #include <vector>
 #include <memory>
 
+#include <glm/ext/vector_float3.hpp>
+#include <glm/ext/quaternion_float.hpp>
+
 class Entity
 {
 public:
     Entity() = default;
-    //Entity(Entity* parent,
-    //    std::string const& name,
-    //    bx::Vec3 position = bx::Vec3{},
-    //    bx::Quaternion rotation = bx::Quaternion{},
-    //    bx::Vec3 scale = bx::Vec3{});
+    Entity(Entity* parent,
+        std::string const& name,
+        glm::vec3 position = glm::vec3{},
+        glm::quat rotation = glm::quat{},
+        glm::vec3 scale = glm::vec3{});
 
     Entity(Entity const&) = delete;
     Entity(Entity&&) = default;
@@ -30,19 +33,19 @@ public:
 
 
     // Coordinates
-    //bx::Vec3        GetPosition();
-    //bx::Quaternion  GetRotation();
-    //bx::Vec3        GetScale();
-    //void            SetPosition(bx::Vec3 pos);
-    //void            SetRotation(bx::Quaternion rot);
-    //void            SetScale(bx::Vec3 scale);
-    //
-    //bx::Vec3        GetGlobalPosition();
-    //bx::Quaternion  GetGlobalRotation();
-    //bx::Vec3        GetGlobalScale();
-    //void            SetGlobalPosition(bx::Vec3 pos);
-    //void            SetGlobalRotation(bx::Quaternion rot);
-    //void            SetGlobalScale(bx::Vec3 scale);
+    glm::vec3       GetPosition();
+    glm::quat       GetRotation();
+    glm::vec3       GetScale();
+    void            SetPosition(glm::vec3 pos);
+    void            SetRotation(glm::quat rot);
+    void            SetScale(glm::vec3 scale);
+    
+    glm::vec3       GetGlobalPosition();
+    glm::quat       GetGlobalRotation();
+    glm::vec3       GetGlobalScale();
+    void            SetGlobalPosition(glm::vec3 pos);
+    void            SetGlobalRotation(glm::quat rot);
+    void            SetGlobalScale(glm::vec3 scale);
 
 
 
@@ -50,8 +53,8 @@ private:
     std::string m_Name;
     std::vector<std::unique_ptr<Entity>> m_Children;
 
-    //bx::Vec3        m_RelativePos;
-    //bx::Quaternion  m_RelativeRotation;
-    //bx::Vec3        m_RelativeScale;
+    glm::vec3   m_RelativePos;
+    glm::quat   m_RelativeRotation;
+    glm::vec3   m_RelativeScale;
 };
 
