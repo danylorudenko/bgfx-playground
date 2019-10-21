@@ -8,6 +8,9 @@
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/quaternion_float.hpp>
 
+namespace pg
+{
+
 class Entity
 {
 public:
@@ -57,4 +60,6 @@ private:
     glm::quat   m_RelativeRotation;
     glm::vec3   m_RelativeScale;
 };
+
+} // namespace pg
 

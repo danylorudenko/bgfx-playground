@@ -5,10 +5,12 @@
 #include <bgfx/c99/bgfx.h>
 
 #include <globals.h>
-#include <Windows/Window.h>
+#include <windows/window.h>
 #include <entity.h>
 #include <struct_helpers.h>
 
+namespace pg
+{
 LRESULT MyProcHandler(HWND handle, UINT message, WPARAM wparam, LPARAM lparam)
 {
     switch (message)
@@ -25,26 +27,33 @@ void mainLoop();
 void mainUpdate();
 
 Entity testEntity;
+
+} // namespace pg
+
+
 int main()
 {
     HINSTANCE hInstance = GetModuleHandleA(NULL);
-    g_MainWindow = Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr };
+    g_MainWindow = pg::Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr };
 
     bgfx_init_t initStruct = bgfx_init_t_default();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
 
+    bgfx_memory_t memory;
     //bgfx_create_s
 
 
-    mainLoop();
+    pg::mainLoop();
 
     bgfx_shutdown();
 
     return 0;
 }
 
+namespace pg
+{
 void mainLoop()
 {
     MSG message{};
@@ -66,3 +75,6 @@ void mainUpdate()
 {
 
 }
+
+} // namespace pg
+

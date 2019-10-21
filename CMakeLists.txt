@@ -16,10 +16,12 @@ target_sources(bgfx-application PUBLIC
 	src/globals.cpp
 	src/entity.h
 	src/entity.cpp
+	src/io_helpers.h
+	src/io_helpers.cpp
 	src/struct_helpers.h
 	src/struct_helpers.cpp
-	src/Windows/Window.h
-	src/Windows/Window.cpp
+	src/windows/window.h
+	src/windows/window.cpp
 )
 
 

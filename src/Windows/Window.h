@@ -5,6 +5,9 @@
 
 #include <Windows.h>
 
+namespace pg
+{
+
 class WindowClass
 {
 public:
@@ -68,3 +71,5 @@ private:
 
     void* userData_;
 };
+
+} // namespace pg

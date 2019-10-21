@@ -1,5 +1,8 @@
-#include <Windows/Window.h>
+#include <windows/window.h>
 #include <cassert>
+
+namespace pg
+{
 
 WindowClass::WindowClass()
     : name_{}
@@ -146,3 +149,5 @@ std::uint32_t Window::Height() const
 {
     return height_;
 }
+
+} // namespace pg

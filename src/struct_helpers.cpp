@@ -1,5 +1,8 @@
 #include <struct_helpers.h>
 
+namespace pg
+{
+
 bgfx_init_t bgfx_init_t_default()
 {
     bgfx_init_t initStruct;
@@ -29,3 +32,5 @@ bgfx_init_t bgfx_init_t_default()
 
     return initStruct;
 }
+
+} // namespace pg
