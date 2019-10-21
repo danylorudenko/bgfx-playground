@@ -1,29 +1,61 @@
-#include <string>
-#include <cstdint>
+#include <io_helpers.h>
+
+#include <utility>
+#include <fstream>
+#include <cassert>
+#include <iterator>
+#include <algorithm>
 
 namespace pg
 {
 
-class FileData
+FileData::FileData() = default;
+
+FileData::FileData(std::string const& fileName)
+    : m_FileName{ fileName }
+    , m_FileData{}
 {
-public:
-    FileData();
-    FileData(std::string const& fileName);
+}
 
-    FileData(FileData const& rhs);
-    FileData(FileData&& rhs);
+FileData::FileData(FileData const& rhs) = default;
+FileData::FileData(FileData&& rhs) = default;
 
-    FileData& operator=(FileData const& rhs);
-    FileData& operator=(FileData&& rhs);
+FileData& FileData::operator=(FileData const& rhs) = default;
+FileData& FileData::operator=(FileData&& rhs) = default;
 
-    ~FileData();
+FileData::~FileData() = default;
 
-private:
-    std::string     m_Name;
+std::uint64_t FileData::Size() const
+{
+    return static_cast<std::uint64_t>(m_FileData.size());
+}
 
-    void*           m_Data;
-    std::uint64_t   m_Size;
-};
+std::byte* FileData::Read()
+{
+    if (m_FileData.size() != 0)
+    {
+        return m_FileData.data();
+    }
+    else
+    {
+        std::ifstream fileStream{ m_FileName };
+        if (!fileStream)
+        {
+            assert(false && "Failed to open file via FileData::Read()");
+            return nullptr;
+        }
+
+        std::copy(
+            std::istream_iterator<std::byte>{ fileStream }, 
+            std::istream_iterator<std::byte>{}, 
+            std::back_inserter(m_FileData)
+        );
+
+        fileStream.close();
+
+        return m_FileData.data();
+    }
+}
 
 } // namespace pg
 
