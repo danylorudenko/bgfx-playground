@@ -6,7 +6,7 @@ namespace pg
 bgfx_init_t bgfx_init_t_default()
 {
     bgfx_init_t initStruct;
-    initStruct.type = BGFX_RENDERER_TYPE_COUNT;
+    initStruct.type = BGFX_RENDERER_TYPE_DIRECT3D11;
     initStruct.vendorId = BGFX_PCI_ID_NONE;
     initStruct.deviceId = 0;
     initStruct.debug = true;

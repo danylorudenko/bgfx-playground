@@ -29,23 +29,48 @@ void mainUpdate();
 
 Entity testEntity;
 
+bgfx_program_handle_t g_MainProgram;
+bgfx_vertex_layout_t g_VertexLayout;
+bgfx_vertex_buffer_handle_t g_VertexBuffer;
+
+float g_Vertices[] =
+{
+    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+     0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
+};
+
 } // namespace pg
 
 
 int main()
 {
+    using namespace pg;
+
     HINSTANCE hInstance = GetModuleHandleA(NULL);
-    pg::g_MainWindow = pg::Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &pg::MyProcHandler, nullptr };
+    g_MainWindow = Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr };
 
     bgfx_init_t initStruct = pg::bgfx_init_t_default();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
 
-    pg::FileReader fileReader{ "shaders\\vs_triangle.bin" };
-    bgfx_memory_t const* shaderData = fileReader.ReadToBgfx();
-    bgfx_shader_handle_t shaderHadle = bgfx_create_shader(shaderData);
+    FileReader v_FileReader{ "shaders\\vs_triangle.bin" };
+    bgfx_memory_t const* v_ShaderData = v_FileReader.ReadToBgfx();
+    bgfx_shader_handle_t v_ShaderHandle = bgfx_create_shader(v_ShaderData);
 
+    FileReader f_FileReader{ "shaders\\fs_triangle.bin" };
+    bgfx_memory_t const* f_ShaderData = f_FileReader.ReadToBgfx();
+    bgfx_shader_handle_t f_ShaderHandle = bgfx_create_shader(f_ShaderData);
+
+    bgfx_program_handle_t programHandle = bgfx_create_program(v_ShaderHandle, f_ShaderHandle, true);
+
+    bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
+    bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
+    bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false, false);
+    bgfx_vertex_layout_end(&g_VertexLayout);
+
+    g_VertexBuffer = bgfx_create_vertex_buffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout, 0);
 
     pg::mainLoop();
 
@@ -75,7 +100,15 @@ void mainLoop()
 
 void mainUpdate()
 {
+    /*bgfx::setViewRect(0, 0, 0, (uint16_t)m_width, (uint16_t)m_height);
+    bgfx::setVertexBuffer(0, g_VertexBuffer);
+    bgfx::setState(BGFX_STATE_DEFAULT);
+    bgfx::submit(0, g_Program);*/
 
+    bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
+    bgfx_set_vertex_buffer(0, g_VertexBuffer, 0, 3);
+    bgfx_set_state(BGFX_STATE_DEFAULT, 0);
+    bgfx_submit(0, g_MainProgram, 0, false);
 }
 
 } // namespace pg
