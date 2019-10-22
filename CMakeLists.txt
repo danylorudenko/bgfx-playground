@@ -51,8 +51,10 @@ if(WIN32)
 	add_custom_command(TARGET bgfx-application POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 		"${CMAKE_CURRENT_SOURCE_DIR}/libs/bgfx"
-		"$<TARGET_FILE_DIR:bgfx-application>"
+		"${CMAKE_CURRENT_SOURCE_DIR}/workdir"
 	)
+	
+	set_property(TARGET bgfx-application PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/workdir")
 else()
 	message(FATAL_ERROR "Only Win64 platfrom is currently supported.")
 endif()

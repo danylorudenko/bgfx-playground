@@ -8,6 +8,7 @@
 #include <windows/window.h>
 #include <entity.h>
 #include <struct_helpers.h>
+#include <io_helpers.h>
 
 namespace pg
 {
@@ -34,15 +35,16 @@ Entity testEntity;
 int main()
 {
     HINSTANCE hInstance = GetModuleHandleA(NULL);
-    g_MainWindow = pg::Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr };
+    pg::g_MainWindow = pg::Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &pg::MyProcHandler, nullptr };
 
-    bgfx_init_t initStruct = bgfx_init_t_default();
+    bgfx_init_t initStruct = pg::bgfx_init_t_default();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
 
-    bgfx_memory_t memory;
-    //bgfx_create_s
+    pg::FileReader fileReader{ "shaders\\vs_triangle.bin" };
+    bgfx_memory_t const* shaderData = fileReader.ReadToBgfx();
+    bgfx_shader_handle_t shaderHadle = bgfx_create_shader(shaderData);
 
 
     pg::mainLoop();

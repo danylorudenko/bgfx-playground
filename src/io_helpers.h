@@ -1,33 +1,33 @@
 #include <string>
 #include <vector>
 #include <cstdint>
-#include <cstddef>
+#include <bgfx/c99/bgfx.h>
 
 namespace pg
 {
 
-class FileData
+class FileReader
 {
 public:
-    FileData();
-    FileData(std::string const& fileName);
+    FileReader();
+    FileReader(std::string const& fileName);
 
-    FileData(FileData const& rhs);
-    FileData(FileData&& rhs);
+    FileReader(FileReader const& rhs);
+    FileReader(FileReader&& rhs);
 
-    FileData& operator=(FileData const& rhs);
-    FileData& operator=(FileData&& rhs);
+    FileReader& operator=(FileReader const& rhs);
+    FileReader& operator=(FileReader&& rhs);
 
-    ~FileData();
+    ~FileReader();
 
-    std::byte* Read(std::string const& fileName);
-    std::byte* Read();
+    std::uint8_t const* Read();
+    bgfx_memory_t const* ReadToBgfx();
 
     std::uint64_t Size() const;
 
 private:
-    std::string             m_FileName;
-    std::vector<std::byte>  m_FileData;
+    std::string                 m_FileName;
+    std::vector<std::uint8_t>   m_FileData;
 };
 
 }
