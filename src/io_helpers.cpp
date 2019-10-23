@@ -38,20 +38,18 @@ std::uint8_t const* FileReader::Read()
     }
     else
     {
-        std::ifstream fileStream{ m_FileName, std::ios_base::binary | std::ios_base::beg };
+        std::ifstream fileStream{ m_FileName, std::ios_base::binary | std::ios_base::ate };
         if (!fileStream)
         {
             assert(false && "Failed to open file via FileData::Read()");
             return nullptr;
         }
 
-        static_assert(sizeof(std::byte) == sizeof(std::uint8_t));
+        std::streamsize fileSize = fileStream.tellg();
 
-        std::copy(
-            std::istream_iterator<std::uint8_t>{ fileStream },
-            std::istream_iterator<std::uint8_t>{},
-            std::back_inserter(m_FileData)
-        );
+        fileStream.seekg(0, std::ios_base::beg);
+        m_FileData.resize(fileSize);
+        fileStream.read(reinterpret_cast<char*>(m_FileData.data()), fileSize);
 
         fileStream.close();
 
@@ -65,6 +63,6 @@ bgfx_memory_t const* FileReader::ReadToBgfx()
     return bgfx_make_ref(data, static_cast<std::uint32_t>(Size()));
 }
 
-} // namespace pg
 
+} // namespace pg
 
