@@ -35,9 +35,9 @@ bgfx_vertex_buffer_handle_t g_VertexBuffer;
 
 float g_Vertices[] =
 {
-    -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f,
-     0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f,
-     0.0f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f
+    -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+     0.0f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 1.0f
 };
 
 } // namespace pg
@@ -68,6 +68,7 @@ int main()
     bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false, false);
+    bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false, false);
     bgfx_vertex_layout_end(&g_VertexLayout);
 
     g_VertexBuffer = bgfx_create_vertex_buffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout, BGFX_BUFFER_NONE);
