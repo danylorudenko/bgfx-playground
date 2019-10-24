@@ -20,6 +20,7 @@ bgfx_init_t bgfx_init_t_default()
 
     initStruct.resolution.width = 800;
     initStruct.resolution.height = 600;
+    initStruct.resolution.reset = BGFX_RESET_VSYNC;
     initStruct.resolution.format = BGFX_TEXTURE_FORMAT_RGBA8;
     initStruct.resolution.numBackBuffers = 2;
 

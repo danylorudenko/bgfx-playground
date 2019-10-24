@@ -35,9 +35,9 @@ bgfx_vertex_buffer_handle_t g_VertexBuffer;
 
 float g_Vertices[] =
 {
-    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-     0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-     0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
+    -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f,
+     0.0f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f
 };
 
 } // namespace pg
@@ -63,23 +63,18 @@ int main()
     bgfx_memory_t const* f_ShaderData = f_FileReader.ReadToBgfx();
     bgfx_shader_handle_t f_ShaderHandle = bgfx_create_shader(f_ShaderData);
 
-    bgfx_program_handle_t programHandle = bgfx_create_program(v_ShaderHandle, f_ShaderHandle, false);
+    g_MainProgram = bgfx_create_program(v_ShaderHandle, f_ShaderHandle, false);
 
     bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false, false);
     bgfx_vertex_layout_end(&g_VertexLayout);
 
-    g_VertexBuffer = bgfx_create_vertex_buffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout, 0);
+    g_VertexBuffer = bgfx_create_vertex_buffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout, BGFX_BUFFER_NONE);
 
-    bgfx_set_view_clear(0, 0, 0xff00ff00, 0.0f, 0);
+    bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
 
     pg::mainLoop();
-
-    //bgfx_destroy_vertex_buffer(g_VertexBuffer);
-    //bgfx_destroy_program(g_MainProgram);
-    //bgfx_destroy_shader(v_ShaderHandle);
-    //bgfx_destroy_shader(f_ShaderHandle);
 
     bgfx_shutdown();
 
@@ -111,7 +106,7 @@ void mainUpdate()
     bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
     bgfx_set_vertex_buffer(0, g_VertexBuffer, 0, 3);
     bgfx_set_state(BGFX_STATE_DEFAULT, 0);
-    bgfx_submit(0, g_MainProgram, 0, true);
+    bgfx_submit(0, g_MainProgram, 0, false);
 }
 
 } // namespace pg
