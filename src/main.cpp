@@ -32,6 +32,7 @@ Entity testEntity;
 bgfx_program_handle_t g_MainProgram;
 bgfx_vertex_layout_t g_VertexLayout;
 bgfx_vertex_buffer_handle_t g_VertexBuffer;
+bgfx_texture_handle_t g_MainTexture;
 
 float g_Vertices[] =
 {
@@ -72,6 +73,10 @@ int main()
     bgfx_vertex_layout_end(&g_VertexLayout);
 
     g_VertexBuffer = bgfx_create_vertex_buffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout, BGFX_BUFFER_NONE);
+
+    // bgfx_is_texutre_valid
+    // bgfx_calc_texture_size
+    g_MainTexture = bgfx_create_texture_2d(128, 128, false, 1, BGFX_TEXTURE_FORMAT_RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, /*texturedata*/nullptr);
 
     bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
 

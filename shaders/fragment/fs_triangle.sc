@@ -1,11 +1,10 @@
-$input v_color0
+$input v_color0, v_texcoord0
 
 #include <bgfx_shader.sh>
 
-// emm, texutre binding declaration somehow?
-// example can be found in bgfx bump-example
+SAMPLER2D(mainTexture, 0);
 
 void main()
 {
-	gl_FragColor = v_color0;
+	gl_FragColor = v_color0 * texture2D(mainTexture, v_texcoord0);
 }
