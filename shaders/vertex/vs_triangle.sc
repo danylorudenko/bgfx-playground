@@ -3,10 +3,12 @@ $output v_color0, v_texcoord0
 
 #include <bgfx_shader.sh>
 
+uniform vec4 u_customPos;
+
 void main()
 {
 	//gl_Position = mul(u_modelViewProj, vec4(a_position, 1.0) );
-	gl_Position = vec4(a_position, 1.0);
+	gl_Position = vec4(a_position, 1.0) + u_customPos;
 	v_color0    = a_color0;
 	v_texcoord0	= a_texcoord0;
 }

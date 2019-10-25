@@ -36,6 +36,7 @@ bgfx_vertex_layout_t g_VertexLayout;
 bgfx_vertex_buffer_handle_t g_VertexBuffer;
 bgfx_texture_handle_t g_MainTexture;
 bgfx_uniform_handle_t g_MainTextureUniform;
+bgfx_uniform_handle_t g_CustomPosUnifrom;
 
 float g_Vertices[] =
 {
@@ -90,7 +91,7 @@ int main()
     g_MainTexture = bgfx_create_texture_2d(width, height, false, 1, BGFX_TEXTURE_FORMAT_RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, textureDataBgfx);
 
     g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
-
+    g_CustomPosUnifrom = bgfx_create_uniform("u_customPos", BGFX_UNIFORM_TYPE_VEC4, 1);
 
     bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
 
@@ -120,6 +121,7 @@ void mainLoop()
     }
 }
 
+float g_Counter = 0.0f;
 void mainUpdate()
 {
     bgfx_touch(0);
@@ -127,6 +129,11 @@ void mainUpdate()
     bgfx_set_vertex_buffer(0, g_VertexBuffer, 0, 3);
     bgfx_set_state(BGFX_STATE_DEFAULT, 0);
     bgfx_set_texture(0, g_MainTextureUniform, g_MainTexture, UINT32_MAX);
+
+    g_Counter = g_Counter > 1.0f ? -1.0f : g_Counter + 0.01f;
+    float customPos[4] = { g_Counter, 0.5f, 0.0f, 0.0f };
+    bgfx_set_uniform(g_CustomPosUnifrom, customPos, 1);
+
     bgfx_submit(0, g_MainProgram, 0, false);
 }
 
