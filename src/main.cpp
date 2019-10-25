@@ -35,6 +35,7 @@ bgfx_program_handle_t g_MainProgram;
 bgfx_vertex_layout_t g_VertexLayout;
 bgfx_vertex_buffer_handle_t g_VertexBuffer;
 bgfx_texture_handle_t g_MainTexture;
+bgfx_uniform_handle_t g_MainTextureUniform;
 
 float g_Vertices[] =
 {
@@ -88,6 +89,8 @@ int main()
     bgfx_memory_t const* textureDataBgfx = bgfx_make_ref_release(textureData, width * height * components, stbiFreeDelegate, nullptr);
     g_MainTexture = bgfx_create_texture_2d(width, height, false, 1, BGFX_TEXTURE_FORMAT_RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, textureDataBgfx);
 
+    g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
+
 
     bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
 
@@ -123,6 +126,7 @@ void mainUpdate()
     bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
     bgfx_set_vertex_buffer(0, g_VertexBuffer, 0, 3);
     bgfx_set_state(BGFX_STATE_DEFAULT, 0);
+    bgfx_set_texture(0, g_MainTextureUniform, g_MainTexture, UINT32_MAX);
     bgfx_submit(0, g_MainProgram, 0, false);
 }
 
