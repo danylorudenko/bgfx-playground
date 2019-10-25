@@ -77,6 +77,7 @@ int main()
 
     // bgfx_is_texutre_valid
     // bgfx_calc_texture_size
+    // or even can use stbi_load() to load from file directly
     void* textureData = stbi_load_from_memory(/*databuffer*/nullptr, /*datasize*/0, /*outwidth*/nullptr, /*outheight*/nullptr, /*outcomponents*/nullptr, /*requiredcomponents*/3);
     stbi_image_free(textureData);
     textureData = nullptr;
