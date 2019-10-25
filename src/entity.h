@@ -21,6 +21,7 @@ public:
     Entity* GetParent();
     Entity* GetChild(std::uint32_t child);
     Entity* FindChild(std::string const& name);
+    Entity* FindChildRecursive(std::string const& name);
     Entity* AddChild(
         std::string const& name, 
         glm::vec3 const& pos = glm::vec3{},

@@ -50,6 +50,30 @@ Entity* Entity::FindChild(std::string const& name)
     }
 }
 
+Entity* Entity::FindChildRecursive(std::string const& name)
+{
+    Entity* result = nullptr;
+
+    std::uint32_t childCount = 0;
+    for (std::uint32_t i = 0; i < childCount; i++)
+    {
+        if (name == m_Children[i]->GetName())
+        {
+            result = m_Children[i].get();
+        }
+    }
+
+    if (!result)
+    {
+        for (std::uint32_t = 0; i < childCount; i++)
+        {
+            result = m_Children[i]->FindChildRecursive(name);
+        }
+    }
+    
+    return result;
+}
+
 Entity* Entity::AddChild(std::string const& name, glm::vec3 const& pos, glm::quat const& rot, glm::vec3 const& scale)
 {
     auto sameName = std::find_if(
