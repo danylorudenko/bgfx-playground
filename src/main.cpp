@@ -1,6 +1,7 @@
 #include <cassert>
 #include <Windows.h>
 
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 #include <assimp/Importer.hpp>
 #include <bgfx/c99/bgfx.h>
@@ -78,11 +79,15 @@ int main()
     // bgfx_is_texutre_valid
     // bgfx_calc_texture_size
     // or even can use stbi_load() to load from file directly
-    void* textureData = stbi_load_from_memory(/*databuffer*/nullptr, /*datasize*/0, /*outwidth*/nullptr, /*outheight*/nullptr, /*outcomponents*/nullptr, /*requiredcomponents*/3);
-    stbi_image_free(textureData);
-    textureData = nullptr;
 
-    g_MainTexture = bgfx_create_texture_2d(128, 128, false, 1, BGFX_TEXTURE_FORMAT_RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, /*texturedata*/nullptr);
+    int width = 0, height = 0, components = 0;
+    void* textureData = stbi_load("assets\\wood.png", &width, &height, &components, 3);
+    assert(width && height && components && "stbi failed to load texture.");
+
+    bgfx_release_fn_t stbiFreeDelegate = (bgfx_release_fn_t)[](void* memory, void* userData) { stbi_image_free(memory); };
+    bgfx_memory_t const* textureDataBgfx = bgfx_make_ref_release(textureData, width * height * components, stbiFreeDelegate, nullptr);
+    g_MainTexture = bgfx_create_texture_2d(width, height, false, 1, BGFX_TEXTURE_FORMAT_RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, textureDataBgfx);
+
 
     bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
 
