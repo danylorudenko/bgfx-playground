@@ -1,6 +1,7 @@
 #include <cassert>
 #include <Windows.h>
 
+#include <stb/stb_image.h>
 #include <assimp/Importer.hpp>
 #include <bgfx/c99/bgfx.h>
 
@@ -76,6 +77,10 @@ int main()
 
     // bgfx_is_texutre_valid
     // bgfx_calc_texture_size
+    void* textureData = stbi_load_from_memory(/*databuffer*/nullptr, /*datasize*/0, /*outwidth*/nullptr, /*outheight*/nullptr, /*outcomponents*/nullptr, /*requiredcomponents*/3);
+    stbi_image_free(textureData);
+    textureData = nullptr;
+
     g_MainTexture = bgfx_create_texture_2d(128, 128, false, 1, BGFX_TEXTURE_FORMAT_RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, /*texturedata*/nullptr);
 
     bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
