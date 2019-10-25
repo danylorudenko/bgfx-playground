@@ -14,46 +14,56 @@ namespace pg
 class Entity
 {
 public:
-    Entity() = default;
-    Entity(Entity* parent,
+    Entity();
+    ~Entity() = default;
+
+    // Hierarchy
+    Entity* GetParent();
+    Entity* GetChild(std::uint32_t child);
+    Entity* FindChild(std::string const& name);
+    Entity* AddChild(
+        std::string const& name, 
+        glm::vec3 const& pos = glm::vec3{},
+        glm::quat const& rot = glm::quat::{},
+        glm::vec3 const& scale = glm::vec3{});
+
+    inline std::string const&   GetName() const;
+
+    // Coordinates
+    inline glm::vec3 const&     GetPosition() const;
+    inline glm::quat const&     GetRotation() const;
+    inline glm::vec3 const&     GetScale() const;
+    inline void                 SetPosition(glm::vec3 const& pos);
+    inline void                 SetRotation(glm::quat const& rot);
+    inline void                 SetScale(glm::vec3 const& scale);
+
+    inline glm::vec3            GetGlobalPosition() const;
+    inline glm::quat            GetGlobalRotation() const;
+    inline glm::vec3            GetGlobalScale() const;
+    inline void                 SetGlobalPosition(glm::vec3 const& pos);
+    inline void                 SetGlobalRotation(glm::quat const& rot);
+    inline void                 SetGlobalScale(glm::vec3 const& scale);
+
+
+private:
+    Entity(
+        Entity* parent,
         std::string const& name,
         glm::vec3 position = glm::vec3{},
         glm::quat rotation = glm::quat{},
         glm::vec3 scale = glm::vec3{});
 
     Entity(Entity const&) = delete;
-    Entity(Entity&&) = default;
     Entity& operator=(Entity const&) = delete;
+
+    Entity(Entity&&) = default;
     Entity& operator=(Entity&&) = default;
-
-    ~Entity() = default;
-
-    // Hierarchy
-    Entity* GetChild(std::size_t child);
-    Entity* FindChild(std::string const& name);
-    void    SetParent(Entity* parent);
-    void    AddChild(Entity* child);
-
-
-    // Coordinates
-    glm::vec3       GetPosition();
-    glm::quat       GetRotation();
-    glm::vec3       GetScale();
-    void            SetPosition(glm::vec3 pos);
-    void            SetRotation(glm::quat rot);
-    void            SetScale(glm::vec3 scale);
-    
-    glm::vec3       GetGlobalPosition();
-    glm::quat       GetGlobalRotation();
-    glm::vec3       GetGlobalScale();
-    void            SetGlobalPosition(glm::vec3 pos);
-    void            SetGlobalRotation(glm::quat rot);
-    void            SetGlobalScale(glm::vec3 scale);
-
 
 
 private:
     std::string m_Name;
+
+    Entity* m_Parent;
     std::vector<std::unique_ptr<Entity>> m_Children;
 
     glm::vec3   m_RelativePos;
