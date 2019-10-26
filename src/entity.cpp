@@ -12,7 +12,7 @@ Entity::Entity()
 
 Entity::Entity(Entity* parent, std::string const& name, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
     : m_Name{ name }
-    , m_Parent{ parent },
+    , m_Parent{ parent }
     , m_RelativePos{ position }
     , m_RelativeRotation{ rotation }
     , m_RelativeScale{ scale }
@@ -65,7 +65,7 @@ Entity* Entity::FindChildRecursive(std::string const& name)
 
     if (!result)
     {
-        for (std::uint32_t = 0; i < childCount; i++)
+        for (std::uint32_t i = 0; i < childCount; i++)
         {
             result = m_Children[i]->FindChildRecursive(name);
         }
@@ -87,9 +87,10 @@ Entity* Entity::AddChild(std::string const& name, glm::vec3 const& pos, glm::qua
     assert(sameName != m_Children.end() && "Entity can't have two children with same names");
     assert(!name.empty() && "Entity can't have an empty name");
 
-    std::unique_ptr<Entity> entity = std::make_unique<Entity>(name, pos, rot, scale);
+
+    std::unique_ptr<Entity> entity{ new Entity{ this, name, pos, rot, scale } };
     Entity* ptr = entity.get();
-    m_Children.emplace_back(std:move(entity));
+    m_Children.emplace_back(std::move(entity));
     return ptr;
 }
 
@@ -131,7 +132,19 @@ void Entity::SetScale(glm::vec3 const& scale)
 glm::vec3 Entity::GetGlobalPosition() const
 {
     glm::vec3 result = m_RelativePos;
-    return m_Parent != nullptr ? result + m_Parent->GetGlobalPosition() : result;
+    return m_Parent ? result + m_Parent->GetGlobalPosition() : result;
+}
+
+glm::quat Entity::GetGlobalRotation() const
+{
+    glm::quat result = m_RelativeRotation;
+    return m_Parent ? m_RelativeRotation * m_Parent->GetGlobalRotation() : m_RelativeRotation;
+}
+
+glm::vec3 Entity::GetGlobalScale() const
+{
+    glm::vec3 result = m_RelativeScale;
+    return m_Parent ? m_RelativeScale * m_Parent->GetGlobalScale() : m_RelativeScale;
 }
 
 

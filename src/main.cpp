@@ -29,7 +29,7 @@ LRESULT MyProcHandler(HWND handle, UINT message, WPARAM wparam, LPARAM lparam)
 void mainLoop();
 void mainUpdate();
 
-Entity testEntity;
+Entity g_RootEntity;
 
 bgfx_program_handle_t g_MainProgram;
 bgfx_vertex_layout_t g_VertexLayout;

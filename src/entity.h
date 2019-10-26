@@ -8,6 +8,8 @@
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/quaternion_float.hpp>
 
+#include <bgfx/c99/bgfx.h>
+
 namespace pg
 {
 
@@ -25,12 +27,12 @@ public:
     Entity* AddChild(
         std::string const& name, 
         glm::vec3 const& pos = glm::vec3{},
-        glm::quat const& rot = glm::quat::{},
+        glm::quat const& rot = glm::quat{},
         glm::vec3 const& scale = glm::vec3{});
 
     inline std::string const&   GetName() const;
 
-    // Coordinates
+// Coordinates
     inline glm::vec3 const&     GetPosition() const;
     inline glm::quat const&     GetRotation() const;
     inline glm::vec3 const&     GetScale() const;
@@ -62,6 +64,7 @@ private:
 
 
 private:
+// General info
     std::string m_Name;
 
     Entity* m_Parent;
@@ -70,6 +73,12 @@ private:
     glm::vec3   m_RelativePos;
     glm::quat   m_RelativeRotation;
     glm::vec3   m_RelativeScale;
+
+// Rendering
+    bgfx_vertex_buffer_handle_t     m_VertexBuffer;
+    bgfx_program_handle_t           m_ShaderProgram;
+    // hmmm, how to arrange data in a straitforward mannder?
+    // shared ptr might just do
 };
 
 } // namespace pg
