@@ -18,6 +18,8 @@ target_sources(bgfx-application PUBLIC
 	src/entity.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
+	src/memory_helpers.h
+	src/memory_helpers.cpp
 	src/struct_helpers.h
 	src/struct_helpers.cpp
 	src/windows/window.h

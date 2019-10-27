@@ -1,9 +1,9 @@
 #include <struct_helpers.h>
 
-namespace pg
+namespace pg::struct_helpers
 {
 
-bgfx_init_t bgfx_init_t_default()
+bgfx_init_t bgfxInitDefault()
 {
     bgfx_init_t initStruct;
     initStruct.type = BGFX_RENDERER_TYPE_COUNT;
@@ -34,4 +34,4 @@ bgfx_init_t bgfx_init_t_default()
     return initStruct;
 }
 
-} // namespace pg
+} // namespace pg::struct_helpers

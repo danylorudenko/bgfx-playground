@@ -3,11 +3,11 @@
 #include <bgfx/c99/bgfx.h>
 #include <globals.h>
 
-namespace pg
+namespace pg::struct_helpers
 {
 
-bgfx_init_t bgfx_init_t_default();
+bgfx_init_t bgfxInitDefault();
 
-} // namespace pg
+} // namespace pg::struct_helpers
 
 

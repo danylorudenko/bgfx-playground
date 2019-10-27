@@ -7,10 +7,11 @@
 #include <bgfx/c99/bgfx.h>
 
 #include <globals.h>
-#include <windows/window.h>
 #include <entity.h>
-#include <struct_helpers.h>
 #include <io_helpers.h>
+#include <memory_helpers.h>
+#include <struct_helpers.h>
+#include <windows/window.h>
 
 namespace pg
 {
@@ -31,12 +32,12 @@ void mainUpdate();
 
 Entity g_RootEntity;
 
-bgfx_program_handle_t g_MainProgram;
-bgfx_vertex_layout_t g_VertexLayout;
-bgfx_vertex_buffer_handle_t g_VertexBuffer;
-bgfx_texture_handle_t g_MainTexture;
-bgfx_uniform_handle_t g_MainTextureUniform;
-bgfx_uniform_handle_t g_CustomPosUnifrom;
+bgfx_program_handle_t                           g_MainProgram;
+bgfx_vertex_layout_t                            g_VertexLayout;
+std::shared_ptr<bgfx_vertex_buffer_handle_t>    g_VertexBuffer;
+bgfx_texture_handle_t                           g_MainTexture;
+bgfx_uniform_handle_t                           g_MainTextureUniform;
+bgfx_uniform_handle_t                           g_CustomPosUnifrom;
 
 float g_Vertices[] =
 {
@@ -55,7 +56,7 @@ int main()
     HINSTANCE hInstance = GetModuleHandleA(NULL);
     g_MainWindow = Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr };
 
-    bgfx_init_t initStruct = pg::bgfx_init_t_default();
+    bgfx_init_t initStruct = pg::struct_helpers::bgfxInitDefault();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
@@ -76,7 +77,7 @@ int main()
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false, false);
     bgfx_vertex_layout_end(&g_VertexLayout);
 
-    g_VertexBuffer = bgfx_create_vertex_buffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout, BGFX_BUFFER_NONE);
+    g_VertexBuffer = pg::memory_helpers::makeSharedVertexBuffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout);
 
     // bgfx_is_texutre_valid
     // bgfx_calc_texture_size
@@ -126,7 +127,7 @@ void mainUpdate()
 {
     bgfx_touch(0);
     bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
-    bgfx_set_vertex_buffer(0, g_VertexBuffer, 0, 3);
+    bgfx_set_vertex_buffer(0, *g_VertexBuffer, 0, 3);
     bgfx_set_state(BGFX_STATE_DEFAULT, 0);
     bgfx_set_texture(0, g_MainTextureUniform, g_MainTexture, UINT32_MAX);
 
