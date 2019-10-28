@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <bgfx/c99/bgfx.h>
 
-namespace pg
+namespace pg::io_helpers
 {
 
 class FileReader
@@ -30,5 +30,5 @@ private:
     std::vector<std::uint8_t>   m_FileData;
 };
 
-}
+} // namespace pg::io_helpers
 

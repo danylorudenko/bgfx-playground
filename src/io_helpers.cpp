@@ -6,7 +6,7 @@
 #include <iterator>
 #include <algorithm>
 
-namespace pg
+namespace pg::io_helpers
 {
 
 FileReader::FileReader() = default;
@@ -60,9 +60,9 @@ std::uint8_t const* FileReader::Read()
 bgfx_memory_t const* FileReader::ReadToBgfx()
 {
     std::uint8_t const* data = Read();
-    return bgfx_make_ref(data, static_cast<std::uint32_t>(Size()));
+    return bgfx_copy(data, static_cast<std::uint32_t>(Size()));
 }
 
 
-} // namespace pg
+} // namespace pg::io_helpers
 

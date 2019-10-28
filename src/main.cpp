@@ -32,10 +32,10 @@ void mainUpdate();
 
 Entity g_RootEntity;
 
-bgfx_program_handle_t                           g_MainProgram;
+std::shared_ptr<bgfx_program_handle_t>          g_MainProgram;
 bgfx_vertex_layout_t                            g_VertexLayout;
 std::shared_ptr<bgfx_vertex_buffer_handle_t>    g_VertexBuffer;
-bgfx_texture_handle_t                           g_MainTexture;
+std::shared_ptr<bgfx_texture_handle_t>          g_MainTexture;
 bgfx_uniform_handle_t                           g_MainTextureUniform;
 bgfx_uniform_handle_t                           g_CustomPosUnifrom;
 
@@ -60,16 +60,7 @@ int main()
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
-
-    FileReader v_FileReader{ "shaders\\vs_triangle.bin" };
-    bgfx_memory_t const* v_ShaderData = v_FileReader.ReadToBgfx();
-    bgfx_shader_handle_t v_ShaderHandle = bgfx_create_shader(v_ShaderData);
-
-    FileReader f_FileReader{ "shaders\\fs_triangle.bin" };
-    bgfx_memory_t const* f_ShaderData = f_FileReader.ReadToBgfx();
-    bgfx_shader_handle_t f_ShaderHandle = bgfx_create_shader(f_ShaderData);
-
-    g_MainProgram = bgfx_create_program(v_ShaderHandle, f_ShaderHandle, false);
+    g_MainProgram = memory_helpers::makeSharedProgram("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
 
     bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
@@ -78,18 +69,7 @@ int main()
     bgfx_vertex_layout_end(&g_VertexLayout);
 
     g_VertexBuffer = pg::memory_helpers::makeSharedVertexBuffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout);
-
-    // bgfx_is_texutre_valid
-    // bgfx_calc_texture_size
-    // or even can use stbi_load() to load from file directly
-
-    int width = 0, height = 0, components = 0;
-    void* textureData = stbi_load("assets\\wood.png", &width, &height, &components, 3);
-    assert(width && height && components && "stbi failed to load texture.");
-
-    bgfx_release_fn_t stbiFreeDelegate = (bgfx_release_fn_t)[](void* memory, void* userData) { stbi_image_free(memory); };
-    bgfx_memory_t const* textureDataBgfx = bgfx_make_ref_release(textureData, width * height * components, stbiFreeDelegate, nullptr);
-    g_MainTexture = bgfx_create_texture_2d(width, height, false, 1, BGFX_TEXTURE_FORMAT_RGB8, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, textureDataBgfx);
+    g_MainTexture = pg::memory_helpers::makeShared2DTexture("assets\\wood.png");
 
     g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
     g_CustomPosUnifrom = bgfx_create_uniform("u_customPos", BGFX_UNIFORM_TYPE_VEC4, 1);
@@ -129,13 +109,13 @@ void mainUpdate()
     bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
     bgfx_set_vertex_buffer(0, *g_VertexBuffer, 0, 3);
     bgfx_set_state(BGFX_STATE_DEFAULT, 0);
-    bgfx_set_texture(0, g_MainTextureUniform, g_MainTexture, UINT32_MAX);
+    bgfx_set_texture(0, g_MainTextureUniform, *g_MainTexture, UINT32_MAX);
 
     g_Counter = g_Counter > 1.0f ? -1.0f : g_Counter + 0.01f;
     float customPos[4] = { g_Counter, 0.5f, 0.0f, 0.0f };
     bgfx_set_uniform(g_CustomPosUnifrom, customPos, 1);
 
-    bgfx_submit(0, g_MainProgram, 0, false);
+    bgfx_submit(0, *g_MainProgram, 0, false);
 }
 
 } // namespace pg
