@@ -12,6 +12,12 @@ std::shared_ptr<bgfx_vertex_buffer_handle_t> makeSharedVertexBuffer(bgfx_memory_
 
 
 
+std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(std::string const& fileName);
+std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(bgfx_memory_t const* mem);
+
+
+
+std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(std::string const& fileName);
 std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(bgfx_memory_t const* mem);
 
 

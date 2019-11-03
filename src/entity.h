@@ -47,6 +47,9 @@ public:
     inline void                 SetGlobalRotation(glm::quat const& rot);
     inline void                 SetGlobalScale(glm::vec3 const& scale);
 
+// Graphics
+    //inline void                 SetShader(std::shared_ptr<bgfx_shared_program_)
+
 
 private:
     Entity(
@@ -75,10 +78,8 @@ private:
     glm::vec3   m_RelativeScale;
 
 // Rendering
-    bgfx_vertex_buffer_handle_t     m_VertexBuffer;
-    bgfx_program_handle_t           m_ShaderProgram;
-    // hmmm, how to arrange data in a straitforward mannder?
-    // shared ptr might just do
+    std::shared_ptr<bgfx_vertex_buffer_handle_t>    m_VertexBuffer;
+    std::shared_ptr<bgfx_program_handle_t>          m_ShaderProgram;
 };
 
 } // namespace pg

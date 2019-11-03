@@ -17,6 +17,22 @@ std::shared_ptr<bgfx_vertex_buffer_handle_t> makeSharedVertexBuffer(bgfx_memory_
         });
 }
 
+std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(std::string const& fileName)
+{
+    io_helpers::FileReader fileReader{ fileName };
+    bgfx_memory_t const* memory = fileReader.ReadToBgfx();
+
+    return makeUniqueShader(memory);
+}
+
+std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(std::string const& fileName)
+{
+    io_helpers::FileReader fileReader{ fileName };
+    bgfx_memory_t const* memory = fileReader.ReadToBgfx();
+    
+    return makeSharedShader(memory);
+}
+
 std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(bgfx_memory_t const* mem)
 {
     bgfx_shader_handle_t shader = bgfx_create_shader(mem);
@@ -25,6 +41,18 @@ std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(bgfx_memory_t const* mem)
         {
             bgfx_destroy_shader(*shaderHandle);
         });
+}
+
+std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(bgfx_memory_t const* mem)
+{
+    bgfx_shader_handle_t shader = bgfx_create_shader(mem);
+
+    auto custom_destroy = [](bgfx_shader_handle_t const* shaderHandle)
+    {
+        bgfx_destroy_shader(*shaderHandle);
+    };
+
+    return std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)>{ new bgfx_shader_handle_t{ shader }, &bgfx_destroy_shader };
 }
 
 std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(bgfx_shader_handle_t vsHandle, bgfx_shader_handle_t fsHandle)

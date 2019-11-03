@@ -16,6 +16,8 @@ target_sources(bgfx-application PUBLIC
 	src/globals.cpp
 	src/entity.h
 	src/entity.cpp
+	src/gfx/gfx_objects.h
+	src/gfx/gfx_objects.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
 	src/memory_helpers.h
@@ -64,7 +66,9 @@ if(WIN32)
 	
 	set_property(TARGET bgfx-application PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/workdir")
 else()
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FATAL_ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!
 	message(FATAL_ERROR "Only Win64 platfrom is currently supported.")
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FATAL_ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!
 endif()
 
 
