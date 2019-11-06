@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <bgfx/c99/bgfx.h>
+#include <gfx/gfx_def.h>
 
 namespace pg::memory_helpers
 {
@@ -11,9 +12,9 @@ namespace pg::memory_helpers
 std::shared_ptr<bgfx_vertex_buffer_handle_t> makeSharedVertexBuffer(bgfx_memory_t const* mem, bgfx_vertex_layout_t const* layout, std::uint16_t flags = BGFX_BUFFER_NONE);
 
 
-
-std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(std::string const& fileName);
-std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(bgfx_memory_t const* mem);
+void uniqueShaderDestroyProxy(bgfx_shader_handle_t const* handle);
+std::unique_ptr<bgfx_shader_handle_t, decltype(&uniqueShaderDestroyProxy)> makeUniqueShader(std::string const& fileName);
+std::unique_ptr<bgfx_shader_handle_t, decltype(&uniqueShaderDestroyProxy)> makeUniqueShader(bgfx_memory_t const* mem);
 
 
 
@@ -35,6 +36,10 @@ std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(std::string const& vsFi
 
 
 std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fileName, int componentsCount = 3);
+
+
+// makes empty texture
+std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::uint32_t width, std::uint32_t height, bgfx_texture_format format, gfx::TextureUsage usage);
 
 
 } // namespace pg::memory_helpers

@@ -1,14 +1,12 @@
 #pragma once
 
 #include <cstddef>
-#include <string>
 #include <vector>
-#include <memory>
 
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/quaternion_float.hpp>
 
-#include <bgfx/c99/bgfx.h>
+#include <gfx/gfx_objects.h>
 
 namespace pg
 {
@@ -48,7 +46,10 @@ public:
     inline void                 SetGlobalScale(glm::vec3 const& scale);
 
 // Graphics
-    //inline void                 SetShader(std::shared_ptr<bgfx_shared_program_)
+    using SharedHandle = std::shared_ptr<bgfx_program_handle_t>;
+
+    inline void                 SetShader(SharedHandle const& shader);
+    inline SharedHandle         GetShader() const;
 
 
 private:
@@ -79,7 +80,9 @@ private:
 
 // Rendering
     std::shared_ptr<bgfx_vertex_buffer_handle_t>    m_VertexBuffer;
-    std::shared_ptr<bgfx_program_handle_t>          m_ShaderProgram;
+    std::shared_ptr<gfx::ShaderRef>                 m_ShaderProgram;
+    std::shared_ptr<bgfx_uniform_handle_t>          m_ModelTransformUniform;
+    std::shared_ptr<bgfx_uniform_handle_t>          m_ColorTransformUniform;
 };
 
 } // namespace pg

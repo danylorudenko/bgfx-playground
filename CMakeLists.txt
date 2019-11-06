@@ -16,8 +16,11 @@ target_sources(bgfx-application PUBLIC
 	src/globals.cpp
 	src/entity.h
 	src/entity.cpp
+	src/gfx/gfx_def.h
 	src/gfx/gfx_objects.h
 	src/gfx/gfx_objects.cpp
+	src/gfx/gfx_pass.h
+	src/gfx/gfx_pass.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
 	src/memory_helpers.h

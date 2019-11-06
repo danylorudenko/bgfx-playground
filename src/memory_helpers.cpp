@@ -17,13 +17,30 @@ std::shared_ptr<bgfx_vertex_buffer_handle_t> makeSharedVertexBuffer(bgfx_memory_
         });
 }
 
-std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(std::string const& fileName)
+
+void uniqueShaderDestroyProxy(bgfx_shader_handle_t const* handle) { bgfx_destroy_shader(*handle); }
+
+std::unique_ptr<bgfx_shader_handle_t, decltype(&uniqueShaderDestroyProxy)> makeUniqueShader(std::string const& fileName)
 {
     io_helpers::FileReader fileReader{ fileName };
     bgfx_memory_t const* memory = fileReader.ReadToBgfx();
 
     return makeUniqueShader(memory);
 }
+
+
+std::unique_ptr<bgfx_shader_handle_t, decltype(&uniqueShaderDestroyProxy)> makeUniqueShader(bgfx_memory_t const* mem)
+{
+    bgfx_shader_handle_t shader = bgfx_create_shader(mem);
+
+    auto custom_destroy = [](bgfx_shader_handle_t const* shaderHandle)
+    {
+        bgfx_destroy_shader(*shaderHandle);
+    };
+
+    return std::unique_ptr<bgfx_shader_handle_t, decltype(&uniqueShaderDestroyProxy)>{ new bgfx_shader_handle_t{ shader }, &uniqueShaderDestroyProxy };
+}
+
 
 std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(std::string const& fileName)
 {
@@ -41,18 +58,6 @@ std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(bgfx_memory_t const* mem)
         {
             bgfx_destroy_shader(*shaderHandle);
         });
-}
-
-std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)> makeUniqueShader(bgfx_memory_t const* mem)
-{
-    bgfx_shader_handle_t shader = bgfx_create_shader(mem);
-
-    auto custom_destroy = [](bgfx_shader_handle_t const* shaderHandle)
-    {
-        bgfx_destroy_shader(*shaderHandle);
-    };
-
-    return std::unique_ptr<bgfx_shader_handle_t, decltype(&bgfx_destroy_shader)>{ new bgfx_shader_handle_t{ shader }, &bgfx_destroy_shader };
 }
 
 std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(bgfx_shader_handle_t vsHandle, bgfx_shader_handle_t fsHandle)
@@ -114,6 +119,22 @@ std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fi
         {
             bgfx_destroy_texture(*textureHandle);
         });
+}
+
+std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::uint32_t width, std::uint32_t height, bgfx_texture_format format, gfx::TextureUsage usage)
+{
+    std::uint64_t textureFlags = BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE;
+    switch (usage)
+    {
+    case gfx::TextureUsage::Sampled:
+        textureFlags |= BGFX_TEXTURE_NONE;
+        break;
+    case gfx::TextureUsage::RenderTarget:
+        textureFlags |= BGFX_TEXTURE_RT;
+        break;
+    }
+
+    return std::make_shared<bgfx_texture_handle_t>(bgfx_create_texture_2d(width, height, false, 1, format, textureFlags, nullptr));
 }
 
 } // namespace pg::memory_helpers
