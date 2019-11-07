@@ -21,7 +21,7 @@ void Pass::End()
 
 }
 
-void Pass::AddAttachment()
+void Pass::AddScreenSpaceAttachment()
 {
 /**
  * Init attachment.
@@ -35,7 +35,9 @@ void Pass::AddAttachment()
  */
 //BGFX_C_API void bgfx_attachment_init(bgfx_attachment_t* _this, bgfx_texture_handle_t _handle, bgfx_access_t _access, uint16_t _layer, uint16_t _mip, uint8_t _resolve);
 
-    bgfx_attachment_init();
+    Attachment attachment;
+
+    //bgfx_attachment_init();
 }
 
 }

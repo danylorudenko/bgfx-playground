@@ -21,6 +21,8 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/gfx_objects.cpp
 	src/gfx/gfx_pass.h
 	src/gfx/gfx_pass.cpp
+	src/gfx/gfx_settings.h
+	src/gfx/gfx_settings.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
 	src/memory_helpers.h

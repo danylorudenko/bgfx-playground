@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <bgfx/c99/bgfx.h>
+#include <gfx/gfx_objects.h>
 
 namespace pg::gfx
 {
@@ -21,9 +22,16 @@ public:
     void Begin();
     void End();
 
-    void AddAttachment();
+    void AddScreenSpaceAttachment();
+
 
 private:
+    struct Attachment
+    {
+        TextureRef texture;
+        bgfx_attachment_t attachment;
+    };
+
     std::vector<bgfx_attachment_t> m_Attachments;
 };
 
