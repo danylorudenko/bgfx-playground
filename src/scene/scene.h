@@ -7,6 +7,7 @@ namespace pg
 
 class Scene
 {
+public:
     Scene();
 
     Scene(Scene&& rhs);
@@ -16,6 +17,7 @@ class Scene
     Scene& operator=(Scene const&) = delete;
 
     ~Scene();
+
 
     Entity& RootEntityRef() { return *m_RootEntity; }
     Entity const& RootEntityRef() const { return *m_RootEntity; }
