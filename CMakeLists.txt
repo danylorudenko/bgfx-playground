@@ -14,8 +14,6 @@ target_sources(bgfx-application PUBLIC
 	src/main.cpp
 	src/globals.h
 	src/globals.cpp
-	src/entity.h
-	src/entity.cpp
 	src/gfx/gfx_def.h
 	src/gfx/gfx_objects.h
 	src/gfx/gfx_objects.cpp
@@ -27,6 +25,12 @@ target_sources(bgfx-application PUBLIC
 	src/io_helpers.cpp
 	src/memory_helpers.h
 	src/memory_helpers.cpp
+	src/scene/component.h
+	src/scene/component.cpp
+	src/scene/entity.h
+	src/scene/entity.cpp
+	src/scene/scene.h
+	src/scene/scene.cpp
 	src/struct_helpers.h
 	src/struct_helpers.cpp
 	src/windows/window.h

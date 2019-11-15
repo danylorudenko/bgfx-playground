@@ -30,6 +30,11 @@ Entity* Entity::GetChild(std::uint32_t child)
     return m_Children[child].get();
 }
 
+Entity const* Entity::GetChild(std::uint32_t child) const
+{
+    return m_Children[child].get();
+}
+
 Entity* Entity::FindChild(std::string const& name)
 {
     auto result = std::find_if(

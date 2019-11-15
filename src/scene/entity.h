@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <vector>
 
 #include <glm/ext/vector_float3.hpp>
@@ -18,16 +19,18 @@ public:
     ~Entity() = default;
 
     // Hierarchy
-    Entity* GetParent();
-    Entity* GetChild(std::uint32_t child);
-    Entity* FindChild(std::string const& name);
-    Entity* FindChildRecursive(std::string const& name);
-    Entity* AddChild(
-        std::string const& name, 
-        glm::vec3 const& pos = glm::vec3{},
-        glm::quat const& rot = glm::quat{},
-        glm::vec3 const& scale = glm::vec3{});
+    Entity*                     GetParent();
+    Entity*                     GetChild(std::uint32_t child);
+    Entity const*               GetChild(std::uint32_t child) const;
+    Entity*                     FindChild(std::string const& name);
+    Entity*                     FindChildRecursive(std::string const& name);
+    Entity*                     AddChild(
+                                    std::string const& name, 
+                                    glm::vec3 const& pos = glm::vec3{},
+                                    glm::quat const& rot = glm::quat{},
+                                    glm::vec3 const& scale = glm::vec3{});
 
+    std::uint32_t               GetChildCount() const { return static_cast<std::uint32_t>(m_Children.size()); }
     inline std::string const&   GetName() const;
 
 // Coordinates

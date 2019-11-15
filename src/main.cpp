@@ -7,7 +7,7 @@
 #include <bgfx/c99/bgfx.h>
 
 #include <globals.h>
-#include <entity.h>
+#include <scene/entity.h>
 #include <io_helpers.h>
 #include <memory_helpers.h>
 #include <struct_helpers.h>

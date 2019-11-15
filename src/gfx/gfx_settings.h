@@ -5,8 +5,8 @@
 namespace pg::gfx::settings
 {
 
-std::uint16_t g_MainResolutionX;
-std::uint16_t g_MainResolutionY;
+extern std::uint16_t g_MainResolutionX;
+extern std::uint16_t g_MainResolutionY;
 
 }
 
