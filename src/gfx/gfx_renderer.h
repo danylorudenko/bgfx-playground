@@ -2,7 +2,7 @@
 
 #include <queue>
 
-#include <gfx/gfx_pass.h>
+#include <gfx/pass/gfx_passbase.h>
 
 namespace pg::gfx
 {
@@ -20,8 +20,12 @@ public:
 
     ~Renderer();
 
+
+    void Update();
+
 private:
-    std::queue<Pass> m_PassQueue;
+    PassSchedule m_PassQueueGuard;
+    std::vector<std::unique_ptr<PassBase>> m_PassQueue;
 };
 
 } // namespace pf::gfx

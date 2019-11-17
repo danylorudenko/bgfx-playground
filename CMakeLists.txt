@@ -17,24 +17,28 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/gfx_def.h
 	src/gfx/gfx_objects.h
 	src/gfx/gfx_objects.cpp
-	src/gfx/gfx_pass.h
-	src/gfx/gfx_pass.cpp
 	src/gfx/gfx_renderer.h
 	src/gfx/gfx_renderer.cpp
 	src/gfx/gfx_settings.h
 	src/gfx/gfx_settings.cpp
+	src/gfx/pass/gfx_pass_forward.h
+	src/gfx/pass/gfx_pass_forward.cpp
+	src/gfx/pass/gfx_pass_schedule.h
+	src/gfx/pass/gfx_passbase.h
+	src/gfx/pass/gfx_passbase.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
 	src/memory_helpers.h
 	src/memory_helpers.cpp
-	src/scene/component.h
-	src/scene/component.cpp
 	src/scene/entity.h
 	src/scene/entity.cpp
+	src/scene/graphics_component.h
+	src/scene/graphics_component.cpp
 	src/scene/scene.h
 	src/scene/scene.cpp
 	src/struct_helpers.h
 	src/struct_helpers.cpp
+	src/utils.hpp
 	src/windows/window.h
 	src/windows/window.cpp
 )

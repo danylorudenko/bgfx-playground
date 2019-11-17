@@ -9,6 +9,7 @@ bgfx_init_t bgfxInitDefault()
     // ==================
     gfx::settings::g_MainResolutionX = 800;
     gfx::settings::g_MainResolutionY = 600;
+    gfx::settings::g_BackbufferFormat = BGFX_TEXTURE_FORMAT_RGBA8;
     // ==================
     
     bgfx_init_t initStruct;
@@ -24,10 +25,10 @@ bgfx_init_t bgfxInitDefault()
     initStruct.platformData.backBuffer = nullptr;
     initStruct.platformData.backBufferDS = nullptr;
 
-    initStruct.resolution.width = 800;
-    initStruct.resolution.height = 600;
+    initStruct.resolution.width = gfx::settings::g_MainResolutionX;
+    initStruct.resolution.height = gfx::settings::g_MainResolutionY;
     initStruct.resolution.reset = BGFX_RESET_VSYNC;
-    initStruct.resolution.format = BGFX_TEXTURE_FORMAT_RGBA8;
+    initStruct.resolution.format = gfx::settings::g_BackbufferFormat;
     initStruct.resolution.numBackBuffers = 2;
 
     initStruct.limits.maxEncoders = 4;

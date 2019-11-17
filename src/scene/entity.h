@@ -9,6 +9,8 @@
 
 #include <gfx/gfx_objects.h>
 
+#include <scene/graphics_component.h>
+
 namespace pg
 {
 
@@ -82,10 +84,7 @@ private:
     glm::vec3   m_RelativeScale;
 
 // Rendering
-    std::shared_ptr<bgfx_vertex_buffer_handle_t>    m_VertexBuffer;
-    std::shared_ptr<gfx::ShaderRef>                 m_ShaderProgram;
-    std::shared_ptr<bgfx_uniform_handle_t>          m_ModelTransformUniform;
-    std::shared_ptr<bgfx_uniform_handle_t>          m_ColorTransformUniform;
+    GraphicsComponent   m_GraphicsComponent;
 };
 
 } // namespace pg

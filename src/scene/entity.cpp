@@ -152,6 +152,29 @@ glm::vec3 Entity::GetGlobalScale() const
     return m_Parent ? m_RelativeScale * m_Parent->GetGlobalScale() : m_RelativeScale;
 }
 
+void Entity::SetGlobalPosition(glm::vec3 const& globalPos)
+{
+    glm::vec3 const currentPos  = GetGlobalPosition();
+    glm::vec3 const diff        = globalPos - currentPos;
+
+    SetPosition(GetPosition() + diff);
+}
+
+void Entity::SetGlobalRotation(glm::quat const& globalRotation)
+{
+    glm::quat const currentRot  = GetGlobalRotation();
+    //glm::quat const diff        = currentRot; 
+    static_assert(false);
+}
+
+void Entity::SetGlobalScale(glm::vec3 const& globalScale)
+{
+    glm::vec3 const currentScale    = GetGlobalScale();
+    glm::vec3 const diff            = globalScale / currentScale;
+
+    SetScale(GetScale() * diff);
+}
+
 
 
 } // namespace pg
