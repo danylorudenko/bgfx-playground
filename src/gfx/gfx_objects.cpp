@@ -1,5 +1,5 @@
 #include <gfx/gfx_objects.h>
-#include <memory_helpers.h>
+#include <bgfx_helpers.h>
 
 namespace pg::gfx
 {
@@ -13,16 +13,16 @@ ShaderRef::ShaderRef(bgfx_program_handle_t handle)
 }
 
 ShaderRef::ShaderRef(std::string const& vertexShaderFile, std::string const& fragmentShaderFile)
-    : m_VertexShaderHandle{ memory_helpers::makeSharedShader(vertexShaderFile) }
-    , m_FragmentShaderHandle{ memory_helpers::makeSharedShader(fragmentShaderFile) }
-    , m_ProgramHandle{ memory_helpers::makeSharedProgram(*m_VertexShaderHandle, *m_FragmentShaderHandle) }
+    : m_VertexShaderHandle{ bgfx_helpers::makeSharedShader(vertexShaderFile) }
+    , m_FragmentShaderHandle{ bgfx_helpers::makeSharedShader(fragmentShaderFile) }
+    , m_ProgramHandle{ bgfx_helpers::makeSharedProgram(*m_VertexShaderHandle, *m_FragmentShaderHandle) }
 {
 }
 
 ShaderRef::ShaderRef(std::shared_ptr<bgfx_shader_handle_t> const& vertexShader, std::shared_ptr<bgfx_shader_handle_t> const& fragmentShader)
     : m_VertexShaderHandle{ vertexShader }
     , m_FragmentShaderHandle{ fragmentShader }
-    , m_ProgramHandle{ memory_helpers::makeSharedProgram(*m_VertexShaderHandle, *m_FragmentShaderHandle) }
+    , m_ProgramHandle{ bgfx_helpers::makeSharedProgram(*m_VertexShaderHandle, *m_FragmentShaderHandle) }
 {
 }
 
@@ -40,11 +40,11 @@ TextureRef::TextureRef(bgfx_texture_handle_t handle)
 {}
 
 TextureRef::TextureRef(std::string const& textureFileName)
-    : m_TextureHandle{ memory_helpers::makeShared2DTexture(textureFileName) }
+    : m_TextureHandle{ bgfx_helpers::makeShared2DTexture(textureFileName) }
 {}
 
 TextureRef::TextureRef(std::uint32_t width, std::uint32_t height, bgfx_texture_format format, TextureUsage usage)
-    : m_TextureHandle{ memory_helpers::makeShared2DTexture(width, height, format, usage) }
+    : m_TextureHandle{ bgfx_helpers::makeShared2DTexture(width, height, format, usage) }
 {
 }
 

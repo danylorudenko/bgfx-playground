@@ -7,6 +7,11 @@
 #include <gfx/pass/gfx_pass_schedule.h>
 #include <utils.hpp>
 
+namespace pg
+{
+class Scene;
+} // namespace pg
+
 namespace pg::gfx
 {
 
@@ -24,14 +29,14 @@ public:
 
     PassSchedule ScheduleId() const;
 
-    virtual void Begin() = 0;
-    virtual void Render() = 0;
+    virtual void Begin(Scene* scene) = 0;
+    virtual void Render(Scene* scene) = 0;
 
     virtual void AddScreenSpaceAttachment();
     virtual void Bake();
 
 
-private:
+protected:
     struct Attachment
     {
         TextureRef texture;

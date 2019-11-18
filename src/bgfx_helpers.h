@@ -6,7 +6,7 @@
 #include <bgfx/c99/bgfx.h>
 #include <gfx/gfx_def.h>
 
-namespace pg::memory_helpers
+namespace pg::bgfx_helpers
 {
 
 std::shared_ptr<bgfx_vertex_buffer_handle_t> makeSharedVertexBuffer(bgfx_memory_t const* mem, bgfx_vertex_layout_t const* layout, std::uint16_t flags = BGFX_BUFFER_NONE);
@@ -42,5 +42,9 @@ std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fi
 std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::uint32_t width, std::uint32_t height, bgfx_texture_format format, gfx::TextureUsage usage);
 
 
-} // namespace pg::memory_helpers
+
+std::shared_ptr<bgfx_uniform_handle_t> makeSharedUniform(std::string const& name, bgfx_uniform_type type, std::uint32_t arrayElementsCount = 1);
+
+
+} // namespace pg::bgfx_helpers
 

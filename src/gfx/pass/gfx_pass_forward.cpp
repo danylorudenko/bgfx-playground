@@ -25,14 +25,23 @@ PassForward::~PassForward()
 {
 }
 
-void PassForward::Begin()
+void PassForward::Begin(Scene* scene)
 {
-    PassBase::Begin();
+    PassBase::Begin(scene);
+
+    ////////////////////////////////
+
+    bgfx_frame_buffer_handle_t const framebuffer = m_Framebuffer.Ref();
+
+    if (BGFX_HANDLE_IS_VALID(framebuffer))
+    {
+        bgfx_set_view_frame_buffer(m_ScheduleId, framebuffer);
+    }
 }
 
-void PassForward::Render()
+void PassForward::Render(Scene* scene)
 {
-    PassBase::Render();
+    PassBase::Render(scene);
 }
 
 }

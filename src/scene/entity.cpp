@@ -1,7 +1,10 @@
 #include "entity.h"
-#include <utility>
+
 #include <algorithm>
 #include <cassert>
+#include <utility>
+
+#include <glm/ext/quaternion_common.hpp>
 
 namespace pg
 {
@@ -163,8 +166,9 @@ void Entity::SetGlobalPosition(glm::vec3 const& globalPos)
 void Entity::SetGlobalRotation(glm::quat const& globalRotation)
 {
     glm::quat const currentRot  = GetGlobalRotation();
-    //glm::quat const diff        = currentRot; 
-    static_assert(false);
+    glm::quat const diff        = glm::inverse(currentRot) * globalRotation; 
+    
+    SetRotation(GetRotation() * diff);
 }
 
 void Entity::SetGlobalScale(glm::vec3 const& globalScale)
@@ -174,7 +178,6 @@ void Entity::SetGlobalScale(glm::vec3 const& globalScale)
 
     SetScale(GetScale() * diff);
 }
-
 
 
 } // namespace pg

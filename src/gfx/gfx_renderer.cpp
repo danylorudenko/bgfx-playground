@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <bgfx/c99/bgfx.h>
+#include <globals.h>
 
 namespace pg::gfx
 {
@@ -23,8 +24,8 @@ void Renderer::Update()
         PassSchedule passId = pass->ScheduleId();
         assert((int)passId > (int)scheduleGuard && "Pass ordering schedule is violated.");
 
-        pass->Begin();
-        pass->Render();
+        pass->Begin(&g_MainScene);
+        pass->Render(&g_MainScene);
     }
 
     bgfx_frame(false);

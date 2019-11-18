@@ -9,7 +9,7 @@
 #include <globals.h>
 #include <scene/entity.h>
 #include <io_helpers.h>
-#include <memory_helpers.h>
+#include <bgfx_helpers.h>
 #include <struct_helpers.h>
 #include <windows/window.h>
 
@@ -60,7 +60,7 @@ int main()
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
-    g_MainProgram = memory_helpers::makeSharedProgram("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
+    g_MainProgram = bgfx_helpers::makeSharedProgram("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
 
     bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
@@ -68,8 +68,8 @@ int main()
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false, false);
     bgfx_vertex_layout_end(&g_VertexLayout);
 
-    g_VertexBuffer = pg::memory_helpers::makeSharedVertexBuffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout);
-    g_MainTexture = pg::memory_helpers::makeShared2DTexture("assets\\wood.png");
+    g_VertexBuffer = pg::bgfx_helpers::makeSharedVertexBuffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout);
+    g_MainTexture = pg::bgfx_helpers::makeShared2DTexture("assets\\wood.png");
 
     g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
     g_CustomPosUnifrom = bgfx_create_uniform("u_customPos", BGFX_UNIFORM_TYPE_VEC4, 1);

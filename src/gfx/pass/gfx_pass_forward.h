@@ -14,8 +14,8 @@ public:
 
     virtual ~PassForward();
 
-    virtual void Begin() override;
-    virtual void Render() override;
+    virtual void Begin(Scene* scene) override;
+    virtual void Render(Scene* scene) override;
 };
 
 } // namespace pg::gfx

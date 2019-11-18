@@ -5,7 +5,7 @@
 #include <limits>
 
 #include <gfx/gfx_settings.h>
-#include <memory_helpers.h>
+#include <bgfx_helpers.h>
 
 namespace pg::gfx
 {
@@ -29,19 +29,12 @@ PassSchedule PassBase::ScheduleId() const
     return m_ScheduleId;
 }
 
-void PassBase::Begin()
+void PassBase::Begin(Scene* scene)
 {
-    bgfx_frame_buffer_handle_t const framebuffer = m_Framebuffer.Ref();
-
-    if (BGFX_HANDLE_IS_VALID(framebuffer))
-    {
-        bgfx_set_view_frame_buffer(m_ScheduleId, framebuffer);
-    }
 }
 
-void PassBase::Render()
+void PassBase::Render(Scene* scene)
 {
-
 }
 
 void PassBase::AddScreenSpaceAttachment()

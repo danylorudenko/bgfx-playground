@@ -9,7 +9,7 @@
 
 #include <gfx/gfx_objects.h>
 
-#include <scene/graphics_component.h>
+#include <scene/renderable_component.h>
 
 namespace pg
 {
@@ -21,40 +21,41 @@ public:
     ~Entity() = default;
 
     // Hierarchy
-    Entity*                     GetParent();
-    Entity*                     GetChild(std::uint32_t child);
-    Entity const*               GetChild(std::uint32_t child) const;
-    Entity*                     FindChild(std::string const& name);
-    Entity*                     FindChildRecursive(std::string const& name);
-    Entity*                     AddChild(
-                                    std::string const& name, 
-                                    glm::vec3 const& pos = glm::vec3{},
-                                    glm::quat const& rot = glm::quat{},
-                                    glm::vec3 const& scale = glm::vec3{});
+    Entity*                             GetParent();
+    Entity*                             GetChild(std::uint32_t child);
+    Entity const*                       GetChild(std::uint32_t child) const;
+    Entity*                             FindChild(std::string const& name);
+    Entity*                             FindChildRecursive(std::string const& name);
+    Entity*                             AddChild(
+                                            std::string const& name, 
+                                            glm::vec3 const& pos = glm::vec3{},
+                                            glm::quat const& rot = glm::quat{},
+                                            glm::vec3 const& scale = glm::vec3{});
 
-    std::uint32_t               GetChildCount() const { return static_cast<std::uint32_t>(m_Children.size()); }
-    inline std::string const&   GetName() const;
+    std::uint32_t                       GetChildCount() const { return static_cast<std::uint32_t>(m_Children.size()); }
+    inline std::string const&           GetName() const;
 
 // Coordinates
-    inline glm::vec3 const&     GetPosition() const;
-    inline glm::quat const&     GetRotation() const;
-    inline glm::vec3 const&     GetScale() const;
-    inline void                 SetPosition(glm::vec3 const& pos);
-    inline void                 SetRotation(glm::quat const& rot);
-    inline void                 SetScale(glm::vec3 const& scale);
+    inline glm::vec3 const&             GetPosition() const;
+    inline glm::quat const&             GetRotation() const;
+    inline glm::vec3 const&             GetScale() const;
+    inline void                         SetPosition(glm::vec3 const& pos);
+    inline void                         SetRotation(glm::quat const& rot);
+    inline void                         SetScale(glm::vec3 const& scale);
 
-    inline glm::vec3            GetGlobalPosition() const;
-    inline glm::quat            GetGlobalRotation() const;
-    inline glm::vec3            GetGlobalScale() const;
-    inline void                 SetGlobalPosition(glm::vec3 const& pos);
-    inline void                 SetGlobalRotation(glm::quat const& rot);
-    inline void                 SetGlobalScale(glm::vec3 const& scale);
+    inline glm::vec3                    GetGlobalPosition() const;
+    inline glm::quat                    GetGlobalRotation() const;
+    inline glm::vec3                    GetGlobalScale() const;
+    inline void                         SetGlobalPosition(glm::vec3 const& pos);
+    inline void                         SetGlobalRotation(glm::quat const& rot);
+    inline void                         SetGlobalScale(glm::vec3 const& scale);
 
 // Graphics
-    using SharedHandle = std::shared_ptr<bgfx_program_handle_t>;
+    inline RenderableComponent&         GetRenderableComponent() { return m_RenderableComponent; }
+    inline RenderableComponent const&   GetRenderableComponent() const { return m_RenderableComponent; }
 
-    inline void                 SetShader(SharedHandle const& shader);
-    inline SharedHandle         GetShader() const;
+    inline void                         SetVertexBuffer(std::shared_ptr<bgfx_vertex_buffer_handle_t> const& vertexBuffer) { m_RenderableComponent.m_VertexBuffer = vertexBuffer; }
+    inline void                         SetShader(gfx::ShaderRef const& program) { m_RenderableComponent.m_ShaderProgram = program; }
 
 
 private:
@@ -84,7 +85,7 @@ private:
     glm::vec3   m_RelativeScale;
 
 // Rendering
-    GraphicsComponent   m_GraphicsComponent;
+    RenderableComponent   m_RenderableComponent;
 };
 
 } // namespace pg

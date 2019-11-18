@@ -12,6 +12,8 @@ target_include_directories(bgfx-application PUBLIC include src)
 target_compile_features(bgfx-application PUBLIC cxx_std_17)
 target_sources(bgfx-application PUBLIC
 	src/main.cpp
+	src/bgfx_helpers.h
+	src/bgfx_helpers.cpp
 	src/globals.h
 	src/globals.cpp
 	src/gfx/gfx_def.h
@@ -28,12 +30,10 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/pass/gfx_passbase.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
-	src/memory_helpers.h
-	src/memory_helpers.cpp
 	src/scene/entity.h
 	src/scene/entity.cpp
-	src/scene/graphics_component.h
-	src/scene/graphics_component.cpp
+	src/scene/renderable_component.h
+	src/scene/renderable_component.cpp
 	src/scene/scene.h
 	src/scene/scene.cpp
 	src/struct_helpers.h

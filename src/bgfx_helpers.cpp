@@ -1,10 +1,11 @@
-#include <memory_helpers.h>
-#include <io_helpers.h>
-#include <stb/stb_image.h>
+#include <bgfx_helpers.h>
 
 #include <cassert>
 
-namespace pg::memory_helpers
+#include <io_helpers.h>
+#include <stb/stb_image.h>
+
+namespace pg::bgfx_helpers
 {
 
 std::shared_ptr<bgfx_vertex_buffer_handle_t> makeSharedVertexBuffer(bgfx_memory_t const* mem, bgfx_vertex_layout_t const* layout, std::uint16_t flags)
@@ -137,5 +138,15 @@ std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::uint32_t width, 
     return std::make_shared<bgfx_texture_handle_t>(bgfx_create_texture_2d(width, height, false, 1, format, textureFlags, nullptr));
 }
 
-} // namespace pg::memory_helpers
+std::shared_ptr<bgfx_uniform_handle_t> makeSharedUniform(std::string const& name, bgfx_uniform_type type, std::uint32_t arrayElementsCount)
+{
+    bgfx_uniform_handle_t uniform = bgfx_create_uniform(name.c_str(), type, arrayElementsCount);
+    return std::shared_ptr<bgfx_uniform_handle_t>(new bgfx_uniform_handle_t{ uniform },
+        [](bgfx_uniform_handle_t* handle)
+        {
+            bgfx_destroy_uniform(*handle);
+        });
+}
+
+} // namespace pg::bgfx_helpers
 
