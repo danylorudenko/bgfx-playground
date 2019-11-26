@@ -21,6 +21,8 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/gfx_objects.cpp
 	src/gfx/gfx_renderer.h
 	src/gfx/gfx_renderer.cpp
+	src/gfx/gfx_resourcemap.h
+	src/gfx/gfx_resourcemap.cpp
 	src/gfx/gfx_settings.h
 	src/gfx/gfx_settings.cpp
 	src/gfx/pass/gfx_pass_forward.h
@@ -30,6 +32,10 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/pass/gfx_passbase.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
+	src/math/math_helpers.hpp
+	src/math/math_helpers.cpp
+	src/scene/camera.h
+	src/scene/camera.cpp
 	src/scene/entity.h
 	src/scene/entity.cpp
 	src/scene/renderable_component.h

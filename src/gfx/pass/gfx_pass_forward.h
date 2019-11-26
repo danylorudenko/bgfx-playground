@@ -8,7 +8,7 @@ namespace pg::gfx
 class PassForward : public PassBase
 {
 public:
-    PassForward(PassSchedule scheduleId);
+    PassForward(PassId scheduleId);
     PassForward(PassForward&& rhs);
     PassForward& operator=(PassForward&& rhs);
 

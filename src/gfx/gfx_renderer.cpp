@@ -18,11 +18,11 @@ Renderer::~Renderer() = default;
 
 void Renderer::Update()
 {
-    PassSchedule scheduleGuard = PassSchedule::kNone;
+    PassId scheduleGuard = PassId::kNone;
     for (auto& pass : m_PassQueue)
     {
-        PassSchedule passId = pass->ScheduleId();
-        assert((int)passId > (int)scheduleGuard && "Pass ordering schedule is violated.");
+        PassId passId = pass->GetPassId();
+        assert((int)passId - 1 == (int)scheduleGuard && "Pass ordering schedule is violated.");
 
         pass->Begin(&g_MainScene);
         pass->Render(&g_MainScene);

@@ -18,7 +18,7 @@ namespace pg::gfx
 class PassBase
 {
 public:
-    PassBase(PassSchedule scheduleId);
+    PassBase(PassId scheduleId);
     PassBase(PassBase&& rhs);
     PassBase& operator=(PassBase&& rhs);
 
@@ -27,7 +27,7 @@ public:
     PassBase(PassBase const&) = delete;
     PassBase& operator=(PassBase const&) = delete;
 
-    PassSchedule ScheduleId() const;
+    PassId GetPassId() const;
 
     virtual void Begin(Scene* scene) = 0;
     virtual void Render(Scene* scene) = 0;
@@ -46,7 +46,7 @@ protected:
     std::vector<Attachment> m_Attachments;
     utils::AutoDestroyed<bgfx_frame_buffer_handle_t> m_Framebuffer;
 
-    PassSchedule m_ScheduleId;
+    PassId m_PassId;
     bool m_Immutable;
 };
 

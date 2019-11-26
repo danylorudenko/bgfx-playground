@@ -1,6 +1,7 @@
 #pragma once
 
 #include <scene/entity.h>
+#include <scene/camera.h>
 
 namespace pg
 {
@@ -19,11 +20,14 @@ public:
     ~Scene();
 
 
-    Entity& RootEntityRef() { return *m_RootEntity; }
-    Entity const& RootEntityRef() const { return *m_RootEntity; }
+    Entity&         GetRootEntityRef() { return *m_RootEntity; }
+    Entity const&   GetRootEntityRef() const { return *m_RootEntity; }
 
-    Entity* RootEntity() { return m_RootEntity.get(); }
-    Entity const* RootEntity() const { return m_RootEntity.get(); }
+    Entity*         GetRootEntity() { return m_RootEntity.get(); }
+    Entity const*   GetRootEntity() const { return m_RootEntity.get(); }
+
+    Camera&         GetMainCamera() { return m_MainCamera; }
+    Camera const&   GetMainCamera() const { return m_MainCamera; }
 
 
     using EntityGenericDelegate = void(*)(Entity& entity);
@@ -35,6 +39,8 @@ public:
 
 private:
     std::unique_ptr<Entity> m_RootEntity;
+
+    Camera                  m_MainCamera;
 };
 
 } // namespace pg

@@ -3,7 +3,7 @@
 namespace pg::gfx
 {
 
-enum PassSchedule
+enum PassId
 {
     kNone = -1,
     kForward = 0
