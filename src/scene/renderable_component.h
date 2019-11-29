@@ -8,7 +8,7 @@ namespace pg
 struct RenderableComponent
 {
     gfx::ShaderRef                                  m_ShaderProgram;
-    std::shared_ptr<bgfx_vertex_buffer_handle_t>    m_VertexBuffer;
+    gfx::VertexBufferRef                            m_VertexBuffer;
     std::shared_ptr<bgfx_uniform_handle_t>          m_ModelTransformUniform;
     std::shared_ptr<bgfx_uniform_handle_t>          m_ColorTransformUniform;
 };

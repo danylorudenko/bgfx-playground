@@ -92,7 +92,7 @@ std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(std::string const& vsFi
     return makeSharedProgram(vsFileReader.ReadToBgfx(), fsFileReader.ReadToBgfx());
 }
 
-std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fileName, int componentsCount)
+std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fileName, int componentsCount, int* widthOut, int* heightOut)
 {
     int width = 0, height = 0, components = 0;
     void* textureData = stbi_load(fileName.c_str(), &width, &height, &components, componentsCount);
@@ -113,6 +113,12 @@ std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fi
     default:
         assert(false && "Only 3 and 4 component count is supported for textures!");
     }
+
+    if (widthOut)
+        *widthOut = width;
+
+    if (heightOut)
+        *heightOut = height;
 
     bgfx_texture_handle_t texture = bgfx_create_texture_2d(width, height, false, 1, textureFormat, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, textureDataBgfx);
     return std::shared_ptr<bgfx_texture_handle_t>(new bgfx_texture_handle_t{ texture },

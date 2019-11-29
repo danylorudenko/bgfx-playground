@@ -4,7 +4,8 @@
 #include <cassert>
 #include <utility>
 
-#include <glm/ext/quaternion_common.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace pg
 {
@@ -177,6 +178,22 @@ void Entity::SetGlobalScale(glm::vec3 const& globalScale)
     glm::vec3 const diff            = globalScale / currentScale;
 
     SetScale(GetScale() * diff);
+}
+
+glm::mat4 Entity::GetGlobalModelMatrix() const
+{
+    glm::mat4 model{
+        1.0f,  0.0f,  0.0f,  0.0f,
+        0.0f,  1.0f,  0.0f,  0.0f,
+        0.0f,  0.0f,  1.0f,  0.0f,
+        0.0f,  0.0f,  0.0f,  1.0f
+    };
+
+    model = glm::scale(model, GetGlobalScale());
+    model *= glm::mat4_cast(GetGlobalRotation());
+    model = glm::translate(model, GetGlobalPosition());
+
+    return model;
 }
 
 

@@ -35,7 +35,7 @@ std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(std::string const& vsFi
 
 
 
-std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fileName, int componentsCount = 3);
+std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fileName, int componentsCount = 3, int* widthOut = nullptr, int* heightOut = nullptr);
 
 
 // makes empty texture

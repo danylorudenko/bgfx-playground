@@ -35,16 +35,22 @@ bgfx_program_handle_t ShaderRef::GetHandle() const
 ///////////////////////////////////////////////////////////////////////////
 // TextureRef
 
-TextureRef::TextureRef(bgfx_texture_handle_t handle)
-    : m_TextureHandle{ std::make_shared<bgfx_texture_handle_t>(handle) }
-{}
-
 TextureRef::TextureRef(std::string const& textureFileName)
-    : m_TextureHandle{ bgfx_helpers::makeShared2DTexture(textureFileName) }
-{}
+    : m_TextureHandle{ nullptr }
+    , m_Width{ 0 }
+    , m_Height{ 0 }
+{
+    int width = 0, height = 0;
+    m_TextureHandle = bgfx_helpers::makeShared2DTexture(textureFileName, 3, &width, &height);
+
+    m_Width     = static_cast<std::uint32_t>(width);
+    m_Height    = static_cast<std::uint32_t>(height);
+}
 
 TextureRef::TextureRef(std::uint32_t width, std::uint32_t height, bgfx_texture_format format, TextureUsage usage)
     : m_TextureHandle{ bgfx_helpers::makeShared2DTexture(width, height, format, usage) }
+    , m_Width{ width }
+    , m_Height{ height }
 {
 }
 
@@ -52,6 +58,28 @@ bgfx_texture_handle_t TextureRef::GetHandle() const
 {
     return m_TextureHandle ? *m_TextureHandle : bgfx_texture_handle_t{ BGFX_INVALID_HANDLE };
 }
+
+
+///////////////////////////////////////////////////////////////////////////
+// VertexBufferRef
+
+VertexBufferRef::VertexBufferRef(std::uint32_t vertexCount, bgfx_memory_t const* mem, bgfx_vertex_layout_t const* layout)
+    : m_VertexBufferHandle{ bgfx_helpers::makeSharedVertexBuffer(mem, layout) }
+    , m_VertexCount{ vertexCount }
+{}
+
+VertexBufferRef::~VertexBufferRef() = default;
+
+bgfx_vertex_buffer_handle_t VertexBufferRef::GetHandle() const
+{
+    return *m_VertexBufferHandle;
+}
+
+std::uint32_t VertexBufferRef::GetVertexCount() const
+{
+    return m_VertexCount;
+}
+
 
 }
 

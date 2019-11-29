@@ -37,41 +37,50 @@ void PassForward::Begin(Scene* scene)
 
     ////////////////////////////////
 
-    bgfx_set_view_name(m_PassId, "PassForward");
+    PassId const passId = m_PassId;
+    bgfx_set_view_name(passId, "PassForward");
 
     ////////////////////////////////
 
     bgfx_frame_buffer_handle_t const framebuffer = m_Framebuffer.Ref();
     if (BGFX_HANDLE_IS_VALID(framebuffer))
     {
-        bgfx_set_view_frame_buffer(m_PassId, framebuffer);
+        bgfx_set_view_frame_buffer(passId, framebuffer);
     }
 
     ////////////////////////////////
 
     {
-        bgfx_set_view_clear(m_PassId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0, 1.0f, 0);
-        bgfx_set_view_rect(m_PassId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);
-        bgfx_set_view_scissor(m_PassId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);
+        bgfx_set_view_clear(passId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0, 1.0f, 0);
+        bgfx_set_view_rect(passId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);
+        bgfx_set_view_scissor(passId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);
 
         // in this call we can set camera data (and view and projection transforms)
         Camera const& camera = scene->GetMainCamera();
         glm::mat4 const view = camera.GetDefaultViewMatrix();
         glm::mat4 const proj = camera.GetDefaultProjectionMatrix();
 
-        bgfx_set_view_transform(m_PassId, glm::value_ptr(view), glm::value_ptr(proj));
+        bgfx_set_view_transform(passId, glm::value_ptr(view), glm::value_ptr(proj));
     }
 
     {
-        bgfx_touch(m_PassId);
+        bgfx_touch(passId);
 
-        Scene::EntityGenericDelegate entityDelegate = [](Entity& entity)
+        Scene::EntityGenericDelegate entityDelegate = [passId](Entity& entity)
         {
             // 1. set model uniform
             // 2. set vertex index buffer
             // 3. set texture (optional)
+            glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
+            RenderableComponent const& renderableComponent = entity.GetRenderableComponent();
+            VertexBufferRef const& vertexBuffer = renderableComponent.m_VertexBuffer;
 
-            bgfx_set_transform
+            bgfx_set_transform(glm::value_ptr(modelMatrix), 0);
+            bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
+            // set texture?
+
+            bgfx_program_handle_t const program = entity.GetRenderableComponent().m_ShaderProgram.GetHandle();
+            bgfx_submit(passId, program, 0, true);
         };
 
         scene->ForEachEntity(entityDelegate);

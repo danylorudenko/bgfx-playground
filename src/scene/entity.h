@@ -6,6 +6,7 @@
 
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/quaternion_float.hpp>
+#include <glm/ext/matrix_float4x4.hpp>
 
 #include <gfx/gfx_objects.h>
 
@@ -51,6 +52,8 @@ public:
     inline void                         SetGlobalScale(glm::vec3 const& scale);
 
 // Graphics
+    glm::mat4                           GetGlobalModelMatrix() const;
+
     inline RenderableComponent&         GetRenderableComponent() { return m_RenderableComponent; }
     inline RenderableComponent const&   GetRenderableComponent() const { return m_RenderableComponent; }
 

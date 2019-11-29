@@ -1,7 +1,6 @@
 #include <scene/camera.h>
 
 #include <glm/geometric.hpp>
-#include <glm/ext/matrix_common.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
