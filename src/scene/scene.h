@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <scene/entity.h>
 #include <scene/camera.h>
 
@@ -30,11 +32,8 @@ public:
     Camera const&   GetMainCamera() const { return m_MainCamera; }
 
 
-    using EntityGenericDelegate = void(*)(Entity& entity);
-    using ConstEntityGenericDelegate = void(*)(Entity const& entity);
-
+    using EntityGenericDelegate = std::function<void(Entity& entity)>;
     void ForEachEntity(EntityGenericDelegate entityDelegate);
-    void ForEachEntity(ConstEntityGenericDelegate entityDelete);
 
 
 private:

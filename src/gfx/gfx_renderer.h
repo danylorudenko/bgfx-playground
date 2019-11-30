@@ -24,7 +24,6 @@ public:
     void Update();
 
 private:
-    PassId m_PassQueueGuard;
     std::vector<std::unique_ptr<PassBase>> m_PassQueue;
 };
 

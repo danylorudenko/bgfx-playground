@@ -93,7 +93,8 @@ Entity* Entity::AddChild(std::string const& name, glm::vec3 const& pos, glm::qua
             return name == entity->GetName();
         }
     );
-    assert(sameName != m_Children.end() && "Entity can't have two children with same names");
+
+    assert(m_Children.size() == 0 || (sameName != m_Children.end()) && "Entity can't have two children with same names");
     assert(!name.empty() && "Entity can't have an empty name");
 
 
@@ -101,11 +102,6 @@ Entity* Entity::AddChild(std::string const& name, glm::vec3 const& pos, glm::qua
     Entity* ptr = entity.get();
     m_Children.emplace_back(std::move(entity));
     return ptr;
-}
-
-std::string const& Entity::GetName() const
-{
-    return m_Name;
 }
 
 glm::vec3 const& Entity::GetPosition() const
@@ -194,6 +190,11 @@ glm::mat4 Entity::GetGlobalModelMatrix() const
     model = glm::translate(model, GetGlobalPosition());
 
     return model;
+}
+
+void Entity::InitRenderableComponent(gfx::ShaderRef const& shaderRef, gfx::VertexBufferRef const& vertexBuffer)
+{
+    m_RenderableComponent = std::make_unique<RenderableComponent>(shaderRef, vertexBuffer);
 }
 
 

@@ -37,8 +37,8 @@ public:
     inline glm::quat const&     GetRotation() const { return m_Rotation; }
     inline void                 SetRotation(glm::quat const& rot) { m_Rotation = rot; }
 
-    inline float                GetFOV() const { return m_FOV; }
-    inline void                 SetFOV(float fov) { m_FOV = fov; }
+    inline float                GetFOV() const { return glm::degrees(m_FOV); }
+    inline void                 SetFOV(float fov) { m_FOV = glm::radians(fov); }
 
     inline View&                GetView() { return m_View; }
     inline View const&          GetView() const { return m_View; }

@@ -6,10 +6,12 @@
 #include <assimp/Importer.hpp>
 #include <bgfx/c99/bgfx.h>
 
-#include <globals.h>
-#include <scene/entity.h>
-#include <io_helpers.h>
 #include <bgfx_helpers.h>
+#include <gfx/gfx_objects.h>
+#include <gfx/gfx_settings.h>
+#include <globals.h>
+#include <io_helpers.h>
+#include <scene/entity.h>
 #include <struct_helpers.h>
 #include <windows/window.h>
 
@@ -30,11 +32,8 @@ LRESULT MyProcHandler(HWND handle, UINT message, WPARAM wparam, LPARAM lparam)
 void mainLoop();
 void mainUpdate();
 
-Entity g_RootEntity;
 
-std::shared_ptr<bgfx_program_handle_t>          g_MainProgram;
 bgfx_vertex_layout_t                            g_VertexLayout;
-std::shared_ptr<bgfx_vertex_buffer_handle_t>    g_VertexBuffer;
 std::shared_ptr<bgfx_texture_handle_t>          g_MainTexture;
 bgfx_uniform_handle_t                           g_MainTextureUniform;
 bgfx_uniform_handle_t                           g_CustomPosUnifrom;
@@ -60,7 +59,8 @@ int main()
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
-    g_MainProgram = bgfx_helpers::makeSharedProgram("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
+
+    gfx::ShaderRef mainProgram{ "shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin" };
 
     bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
@@ -68,7 +68,8 @@ int main()
     bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false, false);
     bgfx_vertex_layout_end(&g_VertexLayout);
 
-    g_VertexBuffer = pg::bgfx_helpers::makeSharedVertexBuffer(bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout);
+    gfx::VertexBufferRef vertexBuffer{ sizeof(g_Vertices) / sizeof(g_Vertices[0]), bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout };
+
     g_MainTexture = pg::bgfx_helpers::makeShared2DTexture("assets\\wood.png");
 
     g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
@@ -76,6 +77,31 @@ int main()
 
     bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
 
+    /////////////////
+    // Scene
+
+    Camera& mainCamera = g_MainScene.GetMainCamera();
+
+    mainCamera.SetFOV(60.0f);
+    mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, -10.0f });
+    mainCamera.SetRotation(glm::identity<glm::quat>());
+
+    View cameraView;
+    cameraView.x = 0;
+    cameraView.y = 0;
+    cameraView.width = gfx::settings::g_MainResolutionX;
+    cameraView.height = gfx::settings::g_MainResolutionY;
+    mainCamera.SetView(cameraView);
+
+
+    Entity& rootEntity = g_MainScene.GetRootEntityRef();
+    
+    Entity* testEntity = rootEntity.AddChild("testEntity");
+    testEntity->InitRenderableComponent(mainProgram, vertexBuffer);
+
+    /////////////////
+
+    g_MainRenderer = std::make_unique<gfx::Renderer>();
     pg::mainLoop();
 
     bgfx_shutdown();
@@ -105,17 +131,19 @@ void mainLoop()
 float g_Counter = 0.0f;
 void mainUpdate()
 {
-    bgfx_touch(0);
-    bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
-    bgfx_set_vertex_buffer(0, *g_VertexBuffer, 0, 3);
-    bgfx_set_state(BGFX_STATE_DEFAULT, 0);
-    bgfx_set_texture(0, g_MainTextureUniform, *g_MainTexture, UINT32_MAX);
+    //bgfx_touch(0);
+    //bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
+    //bgfx_set_vertex_buffer(0, *g_VertexBuffer, 0, 3);
+    //bgfx_set_state(BGFX_STATE_DEFAULT, 0);
+    //bgfx_set_texture(0, g_MainTextureUniform, *g_MainTexture, UINT32_MAX);
 
-    g_Counter = g_Counter > 1.0f ? -1.0f : g_Counter + 0.01f;
-    float customPos[4] = { g_Counter, 0.5f, 0.0f, 0.0f };
-    bgfx_set_uniform(g_CustomPosUnifrom, customPos, 1);
+    //g_Counter = g_Counter > 1.0f ? -1.0f : g_Counter + 0.01f;
+    //float customPos[4] = { g_Counter, 0.5f, 0.0f, 0.0f };
+    //bgfx_set_uniform(g_CustomPosUnifrom, customPos, 1);
 
-    bgfx_submit(0, *g_MainProgram, 0, false);
+    //bgfx_submit(0, *g_MainProgram, 0, false);
+
+    g_MainRenderer->Update();
 }
 
 } // namespace pg

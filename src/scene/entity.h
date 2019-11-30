@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 #include <glm/ext/vector_float3.hpp>
@@ -29,36 +30,39 @@ public:
     Entity*                             FindChildRecursive(std::string const& name);
     Entity*                             AddChild(
                                             std::string const& name, 
-                                            glm::vec3 const& pos = glm::vec3{},
-                                            glm::quat const& rot = glm::quat{},
-                                            glm::vec3 const& scale = glm::vec3{});
+                                            glm::vec3 const& pos = glm::vec3{ 0.0f, 0.0f, 0.0f },
+                                            glm::quat const& rot = glm::identity<glm::quat>(),
+                                            glm::vec3 const& scale = glm::vec3{ 1.0f, 1.0f, 1.0f });
 
     std::uint32_t                       GetChildCount() const { return static_cast<std::uint32_t>(m_Children.size()); }
-    inline std::string const&           GetName() const;
+    inline std::string const&           GetName() const { return m_Name; }
+    inline void                         SetName(std::string const& name) { m_Name = name; }
 
 // Coordinates
-    inline glm::vec3 const&             GetPosition() const;
-    inline glm::quat const&             GetRotation() const;
-    inline glm::vec3 const&             GetScale() const;
-    inline void                         SetPosition(glm::vec3 const& pos);
-    inline void                         SetRotation(glm::quat const& rot);
-    inline void                         SetScale(glm::vec3 const& scale);
+    glm::vec3 const&                    GetPosition() const;
+    glm::quat const&                    GetRotation() const;
+    glm::vec3 const&                    GetScale() const;
+    void                                SetPosition(glm::vec3 const& pos);
+    void                                SetRotation(glm::quat const& rot);
+    void                                SetScale(glm::vec3 const& scale);
 
-    inline glm::vec3                    GetGlobalPosition() const;
-    inline glm::quat                    GetGlobalRotation() const;
-    inline glm::vec3                    GetGlobalScale() const;
-    inline void                         SetGlobalPosition(glm::vec3 const& pos);
-    inline void                         SetGlobalRotation(glm::quat const& rot);
-    inline void                         SetGlobalScale(glm::vec3 const& scale);
+    glm::vec3                           GetGlobalPosition() const;
+    glm::quat                           GetGlobalRotation() const;
+    glm::vec3                           GetGlobalScale() const;
+    void                                SetGlobalPosition(glm::vec3 const& pos);
+    void                                SetGlobalRotation(glm::quat const& rot);
+    void                                SetGlobalScale(glm::vec3 const& scale);
 
 // Graphics
     glm::mat4                           GetGlobalModelMatrix() const;
 
-    inline RenderableComponent&         GetRenderableComponent() { return m_RenderableComponent; }
-    inline RenderableComponent const&   GetRenderableComponent() const { return m_RenderableComponent; }
+    void                                InitRenderableComponent(gfx::ShaderRef const& shader, gfx::VertexBufferRef const& vertexBuffer);
 
-    inline void                         SetVertexBuffer(std::shared_ptr<bgfx_vertex_buffer_handle_t> const& vertexBuffer) { m_RenderableComponent.m_VertexBuffer = vertexBuffer; }
-    inline void                         SetShader(gfx::ShaderRef const& program) { m_RenderableComponent.m_ShaderProgram = program; }
+    inline RenderableComponent&         GetRenderableComponentRef() { return *m_RenderableComponent; }
+    inline RenderableComponent const&   GetRenderableComponentRef() const { return *m_RenderableComponent; }
+
+    inline void                         SetVertexBuffer(gfx::VertexBufferRef const& vertexBuffer) { m_RenderableComponent->m_VertexBuffer = vertexBuffer; }
+    inline void                         SetShader(gfx::ShaderRef const& program) { m_RenderableComponent->m_ShaderProgram = program; }
 
 
 private:
@@ -88,7 +92,7 @@ private:
     glm::vec3   m_RelativeScale;
 
 // Rendering
-    RenderableComponent   m_RenderableComponent;
+    std::unique_ptr<RenderableComponent>   m_RenderableComponent;
 };
 
 } // namespace pg

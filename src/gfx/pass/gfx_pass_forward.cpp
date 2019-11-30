@@ -66,20 +66,22 @@ void PassForward::Begin(Scene* scene)
     {
         bgfx_touch(passId);
 
-        Scene::EntityGenericDelegate entityDelegate = [passId](Entity& entity)
+        bgfx_set_state(BGFX_STATE_DEFAULT, 0);
+
+        auto entityDelegate = [passId](Entity& entity)
         {
             // 1. set model uniform
             // 2. set vertex index buffer
             // 3. set texture (optional)
             glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
-            RenderableComponent const& renderableComponent = entity.GetRenderableComponent();
+            RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
             VertexBufferRef const& vertexBuffer = renderableComponent.m_VertexBuffer;
 
             bgfx_set_transform(glm::value_ptr(modelMatrix), 0);
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
             // set texture?
 
-            bgfx_program_handle_t const program = entity.GetRenderableComponent().m_ShaderProgram.GetHandle();
+            bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram.GetHandle();
             bgfx_submit(passId, program, 0, true);
         };
 

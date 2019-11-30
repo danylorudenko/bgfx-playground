@@ -5,10 +5,15 @@
 #include <bgfx/c99/bgfx.h>
 #include <globals.h>
 
+#include <gfx/pass/gfx_pass_forward.h>
+
 namespace pg::gfx
 {
 
-Renderer::Renderer() = default;
+Renderer::Renderer()
+{
+    m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
+}
 
 Renderer::Renderer(Renderer&&) = default;
 
