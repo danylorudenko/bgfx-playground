@@ -38,11 +38,18 @@ std::shared_ptr<bgfx_texture_handle_t>          g_MainTexture;
 bgfx_uniform_handle_t                           g_MainTextureUniform;
 bgfx_uniform_handle_t                           g_CustomPosUnifrom;
 
-float g_Vertices[] =
+struct Vertex
 {
-    -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-     0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-     0.0f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 1.0f
+    float pos[3];
+    float color[4];
+    float uv[2];
+};
+
+Vertex g_Vertices[] =
+{
+     Vertex{ -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
+     Vertex{  0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+     Vertex{  0.0f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 1.0f }
 };
 
 } // namespace pg
@@ -123,7 +130,6 @@ void mainLoop()
         }
         else {
             mainUpdate();
-            bgfx_frame(false);
         }
     }
 }

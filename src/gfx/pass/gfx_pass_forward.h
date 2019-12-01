@@ -14,7 +14,6 @@ public:
 
     virtual ~PassForward();
 
-    virtual void Begin(Scene* scene) override;
     virtual void Render(Scene* scene) override;
 };
 

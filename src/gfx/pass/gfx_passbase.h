@@ -29,7 +29,6 @@ public:
 
     PassId GetPassId() const;
 
-    virtual void Begin(Scene* scene) = 0;
     virtual void Render(Scene* scene) = 0;
 
     virtual void AddScreenSpaceAttachment();

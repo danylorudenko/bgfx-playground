@@ -29,10 +29,6 @@ PassId PassBase::GetPassId() const
     return m_PassId;
 }
 
-void PassBase::Begin(Scene* scene)
-{
-}
-
 void PassBase::Render(Scene* scene)
 {
 }

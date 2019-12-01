@@ -31,9 +31,9 @@ PassForward::~PassForward()
 {
 }
 
-void PassForward::Begin(Scene* scene)
+void PassForward::Render(Scene* scene)
 {
-    PassBase::Begin(scene);
+    PassBase::Render(scene);
 
     ////////////////////////////////
 
@@ -51,7 +51,7 @@ void PassForward::Begin(Scene* scene)
     ////////////////////////////////
 
     {
-        bgfx_set_view_clear(passId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0, 1.0f, 0);
+        bgfx_set_view_clear(passId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xFFFFFFFF, 1.0f, 0);
         bgfx_set_view_rect(passId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);
         bgfx_set_view_scissor(passId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);
 
@@ -90,11 +90,6 @@ void PassForward::Begin(Scene* scene)
 
     ////////////////////////////////
 
-}
-
-void PassForward::Render(Scene* scene)
-{
-    PassBase::Render(scene);
 }
 
 }
