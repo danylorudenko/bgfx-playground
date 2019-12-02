@@ -34,9 +34,9 @@ void mainUpdate();
 
 
 bgfx_vertex_layout_t                            g_VertexLayout;
-std::shared_ptr<bgfx_texture_handle_t>          g_MainTexture;
-bgfx_uniform_handle_t                           g_MainTextureUniform;
-bgfx_uniform_handle_t                           g_CustomPosUnifrom;
+//std::shared_ptr<bgfx_texture_handle_t>          g_MainTexture;
+//bgfx_uniform_handle_t                           g_MainTextureUniform;
+//bgfx_uniform_handle_t                           g_CustomPosUnifrom;
 
 struct Vertex
 {
@@ -77,12 +77,12 @@ int main()
 
     gfx::VertexBufferRef vertexBuffer{ sizeof(g_Vertices) / sizeof(g_Vertices[0]), bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout };
 
-    g_MainTexture = pg::bgfx_helpers::makeShared2DTexture("assets\\wood.png");
+    //g_MainTexture = pg::bgfx_helpers::makeShared2DTexture("assets\\wood.png");
 
-    g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
-    g_CustomPosUnifrom = bgfx_create_uniform("u_customPos", BGFX_UNIFORM_TYPE_VEC4, 1);
+    //g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
+    //g_CustomPosUnifrom = bgfx_create_uniform("u_customPos", BGFX_UNIFORM_TYPE_VEC4, 1);
 
-    bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
+    //bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
 
     /////////////////
     // Scene

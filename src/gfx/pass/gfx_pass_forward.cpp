@@ -64,7 +64,7 @@ void PassForward::Render(Scene* scene)
     }
 
     {
-        bgfx_touch(passId);
+        bgfx_touch(0);
 
         bgfx_set_state(BGFX_STATE_DEFAULT, 0);
 
