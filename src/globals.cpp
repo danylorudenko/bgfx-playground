@@ -3,9 +3,9 @@
 namespace pg
 {
 
-Window g_MainWindow;
+std::unique_ptr<Window> g_MainWindow = nullptr;
 
-Scene g_MainScene;
+std::unique_ptr<Scene> g_MainScene = nullptr;
 
 std::unique_ptr<gfx::Renderer> g_MainRenderer = nullptr;
 

@@ -34,9 +34,6 @@ void mainUpdate();
 
 
 bgfx_vertex_layout_t                            g_VertexLayout;
-//std::shared_ptr<bgfx_texture_handle_t>          g_MainTexture;
-//bgfx_uniform_handle_t                           g_MainTextureUniform;
-//bgfx_uniform_handle_t                           g_CustomPosUnifrom;
 
 struct Vertex
 {
@@ -60,57 +57,56 @@ int main()
     using namespace pg;
 
     HINSTANCE hInstance = GetModuleHandleA(NULL);
-    g_MainWindow = Window{ hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr };
+    g_MainWindow = std::make_unique<Window>(hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr);
 
     bgfx_init_t initStruct = pg::struct_helpers::bgfxInitDefault();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
+    {
+        gfx::ShaderRef mainProgram{ "shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin" };
 
-    gfx::ShaderRef mainProgram{ "shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin" };
+        bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
+        bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
+        bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false, false);
+        bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false, false);
+        bgfx_vertex_layout_end(&g_VertexLayout);
 
-    bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
-    bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
-    bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false, false);
-    bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false, false);
-    bgfx_vertex_layout_end(&g_VertexLayout);
+        gfx::VertexBufferRef vertexBuffer{ sizeof(g_Vertices) / sizeof(g_Vertices[0]), bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout };
 
-    gfx::VertexBufferRef vertexBuffer{ sizeof(g_Vertices) / sizeof(g_Vertices[0]), bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout };
+        /////////////////
+        // Scene
 
-    //g_MainTexture = pg::bgfx_helpers::makeShared2DTexture("assets\\wood.png");
+        g_MainScene = std::make_unique<Scene>();
+        Camera& mainCamera = g_MainScene->GetMainCamera();
 
-    //g_MainTextureUniform = bgfx_create_uniform("mainTexture", BGFX_UNIFORM_TYPE_SAMPLER, 1);
-    //g_CustomPosUnifrom = bgfx_create_uniform("u_customPos", BGFX_UNIFORM_TYPE_VEC4, 1);
+        mainCamera.SetFOV(60.0f);
+        mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, -10.0f });
+        mainCamera.SetRotation(glm::identity<glm::quat>());
 
-    //bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ffff00, 1.0f, 0);
-
-    /////////////////
-    // Scene
-
-    Camera& mainCamera = g_MainScene.GetMainCamera();
-
-    mainCamera.SetFOV(60.0f);
-    mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, -10.0f });
-    mainCamera.SetRotation(glm::identity<glm::quat>());
-
-    View cameraView;
-    cameraView.x = 0;
-    cameraView.y = 0;
-    cameraView.width = gfx::settings::g_MainResolutionX;
-    cameraView.height = gfx::settings::g_MainResolutionY;
-    mainCamera.SetView(cameraView);
+        View cameraView;
+        cameraView.x = 0;
+        cameraView.y = 0;
+        cameraView.width = gfx::settings::g_MainResolutionX;
+        cameraView.height = gfx::settings::g_MainResolutionY;
+        mainCamera.SetView(cameraView);
 
 
-    Entity& rootEntity = g_MainScene.GetRootEntityRef();
-    
-    Entity* testEntity = rootEntity.AddChild("testEntity");
-    testEntity->InitRenderableComponent(mainProgram, vertexBuffer);
+        Entity& rootEntity = g_MainScene->GetRootEntityRef();
 
-    /////////////////
+        Entity* testEntity = rootEntity.AddChild("testEntity");
+        testEntity->InitRenderableComponent(mainProgram, vertexBuffer);
 
-    g_MainRenderer = std::make_unique<gfx::Renderer>();
-    pg::mainLoop();
+        /////////////////
 
+        g_MainRenderer = std::make_unique<gfx::Renderer>();
+        pg::mainLoop();
+
+        g_MainRenderer.reset();
+        g_MainScene.reset();
+    }
+
+    g_MainWindow.reset();
     bgfx_shutdown();
 
     return 0;
@@ -134,21 +130,8 @@ void mainLoop()
     }
 }
 
-float g_Counter = 0.0f;
 void mainUpdate()
 {
-    //bgfx_touch(0);
-    //bgfx_set_view_rect(0, 0, 0, (uint16_t)g_MainWindow.Width(), (uint16_t)g_MainWindow.Height());
-    //bgfx_set_vertex_buffer(0, *g_VertexBuffer, 0, 3);
-    //bgfx_set_state(BGFX_STATE_DEFAULT, 0);
-    //bgfx_set_texture(0, g_MainTextureUniform, *g_MainTexture, UINT32_MAX);
-
-    //g_Counter = g_Counter > 1.0f ? -1.0f : g_Counter + 0.01f;
-    //float customPos[4] = { g_Counter, 0.5f, 0.0f, 0.0f };
-    //bgfx_set_uniform(g_CustomPosUnifrom, customPos, 1);
-
-    //bgfx_submit(0, *g_MainProgram, 0, false);
-
     g_MainRenderer->Update();
 }
 
