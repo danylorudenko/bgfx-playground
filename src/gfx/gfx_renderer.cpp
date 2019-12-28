@@ -29,7 +29,7 @@ void Renderer::Update()
         PassId passId = pass->GetPassId();
         assert((int)passId - 1 == (int)scheduleGuard && "Pass ordering schedule is violated.");
 
-        pass->Render(g_MainScene.get());
+        pass->Render(Application::GetInstance()->GetMainScene());
     }
 
     bgfx_frame(false);

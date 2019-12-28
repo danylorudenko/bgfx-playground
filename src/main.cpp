@@ -57,7 +57,8 @@ int main()
     using namespace pg;
 
     HINSTANCE hInstance = GetModuleHandleA(NULL);
-    g_MainWindow = std::make_unique<Window>(hInstance, "MyWindow", 800, 600, "MyWindowClass", &MyProcHandler, nullptr);
+
+    Application* application = Application::CreateInstance("Playground", 800u, 600u, &MyProcHandler);
 
     bgfx_init_t initStruct = pg::struct_helpers::bgfxInitDefault();
     bool result = bgfx_init(&initStruct);
@@ -77,8 +78,8 @@ int main()
         /////////////////
         // Scene
 
-        g_MainScene = std::make_unique<Scene>();
-        Camera& mainCamera = g_MainScene->GetMainCamera();
+        Scene* scene = application->GetMainScene();
+        Camera& mainCamera = scene->GetMainCamera();
 
         mainCamera.SetFOV(60.0f);
         mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, -10.0f });
@@ -92,21 +93,18 @@ int main()
         mainCamera.SetView(cameraView);
 
 
-        Entity& rootEntity = g_MainScene->GetRootEntityRef();
+        Entity& rootEntity = scene->GetRootEntityRef();
 
         Entity* testEntity = rootEntity.AddChild("testEntity");
         testEntity->InitRenderableComponent(mainProgram, vertexBuffer);
 
         /////////////////
 
-        g_MainRenderer = std::make_unique<gfx::Renderer>();
         pg::mainLoop();
-
-        g_MainRenderer.reset();
-        g_MainScene.reset();
     }
 
-    g_MainWindow.reset();
+    Application::DestroyInstance();
+
     bgfx_shutdown();
 
     return 0;
@@ -132,7 +130,7 @@ void mainLoop()
 
 void mainUpdate()
 {
-    g_MainRenderer->Update();
+    Application::GetInstance()->GetMainRenderer()->Update();
 }
 
 } // namespace pg

@@ -3,11 +3,13 @@
 namespace pg
 {
 
-std::unique_ptr<Window> g_MainWindow = nullptr;
+Application::Application(char const* title, std::uint32_t width, std::uint32_t height, WindowClass::WinProcHandler procHandler)
+    : m_MainWindow{ std::make_unique<Window>(GetModuleHandleA(NULL), "MyWindow", width, height, "MyWindowClass", procHandler, this) }
+    , m_MainRenderer{ std::make_unique<gfx::Renderer>() }
+    , m_MainScene{ std::make_unique<Scene>() }
+{
 
-std::unique_ptr<Scene> g_MainScene = nullptr;
-
-std::unique_ptr<gfx::Renderer> g_MainRenderer = nullptr;
+}
 
 } // namespace pg
 

@@ -20,7 +20,7 @@ bgfx_init_t bgfxInitDefault()
     initStruct.profile = true;
 
     initStruct.platformData.ndt = nullptr;
-    initStruct.platformData.nwh = g_MainWindow->NativeHandle();
+    initStruct.platformData.nwh = Application::GetInstance()->GetMainWindow()->NativeHandle();
     initStruct.platformData.context = nullptr;
     initStruct.platformData.backBuffer = nullptr;
     initStruct.platformData.backBufferDS = nullptr;
