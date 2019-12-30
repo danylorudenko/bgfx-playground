@@ -65,7 +65,7 @@ int main()
     assert(result && "bgfx failed to initialize!");
 
     {
-        gfx::ShaderRef mainProgram{ "shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin" };
+        gfx::ShaderProgram mainProgram{ "shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin" };
 
         bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
         bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);

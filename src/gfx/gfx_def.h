@@ -5,6 +5,7 @@ namespace pg::gfx
 
 enum class TextureUsage
 {
+    None,
     Sampled,
     RenderTarget
 };

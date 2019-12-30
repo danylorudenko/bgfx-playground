@@ -17,7 +17,7 @@ enum TextureId
 //    kNone = -1
 //};
 
-using TextureMap = std::unordered_map<TextureId, TextureRef>;
+using TextureMap = std::unordered_map<TextureId, Texture>;
 extern TextureMap g_TextureMap;
 
 //using BufferMap = 

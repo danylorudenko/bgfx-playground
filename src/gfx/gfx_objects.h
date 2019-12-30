@@ -1,22 +1,28 @@
 #pragma once
 
-#include <bgfx/c99/bgfx.h>
+#include <cstdint>
 #include <memory>
 #include <string>
-#include <cstdint>
+
 #include <gfx/gfx_def.h>
+#include <bgfx/c99/bgfx.h>
+#include <utils.hpp>
 
 namespace pg::gfx
 {
 
 ////////////////////////////////////////////////
-class ShaderRef
+class ShaderProgram : public pg::utils::NonCopyable
 {
 public:
-    ShaderRef(bgfx_program_handle_t handle = BGFX_INVALID_HANDLE);
-    ShaderRef(std::string const& vertexShaderFile, std::string const& fragmentShaderFile);
-    ShaderRef(std::shared_ptr<bgfx_shader_handle_t> const& vertexShader, std::shared_ptr<bgfx_shader_handle_t> const& fragmentShader);
-    ~ShaderRef() = default;
+    ShaderProgram();
+    ShaderProgram(std::string const& vertexShaderFile, std::string const& fragmentShaderFile);
+    ShaderProgram(std::shared_ptr<bgfx_shader_handle_t> const& vertexShader, std::shared_ptr<bgfx_shader_handle_t> const& fragmentShader);
+
+    ShaderProgram(ShaderProgram&& rhs);
+    ShaderProgram& operator=(ShaderProgram&& rhs);
+
+    ~ShaderProgram();
 
     bgfx_program_handle_t GetHandle() const;
 
@@ -25,22 +31,32 @@ private:
     std::shared_ptr<bgfx_shader_handle_t> m_VertexShaderHandle;
     std::shared_ptr<bgfx_shader_handle_t> m_FragmentShaderHandle;
 
-    std::shared_ptr<bgfx_program_handle_t> m_ProgramHandle;
+    bgfx_program_handle_t m_ProgramHandle;
 };
 
 
 ////////////////////////////////////////////////
-class TextureRef
+class Texture : public pg::utils::NonCopyable
 {
 public:
-    TextureRef(std::uint32_t width, std::uint32_t height, bgfx_texture_format format, TextureUsage usage);
-    TextureRef(std::string const& textureFile);
-    ~TextureRef() = default;
+    Texture(TextureUsage usage, std::uint32_t width, std::uint32_t height, bgfx_texture_format format);
+    Texture(std::string const& textureFile);
+
+    Texture(Texture&& rhs);
+    Texture& operator=(Texture&& rhs);
+
+    ~Texture();
 
     bgfx_texture_handle_t GetHandle() const;
 
+    TextureUsage        GetUsage() const;
+    std::uint32_t       GetWidth() const;
+    std::uint32_t       GetHeight() const;
+
 private:
-    std::shared_ptr<bgfx_texture_handle_t> m_TextureHandle;
+    bgfx_texture_handle_t m_TextureHandle;
+
+    TextureUsage  m_Usage;
     std::uint32_t m_Width;
     std::uint32_t m_Height;
 };
