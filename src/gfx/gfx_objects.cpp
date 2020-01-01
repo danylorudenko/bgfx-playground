@@ -31,6 +31,21 @@ ShaderProgram::ShaderProgram(std::shared_ptr<bgfx_shader_handle_t> const& vertex
 }
 
 ShaderProgram::ShaderProgram(ShaderProgram&& rhs)
+    : m_VertexShaderHandle{ nullptr }
+    , m_FragmentShaderHandle{ nullptr }
+    , m_ProgramHandle{ BGFX_INVALID_HANDLE }
+{
+    operator=(std::move(rhs));
+}
+
+ShaderProgram& ShaderProgram::operator=(ShaderProgram&& rhs)
+{
+    std::swap(m_VertexShaderHandle, rhs.m_VertexShaderHandle);
+    std::swap(m_FragmentShaderHandle, rhs.m_FragmentShaderHandle);
+    std::swap(m_ProgramHandle, rhs.m_ProgramHandle);
+
+    return *this;
+}
 
 ShaderProgram::~ShaderProgram()
 {
@@ -51,8 +66,8 @@ bgfx_program_handle_t ShaderProgram::GetHandle() const
 // Texture
 
 Texture::Texture(std::string const& textureFileName)
-    : m_Usage{ TextureUsage::Sampled }
-    , m_TextureHandle{ BGFX_INVALID_HANDLE }
+    : m_TextureHandle{ BGFX_INVALID_HANDLE }
+    , m_Usage{ TextureUsage::Sampled }
     , m_Width{ 0 }
     , m_Height{ 0 }
 {
@@ -101,9 +116,32 @@ Texture::Texture(TextureUsage usage, std::uint32_t width, std::uint32_t height, 
     m_TextureHandle = bgfx_create_texture_2d(width, height, false, 1, format, textureFlags, nullptr);
 }
 
+Texture::Texture(Texture&& rhs)
+    : m_TextureHandle{ BGFX_INVALID_HANDLE }
+    , m_Usage{ TextureUsage::None }
+    , m_Width{ 0 }
+    , m_Height{ 0 }
+{
+    operator=(std::move(rhs));
+}
+
+Texture& Texture::operator=(Texture&& rhs)
+{
+    std::swap(m_TextureHandle, rhs.m_TextureHandle);
+    std::swap(m_Usage, rhs.m_Usage);
+    std::swap(m_Width, rhs.m_Width);
+    std::swap(m_Height, rhs.m_Height);
+
+    return *this;
+}
+
 Texture::~Texture()
 {
-    bgfx_destroy_texture(m_TextureHandle);
+    if (BGFX_HANDLE_IS_VALID(m_TextureHandle))
+    {
+        bgfx_destroy_texture(m_TextureHandle);
+        m_TextureHandle = BGFX_INVALID_HANDLE;
+    }
 }
 
 bgfx_texture_handle_t Texture::GetHandle() const

@@ -38,7 +38,7 @@ public:
 protected:
     struct Attachment
     {
-        TextureRef texture;
+        SharedTexture texture;
         bgfx_attachment_t attachment;
     };
 

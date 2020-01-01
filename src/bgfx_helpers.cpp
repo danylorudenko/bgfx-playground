@@ -61,37 +61,6 @@ std::shared_ptr<bgfx_shader_handle_t> makeSharedShader(bgfx_memory_t const* mem)
         });
 }
 
-std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(bgfx_shader_handle_t vsHandle, bgfx_shader_handle_t fsHandle)
-{
-    bgfx_program_handle_t program = bgfx_create_program(vsHandle, fsHandle, false);
-    return std::shared_ptr<bgfx_program_handle_t>(new bgfx_program_handle_t{ program },
-        [](bgfx_program_handle_t* programHandle)
-        {
-            bgfx_destroy_program(*programHandle);
-        });
-}
-
-std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(bgfx_memory_t const* vsMem, bgfx_memory_t const* fsMem)
-{
-    bgfx_shader_handle_t vs = bgfx_create_shader(vsMem);
-    bgfx_shader_handle_t fs = bgfx_create_shader(fsMem);
-
-    bgfx_program_handle_t program = bgfx_create_program(vs, fs, true);
-    return std::shared_ptr<bgfx_program_handle_t>(new bgfx_program_handle_t{ program },
-        [](bgfx_program_handle_t* programHandle)
-        {
-            bgfx_destroy_program(*programHandle);
-        });
-}
-
-std::shared_ptr<bgfx_program_handle_t> makeSharedProgram(std::string const& vsFileName, std::string const& fsFileName)
-{
-    pg::io_helpers::FileReader vsFileReader{ vsFileName };
-    pg::io_helpers::FileReader fsFileReader{ fsFileName };
-
-    return makeSharedProgram(vsFileReader.ReadToBgfx(), fsFileReader.ReadToBgfx());
-}
-
 std::shared_ptr<bgfx_texture_handle_t> makeShared2DTexture(std::string const& fileName, int componentsCount, int* widthOut, int* heightOut)
 {
     int width = 0, height = 0, components = 0;

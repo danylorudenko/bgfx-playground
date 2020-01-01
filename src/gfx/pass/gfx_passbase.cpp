@@ -38,15 +38,15 @@ void PassBase::AddScreenSpaceAttachment()
     assert(!m_Immutable && "Attempt to modify immutable pass.");
 
     Attachment attachment{ 
-        TextureRef{ 
+        std::make_shared<Texture>(
+            TextureUsage::RenderTarget,
             gfx::settings::g_MainResolutionX,
             gfx::settings::g_MainResolutionY,
-            gfx::settings::g_BackbufferFormat,
-            TextureUsage::RenderTarget 
-        }
+            gfx::settings::g_BackbufferFormat
+        )
     };
 
-    bgfx_attachment_init(&attachment.attachment, attachment.texture.GetHandle(), BGFX_ACCESS_READWRITE, 0, 0, BGFX_RESOLVE_NONE);
+    bgfx_attachment_init(&attachment.attachment, attachment.texture->GetHandle(), BGFX_ACCESS_READWRITE, 0, 0, BGFX_RESOLVE_NONE);
 
     m_Attachments.emplace_back(attachment);
 }

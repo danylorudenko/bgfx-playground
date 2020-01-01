@@ -34,6 +34,8 @@ private:
     bgfx_program_handle_t m_ProgramHandle;
 };
 
+using SharedShaderProgram = std::shared_ptr<ShaderProgram>;
+
 
 ////////////////////////////////////////////////
 class Texture : public pg::utils::NonCopyable
@@ -61,6 +63,7 @@ private:
     std::uint32_t m_Height;
 };
 
+using SharedTexture = std::shared_ptr<Texture>;
 
 ////////////////////////////////////////////////
 class VertexBufferRef

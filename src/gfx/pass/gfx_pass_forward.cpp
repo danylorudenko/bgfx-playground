@@ -81,7 +81,7 @@ void PassForward::Render(Scene* scene)
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
             // set texture?
 
-            bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram.GetHandle();
+            bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram->GetHandle();
             bgfx_submit(passId, program, 0, true);
         };
 
