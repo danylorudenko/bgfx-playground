@@ -66,18 +66,49 @@ private:
 using SharedTexture = std::shared_ptr<Texture>;
 
 ////////////////////////////////////////////////
-class VertexBufferRef
+
+class VertexLayout : public utils::NonCopyable
 {
 public:
-    VertexBufferRef(std::uint32_t vertexCount, bgfx_memory_t const* mem, bgfx_vertex_layout_t const* layout);
-    ~VertexBufferRef();
+    VertexLayout();
+
+    VertexLayout(VertexLayout&& rhs);
+    VertexLayout& operator=(VertexLayout&& rhs);
+
+    ~VertexLayout();
+
+    bgfx_vertex_layout_t const* GetHandle() const;
+    void AddAtribute(bgfx_attrib_t attributeSemantics, uint8_t elementsCount, bgfx_attrib_type_t dataType, bool normalize);
+    void Bake();
+
+private:
+    bgfx_vertex_layout_t    m_VertexLayout;
+    bool                    m_Started   : 1;
+    bool                    m_Baked     : 1;
+};
+
+using SharedVertexLayout = std::shared_ptr<VertexLayout>;
+
+class VertexBuffer : public utils::NonCopyable
+{
+public:
+    VertexBuffer();
+    VertexBuffer(SharedVertexLayout const& layout, std::uint32_t vertexCount, void* buffer, std::uint32_t bytesCount);
+    VertexBuffer(SharedVertexLayout const& layout, std::uint32_t vertexCount, bgfx_memory_t const* mem);
+    
+    VertexBuffer(VertexBuffer&& rhs);
+    VertexBuffer& operator=(VertexBuffer&& rhs);
+
+    ~VertexBuffer();
 
     bgfx_vertex_buffer_handle_t GetHandle() const;
     std::uint32_t GetVertexCount() const;
 
 private:
-    std::shared_ptr<bgfx_vertex_buffer_handle_t> m_VertexBufferHandle;
-    std::uint32_t m_VertexCount;
+    std::uint32_t               m_VertexCount;
+    bgfx_vertex_buffer_handle_t m_VertexBufferHandle;
+    SharedVertexLayout          m_Layout;
+
 };
 
 }

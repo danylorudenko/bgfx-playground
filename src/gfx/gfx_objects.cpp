@@ -166,25 +166,118 @@ std::uint32_t Texture::GetHeight() const
 
 
 ///////////////////////////////////////////////////////////////////////////
-// VertexBufferRef
-
-VertexBufferRef::VertexBufferRef(std::uint32_t vertexCount, bgfx_memory_t const* mem, bgfx_vertex_layout_t const* layout)
-    : m_VertexBufferHandle{ bgfx_helpers::makeSharedVertexBuffer(mem, layout) }
-    , m_VertexCount{ vertexCount }
-{}
-
-VertexBufferRef::~VertexBufferRef() = default;
-
-bgfx_vertex_buffer_handle_t VertexBufferRef::GetHandle() const
+// VertexLayout
+VertexLayout::VertexLayout()
+    : m_VertexLayout{}
+    , m_Started{ false }
+    , m_Baked{ false }
 {
-    return *m_VertexBufferHandle;
 }
 
-std::uint32_t VertexBufferRef::GetVertexCount() const
+VertexLayout::VertexLayout(VertexLayout&&) = default;
+
+VertexLayout& VertexLayout::operator=(VertexLayout&&) = default;
+
+VertexLayout::~VertexLayout() = default;
+
+bgfx_vertex_layout_t const* VertexLayout::GetHandle() const
+{
+    return &m_VertexLayout;
+}
+
+void VertexLayout::AddAtribute(bgfx_attrib_t attributeSemantics, uint8_t elementsCount, bgfx_attrib_type_t dataType, bool normalize)
+{
+    if (m_Baked)
+    {
+        assert(false && "Attempt to add attribute to baked VertexLayout.");
+        return;
+    }
+
+    bgfx_vertex_layout_t* layoutPtr = &m_VertexLayout;
+    if (!m_Started)
+    {
+        bgfx_vertex_layout_begin(layoutPtr, bgfx_get_renderer_type());
+        m_Started = true;
+    }
+
+    bgfx_vertex_layout_add(layoutPtr, attributeSemantics, elementsCount, dataType, normalize, false);
+}
+
+void VertexLayout::Bake()
+{
+    if (m_Baked)
+    {
+        assert(false && "Attempt to bake VertexLayout second time.");
+        return;
+    }
+
+    bgfx_vertex_layout_end(&m_VertexLayout);
+    m_Baked = true;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// VertexBuffer
+
+VertexBuffer::VertexBuffer()
+    : m_VertexCount{ 0 }
+    , m_VertexBufferHandle{ BGFX_INVALID_HANDLE }
+    , m_Layout{ nullptr }
+{
+}
+
+VertexBuffer::VertexBuffer(VertexBuffer&& rhs)
+    : m_VertexCount{ 0 }
+    , m_VertexBufferHandle{ BGFX_INVALID_HANDLE }
+    , m_Layout{ nullptr }
+{
+    operator=(std::move(rhs));
+}
+
+VertexBuffer& VertexBuffer::operator=(VertexBuffer&& rhs)
+{
+    std::swap(m_VertexCount, rhs.m_VertexCount);
+    std::swap(m_VertexBufferHandle, rhs.m_VertexBufferHandle);
+    std::swap(m_Layout, rhs.m_Layout);
+
+    return *this;
+}
+
+VertexBuffer::VertexBuffer(SharedVertexLayout const& layout, std::uint32_t vertexCount, bgfx_memory_t const* mem)
+    : m_VertexCount{ vertexCount }
+    , m_VertexBufferHandle{ BGFX_INVALID_HANDLE }
+    , m_Layout{ layout }
+{
+    m_VertexBufferHandle = bgfx_create_vertex_buffer(mem, m_Layout->GetHandle(), BGFX_BUFFER_NONE);
+}
+
+VertexBuffer::VertexBuffer(SharedVertexLayout const& layout, std::uint32_t vertexCount, void* buffer, std::uint32_t bytesCount)
+    : m_VertexCount{ vertexCount }
+    , m_VertexBufferHandle{ BGFX_INVALID_HANDLE }
+    , m_Layout{ layout }
+{
+    bgfx_memory_t const* memory = bgfx_make_ref(buffer, bytesCount);
+    m_VertexBufferHandle = bgfx_create_vertex_buffer(memory, m_Layout->GetHandle(), BGFX_BUFFER_NONE);
+}
+
+VertexBuffer::~VertexBuffer()
+{
+    if (BGFX_HANDLE_IS_VALID(m_VertexBufferHandle))
+    {
+        bgfx_destroy_vertex_buffer(m_VertexBufferHandle);
+        m_VertexBufferHandle = BGFX_INVALID_HANDLE;
+    }
+}
+
+bgfx_vertex_buffer_handle_t VertexBuffer::GetHandle() const
+{
+    return m_VertexBufferHandle;
+}
+
+std::uint32_t VertexBuffer::GetVertexCount() const
 {
     return m_VertexCount;
 }
-
 
 }
 
