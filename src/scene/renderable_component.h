@@ -7,13 +7,13 @@ namespace pg
 
 struct RenderableComponent
 {
-    RenderableComponent(gfx::SharedShaderProgram const& shader, gfx::VertexBufferRef const& vertexBuffer)
+    RenderableComponent(gfx::SharedShaderProgram const& shader, gfx::SharedVertexBuffer const& vertexBuffer)
         : m_ShaderProgram{ shader }
         , m_VertexBuffer{ vertexBuffer }
     {}
 
     gfx::SharedShaderProgram                        m_ShaderProgram;
-    gfx::VertexBufferRef                            m_VertexBuffer;
+    gfx::SharedVertexBuffer                         m_VertexBuffer;
 };
 
 } // namespace pg

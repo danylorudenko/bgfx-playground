@@ -33,8 +33,6 @@ void mainLoop();
 void mainUpdate();
 
 
-bgfx_vertex_layout_t                            g_VertexLayout;
-
 struct Vertex
 {
     float pos[3];
@@ -67,13 +65,17 @@ int main()
     {
         gfx::SharedShaderProgram mainProgram = std::make_shared<gfx::ShaderProgram>("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
 
-        bgfx_vertex_layout_begin(&g_VertexLayout, bgfx_get_renderer_type());
-        bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
-        bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false, false);
-        bgfx_vertex_layout_add(&g_VertexLayout, BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false, false);
-        bgfx_vertex_layout_end(&g_VertexLayout);
+        gfx::SharedVertexLayout vertexLayout = std::make_shared<gfx::VertexLayout>();
+        vertexLayout->AddAtribute(BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false);
+        vertexLayout->AddAtribute(BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false);
+        vertexLayout->AddAtribute(BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false);
+        vertexLayout->Bake();
 
-        gfx::VertexBufferRef vertexBuffer{ sizeof(g_Vertices) / sizeof(g_Vertices[0]), bgfx_make_ref(g_Vertices, sizeof(g_Vertices)), &g_VertexLayout };
+        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(
+            vertexLayout,
+            sizeof(g_Vertices) / sizeof(g_Vertices[0]), 
+            g_Vertices, sizeof(g_Vertices)
+        );
 
         /////////////////
         // Scene

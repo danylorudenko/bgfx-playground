@@ -75,7 +75,7 @@ void PassForward::Render(Scene* scene)
             // 3. set texture (optional)
             glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
             RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
-            VertexBufferRef const& vertexBuffer = renderableComponent.m_VertexBuffer;
+            VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
 
             bgfx_set_transform(glm::value_ptr(modelMatrix), 0);
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());

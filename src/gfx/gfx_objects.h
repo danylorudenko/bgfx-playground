@@ -111,5 +111,7 @@ private:
 
 };
 
+using SharedVertexBuffer = std::shared_ptr<VertexBuffer>;
+
 }
 

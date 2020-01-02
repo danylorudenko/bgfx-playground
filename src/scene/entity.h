@@ -56,12 +56,12 @@ public:
 // Graphics
     glm::mat4                           GetGlobalModelMatrix() const;
 
-    void                                InitRenderableComponent(gfx::SharedShaderProgram const& shader, gfx::VertexBufferRef const& vertexBuffer);
+    void                                InitRenderableComponent(gfx::SharedShaderProgram const& shader, gfx::SharedVertexBuffer const& vertexBuffer);
 
     inline RenderableComponent&         GetRenderableComponentRef() { return *m_RenderableComponent; }
     inline RenderableComponent const&   GetRenderableComponentRef() const { return *m_RenderableComponent; }
 
-    inline void                         SetVertexBuffer(gfx::VertexBufferRef const& vertexBuffer) { m_RenderableComponent->m_VertexBuffer = vertexBuffer; }
+    inline void                         SetVertexBuffer(gfx::SharedVertexBuffer const& vertexBuffer) { m_RenderableComponent->m_VertexBuffer = vertexBuffer; }
     inline void                         SetShader(gfx::SharedShaderProgram const& program) { m_RenderableComponent->m_ShaderProgram = program; }
 
 

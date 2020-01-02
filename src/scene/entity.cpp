@@ -192,7 +192,7 @@ glm::mat4 Entity::GetGlobalModelMatrix() const
     return model;
 }
 
-void Entity::InitRenderableComponent(gfx::SharedShaderProgram const& shaderRef, gfx::VertexBuffer const& vertexBuffer)
+void Entity::InitRenderableComponent(gfx::SharedShaderProgram const& shaderRef, gfx::SharedVertexBuffer const& vertexBuffer)
 {
     m_RenderableComponent = std::make_unique<RenderableComponent>(shaderRef, vertexBuffer);
 }
