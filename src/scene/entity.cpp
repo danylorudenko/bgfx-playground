@@ -185,11 +185,11 @@ glm::mat4 Entity::GetGlobalModelMatrix() const
         0.0f,  0.0f,  0.0f,  1.0f
     };
 
-    model = glm::scale(model, GetGlobalScale());
-    model *= glm::mat4_cast(GetGlobalRotation());
-    model = glm::translate(model, GetGlobalPosition());
-
     return model;
+    //model = glm::scale(model, GetGlobalScale());
+    //model *= glm::mat4_cast(GetGlobalRotation());
+    //model = glm::translate(model, GetGlobalPosition());
+
 }
 
 void Entity::InitRenderableComponent(gfx::SharedShaderProgram const& shaderRef, gfx::SharedVertexBuffer const& vertexBuffer)

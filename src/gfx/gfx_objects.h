@@ -89,6 +89,8 @@ private:
 
 using SharedVertexLayout = std::shared_ptr<VertexLayout>;
 
+////////////////////////////////////////////////
+
 class VertexBuffer : public utils::NonCopyable
 {
 public:
@@ -112,6 +114,29 @@ private:
 };
 
 using SharedVertexBuffer = std::shared_ptr<VertexBuffer>;
+
+
+////////////////////////////////////////////////
+
+class UniformProxy : public utils::NonCopyable
+{
+public: 
+    UniformProxy();
+    UniformProxy(std::string const& name, bgfx_uniform_type type, std::uint32_t elementsCount);
+
+    UniformProxy(UniformProxy&& rhs);
+    UniformProxy& operator=(UniformProxy&& rhs);
+
+    ~UniformProxy();
+
+    void SetData(void* data, std::uint32_t numberOfElements = UINT16_MAX);
+    void SetTexture(Texture* texture, int settings);
+
+private:
+    bgfx_uniform_handle_t   m_UniformHandle;
+    bgfx_uniform_info_t     m_MetaData;
+    
+};
 
 }
 

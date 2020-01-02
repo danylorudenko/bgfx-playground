@@ -13,7 +13,9 @@ namespace pg::gfx
 
 PassForward::PassForward(PassId scheduleId)
     : PassBase{ scheduleId }
-{}
+    , m_UniformMVP{ "myMatrix", BGFX_UNIFORM_TYPE_MAT4, 1 }
+{
+}
 
 PassForward::PassForward(PassForward&& rhs)
     : PassBase{ std::move(rhs) }
@@ -23,6 +25,8 @@ PassForward::PassForward(PassForward&& rhs)
 PassForward& PassForward::operator=(PassForward&& rhs)
 {
     PassBase::operator=(std::move(rhs));
+
+    std::swap(m_UniformMVP, rhs.m_UniformMVP);
 
     return *this;
 }
@@ -60,7 +64,7 @@ void PassForward::Render(Scene* scene)
         glm::mat4 const view = camera.GetDefaultViewMatrix();
         glm::mat4 const proj = camera.GetDefaultProjectionMatrix();
 
-        bgfx_set_view_transform(passId, glm::value_ptr(view), glm::value_ptr(proj));
+        //bgfx_set_view_transform(passId, glm::value_ptr(view), glm::value_ptr(proj));
     }
 
     {
@@ -68,7 +72,9 @@ void PassForward::Render(Scene* scene)
 
         bgfx_set_state(BGFX_STATE_DEFAULT, 0);
 
-        auto entityDelegate = [passId](Entity& entity)
+        UniformProxy* myUniform = &m_UniformMVP;
+
+        auto entityDelegate = [passId, myUniform](Entity& entity)
         {
             // 1. set model uniform
             // 2. set vertex index buffer

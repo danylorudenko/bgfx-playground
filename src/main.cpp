@@ -73,8 +73,8 @@ int main()
 
         gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(
             vertexLayout,
-            sizeof(g_Vertices) / sizeof(g_Vertices[0]), 
-            g_Vertices, sizeof(g_Vertices)
+            static_cast<std::uint32_t>(sizeof(g_Vertices) / sizeof(g_Vertices[0])), 
+            g_Vertices, static_cast<std::uint32_t>(sizeof(g_Vertices))
         );
 
         /////////////////
@@ -84,7 +84,7 @@ int main()
         Camera& mainCamera = scene->GetMainCamera();
 
         mainCamera.SetFOV(60.0f);
-        mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, -10.0f });
+        mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, 10.0f });
         mainCamera.SetRotation(glm::identity<glm::quat>());
 
         View cameraView;

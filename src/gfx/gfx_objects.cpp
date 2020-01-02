@@ -167,6 +167,7 @@ std::uint32_t Texture::GetHeight() const
 
 ///////////////////////////////////////////////////////////////////////////
 // VertexLayout
+
 VertexLayout::VertexLayout()
     : m_VertexLayout{}
     , m_Started{ false }
@@ -277,6 +278,62 @@ bgfx_vertex_buffer_handle_t VertexBuffer::GetHandle() const
 std::uint32_t VertexBuffer::GetVertexCount() const
 {
     return m_VertexCount;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// UniformProxy
+UniformProxy::UniformProxy()
+    : m_UniformHandle{ BGFX_INVALID_HANDLE }
+    , m_MetaData{}
+{}
+
+UniformProxy::UniformProxy(std::string const& name, bgfx_uniform_type type, std::uint32_t elementsCount)
+    : m_UniformHandle{ BGFX_INVALID_HANDLE }
+    , m_MetaData{}
+{
+    m_UniformHandle = bgfx_create_uniform(name.c_str(), type, static_cast<std::uint16_t>(elementsCount));
+    bgfx_get_uniform_info(m_UniformHandle, &m_MetaData);
+}
+
+UniformProxy::UniformProxy(UniformProxy&& rhs)
+    : m_UniformHandle{ BGFX_INVALID_HANDLE }
+    , m_MetaData{}
+{
+    operator=(std::move(rhs));
+}
+
+UniformProxy& UniformProxy::operator=(UniformProxy&& rhs)
+{
+    std::swap(m_UniformHandle, rhs.m_UniformHandle);
+    m_MetaData = rhs.m_MetaData;
+
+    return *this;
+}
+
+UniformProxy::~UniformProxy()
+{
+    if (BGFX_HANDLE_IS_VALID(m_UniformHandle))
+    {
+        bgfx_destroy_uniform(m_UniformHandle);
+        m_UniformHandle = BGFX_INVALID_HANDLE;
+    }
+}
+
+void UniformProxy::SetData(void* data, std::uint32_t elementsCount)
+{
+    assert(BGFX_HANDLE_IS_VALID(m_UniformHandle) && "Attempt to set data to invalid uniform");
+    assert(m_MetaData.type != BGFX_UNIFORM_TYPE_SAMPLER && "Attempt to set binary data to a sampler uniform.");
+
+    bgfx_set_uniform(m_UniformHandle, data, static_cast<std::uint16_t>(elementsCount));
+}
+
+void UniformProxy::SetTexture(Texture* texture, int settings)
+{
+    assert(BGFX_HANDLE_IS_VALID(m_UniformHandle) && "Attempt to set data to invalid uniform");
+    assert(m_MetaData.type == BGFX_UNIFORM_TYPE_SAMPLER && "Attempt to set texture to a non-sampler uniform.");
+
+    bgfx_set_texture(0, m_UniformHandle, texture->GetHandle(), BGFX_SAMPLER_UVW_CLAMP);
 }
 
 }
