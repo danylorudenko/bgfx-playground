@@ -12,10 +12,10 @@ target_include_directories(bgfx-application PUBLIC include src)
 target_compile_features(bgfx-application PUBLIC cxx_std_17)
 target_sources(bgfx-application PUBLIC
 	src/main.cpp
+	src/application.h
+	src/application.cpp
 	src/bgfx_helpers.h
 	src/bgfx_helpers.cpp
-	src/globals.h
-	src/globals.cpp
 	src/gfx/gfx_def.h
 	src/gfx/gfx_objects.h
 	src/gfx/gfx_objects.cpp

@@ -8,15 +8,14 @@ namespace pg::gfx
 {
 
 class Renderer
+    : public utils::NonCopyable
+    , public utils::StaticSingleton<Renderer>
 {
 public:
     Renderer();
 
     Renderer(Renderer&& rhs);
     Renderer& operator=(Renderer&& rhs);
-
-    Renderer(Renderer const&) = delete;
-    Renderer& operator=(Renderer const&) = delete;
 
     ~Renderer();
 

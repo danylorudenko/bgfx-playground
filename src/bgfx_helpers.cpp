@@ -2,8 +2,10 @@
 
 #include <cassert>
 
-#include <io_helpers.h>
 #include <stb/stb_image.h>
+
+#include <application.h>
+#include <io_helpers.h>
 
 namespace pg::bgfx_helpers
 {

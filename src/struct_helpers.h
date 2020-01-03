@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bgfx/c99/bgfx.h>
-#include <globals.h>
 
 namespace pg::struct_helpers
 {

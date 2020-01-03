@@ -60,12 +60,14 @@ void PassForward::Render(Scene* scene)
         bgfx_set_view_scissor(passId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);
 
         // in this call we can set camera data (and view and projection transforms)
-        Camera const& camera = scene->GetMainCamera();
-        glm::mat4 const view = camera.GetDefaultViewMatrix();
-        glm::mat4 const proj = camera.GetDefaultProjectionMatrix();
+        
 
         //bgfx_set_view_transform(passId, glm::value_ptr(view), glm::value_ptr(proj));
     }
+
+    Camera const& camera = scene->GetMainCamera();
+    glm::mat4 const view = camera.GetDefaultViewMatrix();
+    glm::mat4 const proj = camera.GetDefaultProjectionMatrix();
 
     {
         bgfx_touch(0);
@@ -74,7 +76,7 @@ void PassForward::Render(Scene* scene)
 
         UniformProxy* myUniform = &m_UniformMVP;
 
-        auto entityDelegate = [passId, myUniform](Entity& entity)
+        auto entityDelegate = [passId, myUniform, view, proj](Entity& entity)
         {
             // 1. set model uniform
             // 2. set vertex index buffer
@@ -83,7 +85,9 @@ void PassForward::Render(Scene* scene)
             RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
             VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
 
-            bgfx_set_transform(glm::value_ptr(modelMatrix), 0);
+            //bgfx_set_transform(glm::value_ptr(modelMatrix), 0);
+            glm::mat4 finalMat = modelMatrix * view * proj;
+            myUniform->SetData(glm::value_ptr(finalMat), 1);
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
             // set texture?
 

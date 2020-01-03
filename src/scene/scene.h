@@ -5,19 +5,20 @@
 #include <scene/entity.h>
 #include <scene/camera.h>
 
+#include <utils.hpp>
+
 namespace pg
 {
 
-class Scene
+class Scene 
+    : public utils::NonCopyable
+    , public utils::StaticSingleton<Scene>
 {
 public:
     Scene();
 
     Scene(Scene&& rhs);
     Scene& operator=(Scene&& rhs);
-
-    Scene(Scene const&) = delete;
-    Scene& operator=(Scene const&) = delete;
 
     ~Scene();
 

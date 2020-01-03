@@ -9,7 +9,7 @@
 #include <bgfx_helpers.h>
 #include <gfx/gfx_objects.h>
 #include <gfx/gfx_settings.h>
-#include <globals.h>
+#include <application.h>
 #include <io_helpers.h>
 #include <scene/entity.h>
 #include <struct_helpers.h>
@@ -57,10 +57,6 @@ int main()
     HINSTANCE hInstance = GetModuleHandleA(NULL);
 
     Application* application = Application::CreateInstance("Playground", 800u, 600u, &MyProcHandler);
-
-    bgfx_init_t initStruct = pg::struct_helpers::bgfxInitDefault();
-    bool result = bgfx_init(&initStruct);
-    assert(result && "bgfx failed to initialize!");
 
     {
         gfx::SharedShaderProgram mainProgram = std::make_shared<gfx::ShaderProgram>("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");

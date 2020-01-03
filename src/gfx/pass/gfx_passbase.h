@@ -15,7 +15,7 @@ class Scene;
 namespace pg::gfx
 {
 
-class PassBase
+class PassBase : public utils::NonCopyable
 {
 public:
     PassBase(PassId scheduleId);
@@ -23,9 +23,6 @@ public:
     PassBase& operator=(PassBase&& rhs);
 
     virtual ~PassBase();
-
-    PassBase(PassBase const&) = delete;
-    PassBase& operator=(PassBase const&) = delete;
 
     PassId GetPassId() const;
 

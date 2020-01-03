@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include <bgfx/c99/bgfx.h>
-#include <globals.h>
+#include <scene/scene.h>
 
 #include <gfx/pass/gfx_pass_forward.h>
 
@@ -12,6 +12,10 @@ namespace pg::gfx
 
 Renderer::Renderer()
 {
+    bgfx_init_t initStruct = pg::struct_helpers::bgfxInitDefault();
+    bool result = bgfx_init(&initStruct);
+    assert(result && "bgfx failed to initialize!");
+
     m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
 }
 
