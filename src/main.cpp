@@ -17,6 +17,7 @@
 
 namespace pg
 {
+
 LRESULT MyProcHandler(HWND handle, UINT message, WPARAM wparam, LPARAM lparam)
 {
     switch (message)
@@ -49,6 +50,7 @@ Vertex g_Vertices[] =
 
 } // namespace pg
 
+pg::Entity* g_TestEntity = nullptr;
 
 int main()
 {
@@ -56,7 +58,15 @@ int main()
 
     HINSTANCE hInstance = GetModuleHandleA(NULL);
 
-    Application* application = Application::CreateInstance("Playground", 800u, 600u, &MyProcHandler);
+    // ==================
+    gfx::settings::g_MainResolutionX = 600;
+    gfx::settings::g_MainResolutionY = 600;
+    gfx::settings::g_BackbufferFormat = BGFX_TEXTURE_FORMAT_RGBA8;
+    // ==================
+
+    Application* application = Application::CreateInstance("Playground", &MyProcHandler);
+    gfx::Renderer* renderer = gfx::Renderer::CreateInstance();
+    Scene* scene = Scene::CreateInstance();
 
     {
         gfx::SharedShaderProgram mainProgram = std::make_shared<gfx::ShaderProgram>("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
@@ -76,11 +86,10 @@ int main()
         /////////////////
         // Scene
 
-        Scene* scene = application->GetMainScene();
         Camera& mainCamera = scene->GetMainCamera();
 
         mainCamera.SetFOV(60.0f);
-        mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, 10.0f });
+        mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, 0.0f });
         mainCamera.SetRotation(glm::identity<glm::quat>());
 
         View cameraView;
@@ -93,8 +102,10 @@ int main()
 
         Entity& rootEntity = scene->GetRootEntityRef();
 
-        Entity* testEntity = rootEntity.AddChild("testEntity");
-        testEntity->InitRenderableComponent(mainProgram, vertexBuffer);
+        g_TestEntity = rootEntity.AddChild("testEntity");
+        g_TestEntity->InitRenderableComponent(mainProgram, vertexBuffer);
+        g_TestEntity->SetPosition({ 0.2f, 0.0f, 0.0f });
+        //g_TestEntity->SetScale({ 0.4f, 0.4f, 0.7f });
 
         /////////////////
 
@@ -126,9 +137,14 @@ void mainLoop()
     }
 }
 
+
+float g_Counter = 0.0f;
+
 void mainUpdate()
 {
-    Application::GetInstance()->GetMainRenderer()->Update();
+    g_TestEntity->SetRotation(glm::quat{ { 0.0f, 0.0f, g_Counter += 0.01f } });
+    
+    gfx::Renderer::GetInstance()->Update();
 }
 
 } // namespace pg

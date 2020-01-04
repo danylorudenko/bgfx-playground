@@ -29,7 +29,7 @@ Camera::~Camera() = default;
 glm::mat4 Camera::GetDefaultViewMatrix() const
 {
     glm::vec3       upVector      = glm::vec3{ 0.0f, 1.0f, 0.0f };
-    glm::vec3 const forwardVector = static_cast<glm::vec3>(glm::mat4_cast(m_Rotation) * glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f });
+    glm::vec3 const forwardVector = static_cast<glm::vec3>(glm::mat4_cast(m_Rotation) * glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f });
     glm::vec3 const rightVector   = glm::cross(forwardVector, upVector);
 
     upVector = glm::cross(rightVector, forwardVector);

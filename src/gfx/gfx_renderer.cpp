@@ -4,6 +4,7 @@
 
 #include <bgfx/c99/bgfx.h>
 #include <scene/scene.h>
+#include <struct_helpers.h>
 
 #include <gfx/pass/gfx_pass_forward.h>
 
@@ -33,7 +34,7 @@ void Renderer::Update()
         PassId passId = pass->GetPassId();
         assert((int)passId - 1 == (int)scheduleGuard && "Pass ordering schedule is violated.");
 
-        pass->Render(Application::GetInstance()->GetMainScene());
+        pass->Render(Scene::GetInstance());
     }
 
     bgfx_frame(false);

@@ -1,10 +1,21 @@
 #include <application.h>
 
+#include <gfx/gfx_settings.h>
+
 namespace pg
 {
 
-Application::Application(char const* title, std::uint32_t width, std::uint32_t height, WindowClass::WinProcHandler procHandler)
-    : m_MainWindow{ std::make_unique<Window>(::GetModuleHandleA(NULL), title, width, height, "MyWindowClass", procHandler, this) }
+Application::Application(char const* title, WindowClass::WinProcHandler procHandler)
+    : m_MainWindow{ 
+        std::make_unique<Window>(
+            ::GetModuleHandleA(NULL), 
+            title, 
+            gfx::settings::g_MainResolutionX, 
+            gfx::settings::g_MainResolutionY, 
+            "MyWindowClass", 
+            procHandler, 
+            this) 
+    }
 {
 
 }

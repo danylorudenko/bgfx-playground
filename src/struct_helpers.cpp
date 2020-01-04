@@ -1,4 +1,6 @@
 #include <struct_helpers.h>
+
+#include <application.h>
 #include <gfx/gfx_settings.h>
 
 namespace pg::struct_helpers
@@ -6,12 +8,6 @@ namespace pg::struct_helpers
 
 bgfx_init_t bgfxInitDefault()
 {
-    // ==================
-    gfx::settings::g_MainResolutionX = 800;
-    gfx::settings::g_MainResolutionY = 600;
-    gfx::settings::g_BackbufferFormat = BGFX_TEXTURE_FORMAT_RGBA8;
-    // ==================
-    
     bgfx_init_t initStruct;
     initStruct.type = BGFX_RENDERER_TYPE_COUNT;
     initStruct.vendorId = BGFX_PCI_ID_NONE;

@@ -16,7 +16,7 @@ class Application
     , public utils::StaticSingleton<Application>
 {
 public:
-    Application(char const* title, std::uint32_t width, std::uint32_t height, WindowClass::WinProcHandler procHandler);
+    Application(char const* title, WindowClass::WinProcHandler procHandler);
 
     inline Window*         GetMainWindow() const { return m_MainWindow.get(); }
 

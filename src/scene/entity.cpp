@@ -178,18 +178,9 @@ void Entity::SetGlobalScale(glm::vec3 const& globalScale)
 
 glm::mat4 Entity::GetGlobalModelMatrix() const
 {
-    glm::mat4 model{
-        1.0f,  0.0f,  0.0f,  0.0f,
-        0.0f,  1.0f,  0.0f,  0.0f,
-        0.0f,  0.0f,  1.0f,  0.0f,
-        0.0f,  0.0f,  0.0f,  1.0f
-    };
-
-    return model;
-    //model = glm::scale(model, GetGlobalScale());
-    //model *= glm::mat4_cast(GetGlobalRotation());
-    //model = glm::translate(model, GetGlobalPosition());
-
+    glm::mat4 model = glm::translate(glm::identity<glm::mat4>(), GetGlobalPosition());
+    model =  glm::scale(model, GetGlobalScale());
+    return glm::mat4_cast(GetGlobalRotation()) * model;
 }
 
 void Entity::InitRenderableComponent(gfx::SharedShaderProgram const& shaderRef, gfx::SharedVertexBuffer const& vertexBuffer)
