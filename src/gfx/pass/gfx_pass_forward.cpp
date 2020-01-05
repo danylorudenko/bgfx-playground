@@ -72,7 +72,13 @@ void PassForward::Render(Scene* scene)
     {
         bgfx_touch(0);
 
-        bgfx_set_state(BGFX_STATE_DEFAULT, 0);
+        bgfx_set_state(0 
+            | BGFX_STATE_WRITE_RGB 
+            | BGFX_STATE_WRITE_A 
+            | BGFX_STATE_WRITE_Z 
+            | BGFX_STATE_DEPTH_TEST_LESS 
+            | BGFX_STATE_CULL_CCW // we have a cube with CCW vertices
+            | BGFX_STATE_MSAA, 0);
 
         UniformProxy* myUniform = &m_UniformMVP;
 
@@ -91,16 +97,17 @@ void PassForward::Render(Scene* scene)
             transforms[2] = glm::translate(glm::identity<glm::mat4>(), entity.GetGlobalPosition());
             transforms[3] = view;
             transforms[4] = proj;
-            //transforms[5] = transforms[2] * transforms[1] * transforms[0];
             transforms[5] = entity.GetGlobalModelMatrix();
 
             RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
             VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
 
+            myUniform->SetData(transforms, 6);
+
             bgfx_set_transform(glm::value_ptr(transforms[5]), 1);
-            //myUniform->SetData(transforms, 6);
+            bgfx_set_view_transform(passId, glm::value_ptr(transforms[3]), glm::value_ptr(transforms[4]));
+
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
-            // set texture?
 
             bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram->GetHandle();
             bgfx_submit(passId, program, 0, true);

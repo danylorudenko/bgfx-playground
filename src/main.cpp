@@ -38,14 +38,46 @@ struct Vertex
 {
     float pos[3];
     float color[4];
-    float uv[2];
 };
 
 Vertex g_Vertices[] =
 {
-     Vertex{ -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
-     Vertex{  0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f },
-     Vertex{  0.0f,  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 1.0f }
+    Vertex{ -1.0f,-1.0f,-1.0f, 0.0f, 0.7f, 0.5f, 1.0f },// triangle 1 : begin
+    Vertex{ -1.0f,-1.0f, 1.0f, 1.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ -1.0f, 1.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f },// triangle 1 : end
+    Vertex{ 1.0f, 1.0f,-1.0f,  0.0f, 0.7f, 0.5f, 1.0f },// triangle 2 : begin
+    Vertex{ -1.0f,-1.0f,-1.0f, 1.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ -1.0f, 1.0f,-1.0f, 0.2f, 0.7f, 0.5f, 1.0f },// triangle 2 : end
+    Vertex{ 1.0f,-1.0f, 1.0f,  0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ -1.0f,-1.0f,-1.0f, 0.0f, 0.7f, 0.4f, 1.0f },
+    Vertex{ 1.0f,-1.0f,-1.0f,  0.0f, 0.1f, 0.5f, 1.0f },
+    Vertex{ 1.0f, 1.0f,-1.0f,  0.2f, 0.9f, 0.5f, 1.0f },
+    Vertex{ 1.0f,-1.0f,-1.0f,  0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ -1.0f,-1.0f,-1.0f, 0.0f, 0.4f, 0.8f, 1.0f },
+    Vertex{ -1.0f,-1.0f,-1.0f, 0.0f, 0.7f, 0.8f, 1.0f },
+    Vertex{ -1.0f, 1.0f, 1.0f, 0.0f, 0.4f, 0.5f, 1.0f },
+    Vertex{ -1.0f, 1.0f,-1.0f, 0.2f, 0.7f, 0.5f, 1.0f },
+    Vertex{ 1.0f,-1.0f, 1.0f,  0.1f, 0.5f, 0.5f, 1.0f },
+    Vertex{ -1.0f,-1.0f, 1.0f, 0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ -1.0f,-1.0f,-1.0f, 0.0f, 0.7f, 0.6f, 1.0f },
+    Vertex{ -1.0f, 1.0f, 1.0f, 0.1f, 0.7f, 0.0f, 1.0f },
+    Vertex{ -1.0f,-1.0f, 1.0f, 0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ 1.0f,-1.0f, 1.0f,  1.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ 1.0f, 1.0f, 1.0f,  0.0f, 0.2f, 0.0f, 1.0f },
+    Vertex{ 1.0f,-1.0f,-1.0f,  0.0f, 0.7f, 0.3f, 1.0f },
+    Vertex{ 1.0f, 1.0f,-1.0f,  1.0f, 0.1f, 0.5f, 1.0f },
+    Vertex{ 1.0f,-1.0f,-1.0f,  0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ 1.0f, 1.0f, 1.0f,  1.0f, 0.7f, 0.7f, 1.0f },
+    Vertex{ 1.0f,-1.0f, 1.0f,  0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ 1.0f, 1.0f, 1.0f,  0.1f, 0.5f, 0.7f, 1.0f },
+    Vertex{ 1.0f, 1.0f,-1.0f,  0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ -1.0f, 1.0f,-1.0f, 0.0f, 0.4f, 0.5f, 1.0f },
+    Vertex{ 1.0f, 1.0f, 1.0f,  0.4f, 0.7f, 1.0f, 1.0f },
+    Vertex{ -1.0f, 1.0f,-1.0f, 0.9f, 0.1f, 0.0f, 1.0f },
+    Vertex{ -1.0f, 1.0f, 1.0f, 0.8f, 0.7f, 1.5f, 1.0f },
+    Vertex{ 1.0f, 1.0f, 1.0f,  0.0f, 0.7f, 0.5f, 1.0f },
+    Vertex{ -1.0f, 1.0f, 1.0f, 0.6f, 0.4f, 1.0f, 1.0f },
+    Vertex{ 1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 0.0f, 1.0f }
 };
 
 } // namespace pg
@@ -74,7 +106,6 @@ int main()
         gfx::SharedVertexLayout vertexLayout = std::make_shared<gfx::VertexLayout>();
         vertexLayout->AddAtribute(BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false);
         vertexLayout->AddAtribute(BGFX_ATTRIB_COLOR0, 4, BGFX_ATTRIB_TYPE_FLOAT, false);
-        vertexLayout->AddAtribute(BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false);
         vertexLayout->Bake();
 
         gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(
@@ -104,8 +135,8 @@ int main()
 
         g_TestEntity = rootEntity.AddChild("testEntity");
         g_TestEntity->InitRenderableComponent(mainProgram, vertexBuffer);
-        g_TestEntity->SetPosition({ 0.2f, 0.0f, 0.0f });
-        //g_TestEntity->SetScale({ 0.4f, 0.4f, 0.7f });
+        g_TestEntity->SetPosition({ 0.0f, 0.0f, 15.0f });
+        g_TestEntity->SetScale({ 1.2f, 1.2f, 1.2f });
 
         /////////////////
 
@@ -141,13 +172,24 @@ void mainLoop()
 float g_CounterPos = 0.0f;
 float g_CounterScale = 0.0f;
 float g_CounterRot = 0.0f;
+float g_CounterCamOrbit = 0.0f;
 
 void mainUpdate()
 {
-    g_TestEntity->SetRotation(glm::quat{ { 0.0f, 0.0f, g_CounterRot += 0.02f } });
-    g_TestEntity->SetPosition({ g_CounterPos > 1.5f ? g_CounterPos = -1.5f : g_CounterPos += 0.01f, 0.0f, 0.0f });
-    g_TestEntity->SetScale({ 1.0f, g_CounterScale > 1.5f ? g_CounterScale = 0.0f : g_CounterScale += 0.03f, 1.0f });
-    
+    g_TestEntity->SetRotation(glm::quat{ { g_CounterRot += 0.02f, 0.0f, 0.0f } });
+    //g_TestEntity->SetPosition({ glm::sin(g_CounterPos += 0.01f), 0.0f, 0.0f });
+    //g_TestEntity->SetScale({ 0.2f, glm::abs(glm::sin(g_CounterScale += 0.05f)) * 0.2f, 0.2f });
+
+    ///////////////////////
+
+    Camera& cam = Scene::GetInstance()->GetMainCamera();
+    float constexpr C_ORBIT_RADIUS = 10.5;
+
+    g_CounterCamOrbit += 0.01f;
+    cam.SetPosition({ glm::sin(g_CounterCamOrbit) * C_ORBIT_RADIUS, 0.0f, glm::cos(g_CounterCamOrbit) * C_ORBIT_RADIUS });
+    //cam.SetRotation(glm::quat{{ 0.0f, 0.0f, 0.0f }});
+
+
     gfx::Renderer::GetInstance()->Update();
 }
 
