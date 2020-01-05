@@ -13,7 +13,7 @@ namespace pg::gfx
 
 PassForward::PassForward(PassId scheduleId)
     : PassBase{ scheduleId }
-    , m_UniformMVP{ "myTransforms", BGFX_UNIFORM_TYPE_MAT4, 5 }
+    , m_UniformMVP{ "myTransforms", BGFX_UNIFORM_TYPE_MAT4, 6 }
 {
 }
 
@@ -84,19 +84,21 @@ void PassForward::Render(Scene* scene)
             //glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
 
             // scale, rotation, translation, view, perspective
-            glm::mat4 transforms[5];
+            glm::mat4 transforms[6];
 
             transforms[0] = glm::scale(glm::identity<glm::mat4>(), entity.GetGlobalScale());
             transforms[1] = glm::mat4_cast(entity.GetGlobalRotation());
             transforms[2] = glm::translate(glm::identity<glm::mat4>(), entity.GetGlobalPosition());
             transforms[3] = view;
             transforms[4] = proj;
+            //transforms[5] = transforms[2] * transforms[1] * transforms[0];
+            transforms[5] = entity.GetGlobalModelMatrix();
 
             RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
             VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
 
-            //bgfx_set_transform(glm::value_ptr(modelMatrix), 0);
-            myUniform->SetData(transforms, 5);
+            bgfx_set_transform(glm::value_ptr(transforms[5]), 1);
+            //myUniform->SetData(transforms, 6);
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
             // set texture?
 
