@@ -138,11 +138,15 @@ void mainLoop()
 }
 
 
-float g_Counter = 0.0f;
+float g_CounterPos = 0.0f;
+float g_CounterScale = 0.0f;
+float g_CounterRot = 0.0f;
 
 void mainUpdate()
 {
-    g_TestEntity->SetRotation(glm::quat{ { 0.0f, 0.0f, g_Counter += 0.01f } });
+    g_TestEntity->SetRotation(glm::quat{ { 0.0f, 0.0f, g_CounterRot += 0.02f } });
+    g_TestEntity->SetPosition({ g_CounterPos > 1.5f ? g_CounterPos = -1.5f : g_CounterPos += 0.01f, 0.0f, 0.0f });
+    g_TestEntity->SetScale({ 1.0f, g_CounterScale > 1.5f ? g_CounterScale = 0.0f : g_CounterScale += 0.03f, 1.0f });
     
     gfx::Renderer::GetInstance()->Update();
 }
