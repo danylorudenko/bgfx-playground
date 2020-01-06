@@ -29,6 +29,8 @@ public:
 
     ~Camera();
 
+    void                        Update(float dt);
+
     inline glm::vec3&           GetPosition() { return m_Position; }
     inline glm::vec3 const&     GetPosition() const { return m_Position; }
     inline void                 SetPosition(glm::vec3 const& pos) { m_Position = pos; }

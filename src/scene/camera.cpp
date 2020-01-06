@@ -26,6 +26,11 @@ Camera& Camera::operator=(Camera&&) = default;
 
 Camera::~Camera() = default;
 
+void Camera::Update(float dt)
+{
+
+}
+
 glm::mat4 Camera::GetDefaultViewMatrix() const
 {
     glm::vec3 const upVector        = glm::vec3{ 0.0f, 1.0f, 0.0f };

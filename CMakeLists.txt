@@ -11,11 +11,12 @@ add_executable(bgfx-application)
 target_include_directories(bgfx-application PUBLIC include src)
 target_compile_features(bgfx-application PUBLIC cxx_std_17)
 target_sources(bgfx-application PUBLIC
-	src/main.cpp
-	src/application.h
-	src/application.cpp
-	src/bgfx_helpers.h
-	src/bgfx_helpers.cpp
+	src/main/main.cpp
+	src/main/application.h
+	src/main/application.cpp
+	src/class_features/class_features.hpp
+	src/gfx/bgfx_helpers.h
+	src/gfx/bgfx_helpers.cpp
 	src/gfx/gfx_def.h
 	src/gfx/gfx_objects.h
 	src/gfx/gfx_objects.cpp
@@ -34,8 +35,8 @@ target_sources(bgfx-application PUBLIC
 	src/input/input_system.cpp
 	src/input/keyboard.h
 	src/input/keyboard.cpp
-	src/io_helpers.h
-	src/io_helpers.cpp
+	src/io/io_helpers.h
+	src/io/io_helpers.cpp
 	src/math/math_helpers.hpp
 	src/math/math_helpers.cpp
 	src/scene/camera.h
@@ -46,11 +47,8 @@ target_sources(bgfx-application PUBLIC
 	src/scene/renderable_component.cpp
 	src/scene/scene.h
 	src/scene/scene.cpp
-	src/struct_helpers.h
-	src/struct_helpers.cpp
-	src/utils.hpp
-	src/windows/window.h
-	src/windows/window.cpp
+	src/system/window.h
+	src/system/window.cpp
 )
 
 

@@ -4,15 +4,16 @@
 #include <memory>
 #include <string>
 
+#include <class_features/class_features.hpp>
 #include <gfx/gfx_def.h>
 #include <bgfx/c99/bgfx.h>
-#include <utils.hpp>
 
 namespace pg::gfx
 {
 
 ////////////////////////////////////////////////
-class ShaderProgram : public pg::utils::NonCopyable
+class ShaderProgram 
+    : public pg::class_features::NonCopyable
 {
 public:
     ShaderProgram();
@@ -38,7 +39,7 @@ using SharedShaderProgram = std::shared_ptr<ShaderProgram>;
 
 
 ////////////////////////////////////////////////
-class Texture : public pg::utils::NonCopyable
+class Texture : public pg::class_features::NonCopyable
 {
 public:
     Texture(TextureUsage usage, std::uint32_t width, std::uint32_t height, bgfx_texture_format format);
@@ -67,7 +68,7 @@ using SharedTexture = std::shared_ptr<Texture>;
 
 ////////////////////////////////////////////////
 
-class VertexLayout : public utils::NonCopyable
+class VertexLayout : public pg::class_features::NonCopyable
 {
 public:
     VertexLayout();
@@ -91,7 +92,7 @@ using SharedVertexLayout = std::shared_ptr<VertexLayout>;
 
 ////////////////////////////////////////////////
 
-class VertexBuffer : public utils::NonCopyable
+class VertexBuffer : public pg::class_features::NonCopyable
 {
 public:
     VertexBuffer();
@@ -118,7 +119,7 @@ using SharedVertexBuffer = std::shared_ptr<VertexBuffer>;
 
 ////////////////////////////////////////////////
 
-class UniformProxy : public utils::NonCopyable
+class UniformProxy : public pg::class_features::NonCopyable
 {
 public: 
     UniformProxy();

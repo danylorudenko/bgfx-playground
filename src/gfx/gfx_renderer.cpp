@@ -3,8 +3,8 @@
 #include <cassert>
 
 #include <bgfx/c99/bgfx.h>
+#include <gfx/bgfx_helpers.h>
 #include <scene/scene.h>
-#include <struct_helpers.h>
 
 #include <gfx/pass/gfx_pass_forward.h>
 
@@ -13,7 +13,7 @@ namespace pg::gfx
 
 Renderer::Renderer()
 {
-    bgfx_init_t initStruct = pg::struct_helpers::bgfxInitDefault();
+    bgfx_init_t initStruct = pg::bgfx_helpers::bgfxInitDefault();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
@@ -26,7 +26,7 @@ Renderer& Renderer::operator=(Renderer&& rhs) = default;
 
 Renderer::~Renderer() = default;
 
-void Renderer::Update()
+void Renderer::Update(float dt)
 {
     PassId scheduleGuard = PassId::kNone;
     for (auto& pass : m_PassQueue)

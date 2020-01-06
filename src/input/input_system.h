@@ -1,11 +1,15 @@
 #pragma once
 
-#include "..\class_features\NonCopyable.hpp"
-#include "Keyboard.hpp"
-#include <cstdint>
+#include <class_features/class_features.hpp>
+#include <input/keyboard.h>
 #include <Windows.h>
 
+namespace pg::input
+{
+
 class InputSystem
+    : public class_features::NonCopyable
+    , public class_features::StaticSingleton<InputSystem>
 {
 private:
     struct MouseState
@@ -40,7 +44,7 @@ public:
 
     ~InputSystem();
 
-    void Update();
+    void Update(float dt);
 
     void ProcessSystemInput(HWND handle, WPARAM wparam, LPARAM lparam);
 
@@ -69,3 +73,4 @@ private:
 
 };
 
+} // namespace pg::input

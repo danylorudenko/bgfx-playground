@@ -8,8 +8,8 @@ namespace pg::gfx
 {
 
 class Renderer
-    : public utils::NonCopyable
-    , public utils::StaticSingleton<Renderer>
+    : public pg::class_features::NonCopyable
+    , public pg::class_features::StaticSingleton<Renderer>
 {
 public:
     Renderer();
@@ -20,7 +20,7 @@ public:
     ~Renderer();
 
 
-    void Update();
+    void Update(float dt);
 
 private:
     std::vector<std::unique_ptr<PassBase>> m_PassQueue;

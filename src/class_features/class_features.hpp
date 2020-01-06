@@ -3,7 +3,7 @@
 #include <cassert>
 #include <utility>
 
-namespace pg::utils
+namespace pg::class_features
 {
 
 class NonCopyable

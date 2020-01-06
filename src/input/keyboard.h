@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+namespace pg::input
+{
+
 enum class Keys
 {
     A = 0,
@@ -99,3 +102,4 @@ Keys VKeyToKeys(std::uint32_t vKey);
 
 std::uint32_t KeysToVKey(Keys key);
 
+} // namespace pg::input

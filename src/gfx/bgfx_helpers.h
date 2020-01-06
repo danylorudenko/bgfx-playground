@@ -9,6 +9,8 @@
 namespace pg::bgfx_helpers
 {
 
+bgfx_init_t bgfxInitDefault(bool debug = false);
+
 void uniqueShaderDestroyProxy(bgfx_shader_handle_t const* handle);
 std::unique_ptr<bgfx_shader_handle_t, decltype(&uniqueShaderDestroyProxy)> makeUniqueShader(std::string const& fileName);
 std::unique_ptr<bgfx_shader_handle_t, decltype(&uniqueShaderDestroyProxy)> makeUniqueShader(bgfx_memory_t const* mem);

@@ -1,4 +1,4 @@
-#include <bgfx_helpers.h>
+#include <gfx/bgfx_helpers.h>
 #include <gfx/gfx_objects.h>
 
 #include <stb/stb_image.h>

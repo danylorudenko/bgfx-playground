@@ -5,7 +5,7 @@
 #include <bgfx/c99/bgfx.h>
 #include <gfx/gfx_objects.h>
 #include <gfx/pass/gfx_pass_schedule.h>
-#include <utils.hpp>
+#include <class_features/class_features.hpp>
 
 namespace pg
 {
@@ -15,7 +15,7 @@ class Scene;
 namespace pg::gfx
 {
 
-class PassBase : public utils::NonCopyable
+class PassBase : public class_features::NonCopyable
 {
 public:
     PassBase(PassId scheduleId);
@@ -40,7 +40,7 @@ protected:
     };
 
     std::vector<Attachment> m_Attachments;
-    utils::AutoDestroyed<bgfx_frame_buffer_handle_t> m_Framebuffer;
+    class_features::AutoDestroyed<bgfx_frame_buffer_handle_t> m_Framebuffer;
 
     PassId m_PassId;
     bool m_Immutable;

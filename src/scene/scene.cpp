@@ -18,6 +18,11 @@ Scene& Scene::operator=(Scene&&) = default;
 
 Scene::~Scene() = default;
 
+void Scene::Update(float dt)
+{
+
+}
+
 void RecursiveEntityTraversal(Entity& current, Scene::EntityGenericDelegate entityDelegate)
 {
     entityDelegate(current);

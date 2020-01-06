@@ -1,5 +1,8 @@
-#include "Keyboard.hpp"
+#include <input/keyboard.h>
 #include <Windows.h>
+
+namespace pg::input
+{
 
 Keys VKeyToKeys(std::uint32_t vKey)
 {
@@ -378,3 +381,5 @@ std::uint32_t KeysToVKey(Keys key)
         return 0;
     }
 }
+
+} // namespace pg::input

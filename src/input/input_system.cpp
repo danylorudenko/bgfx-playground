@@ -1,9 +1,12 @@
-#include "InputSystem.hpp"
-#include "Keyboard.hpp"
+#include <input/input_system.h>
+
 #include <utility>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
+
+namespace pg::input
+{
 
 InputSystem::InputSystem()
 {
@@ -192,7 +195,7 @@ std::uint32_t InputSystem::GetCharFromKeys(Keys key)
     return MapVirtualKeyW(KeysToVKey(key), MAPVK_VK_TO_CHAR);
 }
 
-void InputSystem::Update()
+void InputSystem::Update(float dt)
 {
     prevMouseState_ = mouseState_;
     mouseState_ = pendingMouseState_;
@@ -214,7 +217,7 @@ void InputSystem::ProcessSystemInput(HWND handle, WPARAM wparam, LPARAM lparam)
         return;
     }
 
-    void* data = malloc(dataSize);
+    void* data = std::malloc(dataSize);
     result = GetRawInputData((HRAWINPUT)lparam, RID_INPUT, data, &dataSize, sizeof(RAWINPUTHEADER));
     if (result < 0 || result != dataSize) {
         DWORD err = GetLastError();
@@ -269,3 +272,5 @@ void InputSystem::ProcessSystemInput(HWND handle, WPARAM wparam, LPARAM lparam)
         std::free(data);
 
 }
+
+} // namespace pg::input

@@ -2,17 +2,17 @@
 
 #include <functional>
 
+#include <class_features/class_features.hpp>
 #include <scene/entity.h>
 #include <scene/camera.h>
 
-#include <utils.hpp>
 
 namespace pg
 {
 
 class Scene 
-    : public utils::NonCopyable
-    , public utils::StaticSingleton<Scene>
+    : public class_features::NonCopyable
+    , public class_features::StaticSingleton<Scene>
 {
 public:
     Scene();
@@ -22,6 +22,7 @@ public:
 
     ~Scene();
 
+    void            Update(float dt);
 
     Entity&         GetRootEntityRef() { return *m_RootEntity; }
     Entity const&   GetRootEntityRef() const { return *m_RootEntity; }

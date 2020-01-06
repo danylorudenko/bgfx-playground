@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <limits>
 
+#include <gfx/bgfx_helpers.h>
 #include <gfx/gfx_settings.h>
-#include <bgfx_helpers.h>
 
 namespace pg::gfx
 {
