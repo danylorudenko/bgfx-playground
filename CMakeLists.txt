@@ -30,6 +30,10 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/pass/gfx_pass_schedule.h
 	src/gfx/pass/gfx_passbase.h
 	src/gfx/pass/gfx_passbase.cpp
+	src/input/input_system.h
+	src/input/input_system.cpp
+	src/input/keyboard.h
+	src/input/keyboard.cpp
 	src/io_helpers.h
 	src/io_helpers.cpp
 	src/math/math_helpers.hpp
