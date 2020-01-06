@@ -20,7 +20,7 @@ Scene::~Scene() = default;
 
 void Scene::Update(float dt)
 {
-
+    m_MainCamera.Update(dt);
 }
 
 void RecursiveEntityTraversal(Entity& current, Scene::EntityGenericDelegate entityDelegate)

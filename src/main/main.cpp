@@ -197,7 +197,7 @@ void mainUpdate()
     float constexpr C_ORBIT_RADIUS = 10.5;
 
     g_CounterCamOrbit += 0.01f;
-    cam.SetPosition({ glm::sin(g_CounterCamOrbit) * C_ORBIT_RADIUS, 0.0f, glm::cos(g_CounterCamOrbit) * C_ORBIT_RADIUS });
+    //cam.SetPosition({ glm::sin(g_CounterCamOrbit) * C_ORBIT_RADIUS, 0.0f, glm::cos(g_CounterCamOrbit) * C_ORBIT_RADIUS });
     //cam.SetRotation(glm::quat{{ 0.0f, 0.0f, 0.0f }});
 
     ///////////////////////

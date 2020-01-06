@@ -5,6 +5,9 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include <gfx/gfx_settings.h>
+#include <input/input_system.h>
+
+#include <iostream>
 
 namespace pg
 {
@@ -28,18 +31,61 @@ Camera::~Camera() = default;
 
 void Camera::Update(float dt)
 {
+    using namespace input;
 
+    float constexpr C_SPEED = 0.01f;
+
+    InputSystem* inputSystem = InputSystem::GetInstance();
+    if (inputSystem->GetKeyboardButtonDown(Keys::W))
+    {
+        std::cout << "W" << std::endl;
+        m_Position += (GetForward() * C_SPEED);
+    }
+    if (inputSystem->GetKeyboardButtonDown(Keys::S))
+    {
+        std::cout << "S" << std::endl;
+        m_Position += (GetBackward() * C_SPEED);
+    }
+    if (inputSystem->GetKeyboardButtonDown(Keys::A))
+    {
+        std::cout << "A" << std::endl;
+        m_Position += (GetLeft() * C_SPEED);
+    }
+    if (inputSystem->GetKeyboardButtonDown(Keys::D))
+    {
+        std::cout << "D" << std::endl;
+        m_Position += (GetRight() * C_SPEED);
+    }
+}
+
+glm::vec3 Camera::GetForward() const
+{
+    return static_cast<glm::vec3>(glm::mat4_cast(m_Rotation) * glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f });
+}
+
+glm::vec3 Camera::GetBackward() const
+{
+    return -GetForward();
+}
+
+glm::vec3 Camera::GetRight() const
+{
+    return glm::cross(glm::vec3{ 0.0f, 1.0f, 0.0f }, GetForward());
+}
+
+glm::vec3 Camera::GetLeft() const
+{
+    return -GetRight();
 }
 
 glm::mat4 Camera::GetDefaultViewMatrix() const
 {
-    glm::vec3 const upVector        = glm::vec3{ 0.0f, 1.0f, 0.0f };
-    glm::vec3 const forwardVector   = static_cast<glm::vec3>(glm::mat4_cast(m_Rotation) * glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f });
-    glm::vec3 const rightVector     = glm::cross(upVector, forwardVector);
+    glm::vec3 const forwardVector   = GetForward();
+    glm::vec3 const rightVector     = GetRight();
 
-    glm::vec3 const adjustedUpVector = glm::cross(forwardVector, rightVector);
+    glm::vec3 const upVector = glm::cross(forwardVector, rightVector);
 
-    return glm::lookAtLH(m_Position, m_Position + forwardVector, adjustedUpVector);
+    return glm::lookAtLH(m_Position, m_Position + forwardVector, upVector);
 }
 
 glm::mat4 Camera::GetDefaultProjectionMatrix() const
