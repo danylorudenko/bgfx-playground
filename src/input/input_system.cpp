@@ -9,8 +9,13 @@ namespace pg::input
 {
 
 InputSystem::InputSystem()
+    : m_PendingMouseState{}
+    , m_MouseState{}
+    , m_PrevMouseState{}
+    , m_PendingKeyboardState{}
+    , m_KeyboardState{}
+    , m_PrevKeyboardState{}
 {
-    
 }
 
 InputSystem::InputSystem(HWND windowHandle)
@@ -28,7 +33,7 @@ InputSystem::InputSystem(HWND windowHandle)
 
     RAWINPUTDEVICELIST* list = NULL;
     if (inputDeviceCount > 0) {
-        list = (RAWINPUTDEVICELIST*)malloc(sizeof(RAWINPUTDEVICELIST) * inputDeviceCount);
+        list = (RAWINPUTDEVICELIST*)std::malloc(sizeof(RAWINPUTDEVICELIST) * inputDeviceCount);
         {
             UINT err = GetRawInputDeviceList(list, &inputDeviceCount, sizeof(RAWINPUTDEVICELIST));
             if (err == (UINT)-1) {
@@ -97,74 +102,74 @@ InputSystem::~InputSystem()
 
 InputSystem::MouseState const& InputSystem::GetMouseState() const
 {
-    return mouseState_;
+    return m_MouseState;
 }
 
 bool InputSystem::GetLeftMouseButtonPressed() const
 {
-    return mouseState_.mouseButtonStates_ & 1 << (int)MouseState::Left;
+    return m_MouseState.mouseButtonStates_ & 1 << (int)MouseState::Left;
 }
 
 bool InputSystem::GetRightMouseButtonPressed() const
 {
-    return mouseState_.mouseButtonStates_ & 1 << (int)MouseState::Right;
+    return m_MouseState.mouseButtonStates_ & 1 << (int)MouseState::Right;
 }
 
 bool InputSystem::GetMiddleMouseButtonPressed() const
 {
-    return mouseState_.mouseButtonStates_ & 1 << (int)MouseState::Middle;
+    return m_MouseState.mouseButtonStates_ & 1 << (int)MouseState::Middle;
 }
 
 bool InputSystem::GetLeftMouseButtonJustPressed() const
 {
-    bool prevValue = prevMouseState_.mouseButtonStates_ & 1 << (int)MouseState::Left;
+    bool prevValue = m_PrevMouseState.mouseButtonStates_ & 1 << (int)MouseState::Left;
     return !prevValue && GetLeftMouseButtonPressed();
 }
 
 bool InputSystem::GetRightMouseButtonJustPressed() const
 {
-    bool prevValue = prevMouseState_.mouseButtonStates_ & 1 << (int)MouseState::Right;
+    bool prevValue = m_PrevMouseState.mouseButtonStates_ & 1 << (int)MouseState::Right;
     return !prevValue && GetRightMouseButtonPressed();
 }
 
 bool InputSystem::GetMiddleMouseButtonJustPressed() const
 {
-    bool prevValue = prevMouseState_.mouseButtonStates_ & 1 << (int)MouseState::Middle;
+    bool prevValue = m_PrevMouseState.mouseButtonStates_ & 1 << (int)MouseState::Middle;
     return !prevValue && GetMiddleMouseButtonPressed();
 }
 
 bool InputSystem::GetLeftMouseButtonJustReleased() const
 {
-    bool prevValue = prevMouseState_.mouseButtonStates_ & 1 << (int)MouseState::Left;
+    bool prevValue = m_PrevMouseState.mouseButtonStates_ & 1 << (int)MouseState::Left;
     return prevValue && !GetLeftMouseButtonPressed();
 }
 
 bool InputSystem::GetRightMouseButtonJustReleased() const
 {
-    bool prevValue = prevMouseState_.mouseButtonStates_ & 1 << (int)MouseState::Right;
+    bool prevValue = m_PrevMouseState.mouseButtonStates_ & 1 << (int)MouseState::Right;
     return prevValue && !GetRightMouseButtonPressed();
 }
 
 bool InputSystem::GetMiddleMouseButtonJustReleased() const
 {
-    bool prevValue = prevMouseState_.mouseButtonStates_ & 1 << (int)MouseState::Middle;
+    bool prevValue = m_PrevMouseState.mouseButtonStates_ & 1 << (int)MouseState::Middle;
     return prevValue && !GetMiddleMouseButtonPressed();
 }
 
 bool InputSystem::GetKeyboardButtonDown(Keys key) const
 {
-    return GetKeysBitflagValue(keyboardState_.keysBits, key);
+    return GetKeysBitflagValue(m_KeyboardState.keysBits, key);
 }
 
 bool InputSystem::GetKeyboardButtonJustPressed(Keys key) const
 {
-    bool prevValue = GetKeysBitflagValue(prevKeyboardState_.keysBits, key);
+    bool prevValue = GetKeysBitflagValue(m_PrevKeyboardState.keysBits, key);
     return !prevValue && GetKeyboardButtonDown(key);
 }
 
 bool InputSystem::GetKeyboardButtonJustReleased(Keys key) const
 {
-    bool prevValue = GetKeysBitflagValue(prevKeyboardState_.keysBits, key);
+    bool prevValue = GetKeysBitflagValue(m_PrevKeyboardState.keysBits, key);
     return prevValue && !GetKeyboardButtonDown(key);
 }
 
@@ -197,11 +202,11 @@ std::uint32_t InputSystem::GetCharFromKeys(Keys key)
 
 void InputSystem::Update(float dt)
 {
-    prevMouseState_ = mouseState_;
-    mouseState_ = pendingMouseState_;
+    m_PrevMouseState = m_MouseState;
+    m_MouseState = m_PendingMouseState;
 
-    prevKeyboardState_ = keyboardState_;
-    keyboardState_ = pendingKeyboardState_;
+    m_PrevKeyboardState = m_KeyboardState;
+    m_KeyboardState = m_PendingKeyboardState;
 }
 
 void InputSystem::ProcessSystemInput(HWND handle, WPARAM wparam, LPARAM lparam)
@@ -231,40 +236,40 @@ void InputSystem::ProcessSystemInput(HWND handle, WPARAM wparam, LPARAM lparam)
     if (header.dwType == RIM_TYPEMOUSE) {
         RAWMOUSE& mouse = rawInput->data.mouse;
         if(mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN)
-            pendingMouseState_.mouseButtonStates_ |= 1 << MouseState::MouseButtonOffsets::Left;
+            m_PendingMouseState.mouseButtonStates_ |= 1 << MouseState::MouseButtonOffsets::Left;
 
         if(mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN)
-            pendingMouseState_.mouseButtonStates_ |= 1 << MouseState::MouseButtonOffsets::Right;
+            m_PendingMouseState.mouseButtonStates_ |= 1 << MouseState::MouseButtonOffsets::Right;
 
         if(mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN)
-            pendingMouseState_.mouseButtonStates_ |= 1 << MouseState::MouseButtonOffsets::Middle;
+            m_PendingMouseState.mouseButtonStates_ |= 1 << MouseState::MouseButtonOffsets::Middle;
 
         if(mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_UP)
-            pendingMouseState_.mouseButtonStates_ &= !(1 << MouseState::MouseButtonOffsets::Left);
+            m_PendingMouseState.mouseButtonStates_ &= !(1 << MouseState::MouseButtonOffsets::Left);
 
         if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP)
-            pendingMouseState_.mouseButtonStates_ &= !(1 << MouseState::MouseButtonOffsets::Right);
+            m_PendingMouseState.mouseButtonStates_ &= !(1 << MouseState::MouseButtonOffsets::Right);
 
         if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_UP)
-            pendingMouseState_.mouseButtonStates_ &= !(1 << MouseState::MouseButtonOffsets::Middle);
+            m_PendingMouseState.mouseButtonStates_ &= !(1 << MouseState::MouseButtonOffsets::Middle);
 
         if (mouse.usButtonFlags & RI_MOUSE_WHEEL)
-            pendingMouseState_.mouseWheelDelta_ = static_cast<float>(mouse.usButtonData);
+            m_PendingMouseState.mouseWheelDelta_ = static_cast<float>(mouse.usButtonData);
 
-        pendingMouseState_.xDelta_ = static_cast<float>(mouse.lLastX);
-        pendingMouseState_.yDelta_ = static_cast<float>(mouse.lLastY);
+        m_PendingMouseState.xDelta_ = static_cast<float>(mouse.lLastX);
+        m_PendingMouseState.yDelta_ = static_cast<float>(mouse.lLastY);
     }
     else if (header.dwType == RIM_TYPEKEYBOARD) {
         // handle keyboard input?
         RAWKEYBOARD& keyboard = rawInput->data.keyboard;
         if (keyboard.Flags & RI_KEY_BREAK) {
             //up
-            SetKeysBitflagValue(pendingKeyboardState_.keysBits, VKeyToKeys(keyboard.VKey), false);
+            SetKeysBitflagValue(m_PendingKeyboardState.keysBits, VKeyToKeys(keyboard.VKey), false);
         }
         // RI_KEY_MAKE defined as 0 sooo
         else if (keyboard.Flags == RI_KEY_MAKE) {
             // down
-            SetKeysBitflagValue(pendingKeyboardState_.keysBits, VKeyToKeys(keyboard.VKey), true);
+            SetKeysBitflagValue(m_PendingKeyboardState.keysBits, VKeyToKeys(keyboard.VKey), true);
         }
     }
 

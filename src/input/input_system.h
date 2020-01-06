@@ -27,13 +27,13 @@ private:
         std::uint64_t keysBits[(std::uint32_t)Keys::END / 64 + 1];
     };
 
-    MouseState pendingMouseState_;
-    MouseState mouseState_;
-    MouseState prevMouseState_;
+    MouseState m_PendingMouseState;
+    MouseState m_MouseState;
+    MouseState m_PrevMouseState;
 
-    KeyboardState pendingKeyboardState_;
-    KeyboardState prevKeyboardState_;
-    KeyboardState keyboardState_;
+    KeyboardState m_PendingKeyboardState;
+    KeyboardState m_PrevKeyboardState;
+    KeyboardState m_KeyboardState;
 
 
 public:
