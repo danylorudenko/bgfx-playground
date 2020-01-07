@@ -14,7 +14,7 @@ namespace pg
 
 Camera::Camera()
     : m_Position{}
-    , m_Rotation{}
+    , m_Orientation{}
     , m_FOV{ 0.0f }
     , m_View{ 0, 0, 0, 0 }
 {}
@@ -41,7 +41,7 @@ void Camera::Update(float dt)
     if (inputSystem->GetKeyboardButtonJustReleased(Keys::R))
     {
         m_Position = { 0.0f, 0.0f, 0.0f };
-        m_Rotation = glm::quat{{ 0.0f, 0.0f, 0.0f }};
+        m_Orientation = { 0.0f, 0.0f, 0.0f };
     }
     
     ////////////
@@ -67,25 +67,35 @@ void Camera::Update(float dt)
     // orientation
     if (inputSystem->GetKeyboardButtonDown(Keys::Up))
     {
-        m_Rotation = m_Rotation * glm::quat{{ -C_ROT_SPEED, 0.0f, 0.0f }};
+        m_Orientation.x += -C_ROT_SPEED;
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::Down))
     {
-        m_Rotation = m_Rotation * glm::quat{{ C_ROT_SPEED, 0.0f, 0.0f }};
+        m_Orientation.x += C_ROT_SPEED;
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::Right))
     {
-        m_Rotation = m_Rotation * glm::quat{{ 0.0f, C_ROT_SPEED, 0.0f }};
+        m_Orientation.y += C_ROT_SPEED;
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::Left))
     {
-        m_Rotation = m_Rotation * glm::quat{{ 0.0f, -C_ROT_SPEED, 0.0f }};
+        m_Orientation.y += -C_ROT_SPEED;
     }
+}
+
+void Camera::SetRotation(glm::quat const& rotation)
+{
+    m_Orientation = glm::eulerAngles(rotation);
+}
+
+glm::quat Camera::GetRotation() const
+{
+    return glm::quat{ m_Orientation };
 }
 
 glm::vec3 Camera::GetForward() const
 {
-    return static_cast<glm::vec3>(glm::mat4_cast(m_Rotation) * glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f });
+    return static_cast<glm::vec3>(glm::mat4_cast(GetRotation()) * glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f });
 }
 
 glm::vec3 Camera::GetBackward() const
@@ -95,7 +105,7 @@ glm::vec3 Camera::GetBackward() const
 
 glm::vec3 Camera::GetRight() const
 {
-    return glm::cross(glm::vec3{ 0.0f, 1.0f, 0.0f }, GetForward());
+    return glm::cross({ 0.0f, 1.0f, 0.0f }, GetForward());
 }
 
 glm::vec3 Camera::GetLeft() const
@@ -105,10 +115,7 @@ glm::vec3 Camera::GetLeft() const
 
 glm::mat4 Camera::GetDefaultViewMatrix() const
 {
-    glm::vec3 const forwardVector   = GetForward();
-    glm::vec3 const rightVector     = GetRight();
-
-    //glm::vec3 const upVector = glm::cross(forwardVector, rightVector);
+    glm::vec3 const forwardVector = GetForward();
     glm::vec3 constexpr upVector{ 0.0f, 1.0f, 0.0f };
 
     return glm::lookAtLH(m_Position, m_Position + forwardVector, upVector);

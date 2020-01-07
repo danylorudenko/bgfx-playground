@@ -35,9 +35,12 @@ public:
     inline glm::vec3 const&     GetPosition() const { return m_Position; }
     inline void                 SetPosition(glm::vec3 const& pos) { m_Position = pos; }
 
-    inline glm::quat&           GetRotation() { return m_Rotation; }
-    inline glm::quat const&     GetRotation() const { return m_Rotation; }
-    inline void                 SetRotation(glm::quat const& rot) { m_Rotation = rot; }
+    glm::quat                   GetRotation() const;
+    void                        SetRotation(glm::quat const& rot);
+
+    inline glm::vec3&           GetOrientation() { return m_Orientation; }
+    inline glm::vec3 const&     GetOrientation() const { return m_Orientation;}
+    inline void                 SetOrientation(glm::vec3 const& orientation) { m_Orientation = orientation; }
 
     glm::vec3                   GetForward() const;
     glm::vec3                   GetBackward() const;
@@ -56,7 +59,8 @@ public:
 
 private:
     glm::vec3 m_Position;
-    glm::quat m_Rotation;
+    glm::vec3 m_Orientation;
+    //glm::quat m_Rotation;
     float     m_FOV;
 
     View      m_View;

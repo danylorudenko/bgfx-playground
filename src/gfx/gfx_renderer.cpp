@@ -28,6 +28,8 @@ Renderer::~Renderer() = default;
 
 void Renderer::Update(float dt)
 {
+    bgfx_touch(0);
+
     PassId scheduleGuard = PassId::kNone;
     for (auto& pass : m_PassQueue)
     {
