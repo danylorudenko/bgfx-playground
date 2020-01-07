@@ -94,8 +94,8 @@ Entity* Entity::AddChild(std::string const& name, glm::vec3 const& pos, glm::qua
         }
     );
 
-    assert(m_Children.size() == 0 || (sameName != m_Children.end()) && "Entity can't have two children with same names");
     assert(!name.empty() && "Entity can't have an empty name");
+    assert(m_Children.size() == 0 || (sameName == m_Children.end()) && "Entity can't have two children with same names");
 
 
     std::unique_ptr<Entity> entity{ new Entity{ this, name, pos, rot, scale } };

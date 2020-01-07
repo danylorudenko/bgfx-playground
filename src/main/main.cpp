@@ -92,7 +92,7 @@ Vertex g_Vertices[] =
 
 } // namespace pg
 
-pg::Entity* g_TestEntity = nullptr;
+pg::Entity* g_TestEntity[2];
 
 int main()
 {
@@ -144,10 +144,15 @@ int main()
 
         Entity& rootEntity = scene->GetRootEntityRef();
 
-        g_TestEntity = rootEntity.AddChild("testEntity");
-        g_TestEntity->InitRenderableComponent(mainProgram, vertexBuffer);
-        g_TestEntity->SetPosition({ 0.0f, 0.0f, 15.0f });
-        g_TestEntity->SetScale({ 1.2f, 1.2f, 1.2f });
+        g_TestEntity[0] = rootEntity.AddChild("testEntity0");
+        g_TestEntity[0]->InitRenderableComponent(mainProgram, vertexBuffer);
+        g_TestEntity[0]->SetPosition({ 5.0f, 0.0f, 15.0f });
+        g_TestEntity[0]->SetScale({ 1.2f, 1.2f, 1.2f });
+
+        g_TestEntity[1] = rootEntity.AddChild("testEntity1");
+        g_TestEntity[1]->InitRenderableComponent(mainProgram, vertexBuffer);
+        g_TestEntity[1]->SetPosition({ 1.0f, 0.0f, 15.0f });
+        g_TestEntity[1]->SetScale({ 1.2f, 1.2f, 1.2f });
 
         /////////////////
 
@@ -187,7 +192,7 @@ float g_CounterCamOrbit = 0.0f;
 
 void mainUpdate()
 {
-    g_TestEntity->SetRotation(glm::quat{ { g_CounterRot += 0.02f, 0.0f, 0.0f } });
+    g_TestEntity[0]->SetRotation(g_TestEntity[0]->GetRotation() * glm::quat{ { 0.02f, 0.0f, 0.0f } });
     //g_TestEntity->SetPosition({ glm::sin(g_CounterPos += 0.01f), 0.0f, 0.0f });
     //g_TestEntity->SetScale({ 0.2f, glm::abs(glm::sin(g_CounterScale += 0.05f)) * 0.2f, 0.2f });
 

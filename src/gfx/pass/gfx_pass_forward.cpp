@@ -102,7 +102,7 @@ void PassForward::Render(Scene* scene)
             RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
             VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
 
-            myUniform->SetData(transforms, 6);
+            //myUniform->SetData(transforms, 6);
 
             bgfx_set_transform(glm::value_ptr(transforms[5]), 1);
             bgfx_set_view_transform(passId, glm::value_ptr(transforms[3]), glm::value_ptr(transforms[4]));

@@ -108,7 +108,8 @@ glm::mat4 Camera::GetDefaultViewMatrix() const
     glm::vec3 const forwardVector   = GetForward();
     glm::vec3 const rightVector     = GetRight();
 
-    glm::vec3 const upVector = glm::cross(forwardVector, rightVector);
+    //glm::vec3 const upVector = glm::cross(forwardVector, rightVector);
+    glm::vec3 constexpr upVector{ 0.0f, 1.0f, 0.0f };
 
     return glm::lookAtLH(m_Position, m_Position + forwardVector, upVector);
 }
