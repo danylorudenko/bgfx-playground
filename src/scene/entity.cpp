@@ -136,8 +136,9 @@ void Entity::SetScale(glm::vec3 const& scale)
 
 glm::vec3 Entity::GetGlobalPosition() const
 {
-    glm::vec3 result = m_RelativePos;
-    return m_Parent ? result + m_Parent->GetGlobalPosition() : result;
+    return m_Parent 
+        ? (static_cast<glm::vec3>(glm::mat4_cast(m_Parent->GetGlobalRotation()) * glm::vec4{ m_RelativePos * m_Parent->GetGlobalScale(), 0.0f })) + m_Parent->GetGlobalPosition()
+        : m_RelativePos;
 }
 
 glm::quat Entity::GetGlobalRotation() const

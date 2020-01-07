@@ -14,7 +14,7 @@ namespace pg
 
 Camera::Camera()
     : m_Position{}
-    , m_Orientation{}
+    , m_OrientationEuler{}
     , m_FOV{ 0.0f }
     , m_View{ 0, 0, 0, 0 }
 {}
@@ -41,7 +41,7 @@ void Camera::Update(float dt)
     if (inputSystem->GetKeyboardButtonJustReleased(Keys::R))
     {
         m_Position = { 0.0f, 0.0f, 0.0f };
-        m_Orientation = { 0.0f, 0.0f, 0.0f };
+        m_OrientationEuler = { 0.0f, 0.0f, 0.0f };
     }
     
     ////////////
@@ -67,30 +67,30 @@ void Camera::Update(float dt)
     // orientation
     if (inputSystem->GetKeyboardButtonDown(Keys::Up))
     {
-        m_Orientation.x += -C_ROT_SPEED;
+        m_OrientationEuler.x += -C_ROT_SPEED;
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::Down))
     {
-        m_Orientation.x += C_ROT_SPEED;
+        m_OrientationEuler.x += C_ROT_SPEED;
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::Right))
     {
-        m_Orientation.y += C_ROT_SPEED;
+        m_OrientationEuler.y += C_ROT_SPEED;
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::Left))
     {
-        m_Orientation.y += -C_ROT_SPEED;
+        m_OrientationEuler.y += -C_ROT_SPEED;
     }
 }
 
 void Camera::SetRotation(glm::quat const& rotation)
 {
-    m_Orientation = glm::eulerAngles(rotation);
+    m_OrientationEuler = glm::eulerAngles(rotation);
 }
 
 glm::quat Camera::GetRotation() const
 {
-    return glm::quat{ m_Orientation };
+    return glm::quat{ m_OrientationEuler };
 }
 
 glm::vec3 Camera::GetForward() const
