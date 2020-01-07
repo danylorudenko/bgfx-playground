@@ -33,27 +33,27 @@ void Camera::Update(float dt)
 {
     using namespace input;
 
-    float constexpr C_SPEED = 0.01f;
+    float constexpr C_SPEED = 0.1f;
 
     InputSystem* inputSystem = InputSystem::GetInstance();
+    if (inputSystem->GetKeyboardButtonJustReleased(Keys::R))
+    {
+        m_Position = { 0.0f, 0.0f, 0.0f };
+    }
     if (inputSystem->GetKeyboardButtonDown(Keys::W))
     {
-        std::cout << "W" << std::endl;
         m_Position += (GetForward() * C_SPEED);
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::S))
     {
-        std::cout << "S" << std::endl;
         m_Position += (GetBackward() * C_SPEED);
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::A))
     {
-        std::cout << "A" << std::endl;
         m_Position += (GetLeft() * C_SPEED);
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::D))
     {
-        std::cout << "D" << std::endl;
         m_Position += (GetRight() * C_SPEED);
     }
 }
