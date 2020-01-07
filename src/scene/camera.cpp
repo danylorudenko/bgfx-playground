@@ -33,28 +33,53 @@ void Camera::Update(float dt)
 {
     using namespace input;
 
-    float constexpr C_SPEED = 0.1f;
+    float constexpr C_MOV_SPEED = 0.1f;
+    float constexpr C_ROT_SPEED = 0.025f;
 
     InputSystem* inputSystem = InputSystem::GetInstance();
+
     if (inputSystem->GetKeyboardButtonJustReleased(Keys::R))
     {
         m_Position = { 0.0f, 0.0f, 0.0f };
+        m_Rotation = glm::quat{{ 0.0f, 0.0f, 0.0f }};
     }
+    
+    ////////////
+    // movement
     if (inputSystem->GetKeyboardButtonDown(Keys::W))
     {
-        m_Position += (GetForward() * C_SPEED);
+        m_Position += (GetForward() * C_MOV_SPEED);
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::S))
     {
-        m_Position += (GetBackward() * C_SPEED);
+        m_Position += (GetBackward() * C_MOV_SPEED);
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::A))
     {
-        m_Position += (GetLeft() * C_SPEED);
+        m_Position += (GetLeft() * C_MOV_SPEED);
     }
     if (inputSystem->GetKeyboardButtonDown(Keys::D))
     {
-        m_Position += (GetRight() * C_SPEED);
+        m_Position += (GetRight() * C_MOV_SPEED);
+    }
+
+    ////////////
+    // orientation
+    if (inputSystem->GetKeyboardButtonDown(Keys::Up))
+    {
+        m_Rotation = m_Rotation * glm::quat{{ -C_ROT_SPEED, 0.0f, 0.0f }};
+    }
+    if (inputSystem->GetKeyboardButtonDown(Keys::Down))
+    {
+        m_Rotation = m_Rotation * glm::quat{{ C_ROT_SPEED, 0.0f, 0.0f }};
+    }
+    if (inputSystem->GetKeyboardButtonDown(Keys::Right))
+    {
+        m_Rotation = m_Rotation * glm::quat{{ 0.0f, C_ROT_SPEED, 0.0f }};
+    }
+    if (inputSystem->GetKeyboardButtonDown(Keys::Left))
+    {
+        m_Rotation = m_Rotation * glm::quat{{ 0.0f, -C_ROT_SPEED, 0.0f }};
     }
 }
 

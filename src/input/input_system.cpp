@@ -266,14 +266,13 @@ void InputSystem::ProcessSystemInput(HWND handle, WPARAM wparam, LPARAM lparam)
         m_PendingMouseState.yDelta_ = static_cast<float>(mouse.lLastY);
     }
     else if (header.dwType == RIM_TYPEKEYBOARD) {
-        // handle keyboard input?
         RAWKEYBOARD& keyboard = rawInput->data.keyboard;
-        if (keyboard.Flags & RI_KEY_BREAK) {
+        if (keyboard.Message == WM_KEYUP || keyboard.Message == WM_SYSKEYUP) {
             // up
             SetKeysBitflagValue(m_PendingKeyboardState.keysBits, VKeyToKeys(keyboard.VKey), false);
         }
         // RI_KEY_MAKE defined as 0 sooo
-        else if (keyboard.Flags == RI_KEY_MAKE) {
+        else if (keyboard.Message == WM_KEYDOWN || keyboard.Message == WM_SYSKEYDOWN) {
             // down
             SetKeysBitflagValue(m_PendingKeyboardState.keysBits, VKeyToKeys(keyboard.VKey), true);
         }
