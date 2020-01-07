@@ -13,7 +13,7 @@ namespace pg::gfx
 
 Renderer::Renderer()
 {
-    bgfx_init_t initStruct = pg::bgfx_helpers::bgfxInitDefault();
+    bgfx_init_t initStruct = pg::bgfx_helpers::bgfxInitDefault(true);
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 

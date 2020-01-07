@@ -146,17 +146,12 @@ int main()
 
         g_TestEntity[0] = rootEntity.AddChild("testEntity0");
         g_TestEntity[0]->InitRenderableComponent(mainProgram, vertexBuffer);
-        g_TestEntity[0]->SetPosition({ 5.0f, 0.0f, 15.0f });
-        g_TestEntity[0]->SetScale({ 0.5f, 0.5f, 0.5f });
 
-        g_TestEntity[1] = g_TestEntity[0]->AddChild("testEntity1");
+        g_TestEntity[1] = rootEntity.AddChild("testEntity1");
         g_TestEntity[1]->InitRenderableComponent(mainProgram, vertexBuffer);
-        g_TestEntity[1]->SetPosition({ -3.0f, 0.0f, 0.0f });
-        g_TestEntity[1]->SetScale({ 2.0f, 2.0f, 2.0f });
 
-        g_TestEntity[2] = g_TestEntity[0]->AddChild("testEntity2");
+        g_TestEntity[2] = rootEntity.AddChild("testEntity2");
         g_TestEntity[2]->InitRenderableComponent(mainProgram, vertexBuffer);
-        g_TestEntity[2]->SetPosition({ 2.0f, 2.0f, 0.0f });
 
         /////////////////
 
@@ -195,9 +190,9 @@ float g_CounterRot = 0.0f;
 
 void mainUpdate()
 {
-    g_TestEntity[0]->SetRotation(g_TestEntity[0]->GetRotation() * glm::quat{ { 0.02f, 0.0f, 0.0f } });
-    g_TestEntity[0]->SetPosition({ glm::sin(g_CounterPos += 0.05f) * 3.0f, 0.0f, 15.0f });
-    g_TestEntity[0]->SetScale({ 0.5f, glm::abs(glm::sin(g_CounterScale += 0.05f)) * 0.5f, 0.5f });
+    //g_TestEntity[0]->SetRotation(g_TestEntity[0]->GetRotation() * glm::quat{ { 0.02f, 0.0f, 0.0f } });
+    //g_TestEntity[0]->SetPosition({ glm::sin(g_CounterPos += 0.05f) * 3.0f, 0.0f, 15.0f });
+    //g_TestEntity[0]->SetScale({ 0.5f, glm::abs(glm::sin(g_CounterScale += 0.05f)) * 0.5f, 0.5f });
 
 
     ///////////////////////
