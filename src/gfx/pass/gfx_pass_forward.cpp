@@ -68,14 +68,6 @@ void PassForward::Render(Scene* scene)
     }
 
     {
-        bgfx_set_state(0 
-            | BGFX_STATE_WRITE_RGB 
-            | BGFX_STATE_WRITE_A 
-            | BGFX_STATE_WRITE_Z 
-            | BGFX_STATE_DEPTH_TEST_LESS 
-            | BGFX_STATE_CULL_CCW // we have a cube with CCW vertices
-            | BGFX_STATE_MSAA, 0);
-
         float counter = -3.0f;
 
         auto entityDelegate = [passId, &counter](Entity& entity)
@@ -97,7 +89,16 @@ void PassForward::Render(Scene* scene)
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
 
             bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram->GetHandle();
-            bgfx_submit(passId, program, 0, true);
+
+            bgfx_set_state(0
+                | BGFX_STATE_WRITE_RGB
+                | BGFX_STATE_WRITE_A
+                | BGFX_STATE_WRITE_Z
+                | BGFX_STATE_DEPTH_TEST_LESS
+                | BGFX_STATE_CULL_CCW // we have a cube with CCW vertices
+                | BGFX_STATE_MSAA, 0);
+
+            bgfx_submit(passId, program, 0, false);
         };
 
         scene->ForEachEntity(entityDelegate);

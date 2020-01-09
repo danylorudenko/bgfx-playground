@@ -1,4 +1,4 @@
-#include <application.h>
+#include <main/application.h>
 
 #include <gfx/gfx_settings.h>
 

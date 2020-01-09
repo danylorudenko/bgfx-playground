@@ -18,6 +18,8 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/bgfx_helpers.h
 	src/gfx/bgfx_helpers.cpp
 	src/gfx/gfx_def.h
+	src/gfx/gfx_instancing.h
+	src/gfx/gfx_instancing.cpp
 	src/gfx/gfx_objects.h
 	src/gfx/gfx_objects.cpp
 	src/gfx/gfx_renderer.h
