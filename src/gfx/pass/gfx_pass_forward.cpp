@@ -11,12 +11,11 @@
 namespace pg::gfx
 {
 
-UniformProxy u_PosAdjustment;
+//UniformProxy u_PosAdjustment;
 
 PassForward::PassForward(PassId scheduleId)
     : PassBase{ scheduleId }
 {
-    u_PosAdjustment = UniformProxy{ "u_PosAdjustment", BGFX_UNIFORM_TYPE_VEC4, 1 };
 }
 
 PassForward::PassForward(PassForward&& rhs)
@@ -77,8 +76,8 @@ void PassForward::Render(Scene* scene)
             // 3. set texture (optional)
             //glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
 
-            glm::vec4 data{ counter += 3.0f, 0.0f, 0.0f, 1.0f };
-            u_PosAdjustment.SetData(glm::value_ptr(data), 1);
+            //glm::vec4 data{ counter += 3.0f, 0.0f, 0.0f, 1.0f };
+            //u_PosAdjustment.SetData(glm::value_ptr(data), 1);
 
             RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
             VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;

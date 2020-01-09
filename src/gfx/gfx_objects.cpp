@@ -336,5 +336,29 @@ void UniformProxy::SetTexture(Texture* texture, int settings)
     bgfx_set_texture(0, m_UniformHandle, texture->GetHandle(), BGFX_SAMPLER_UVW_CLAMP);
 }
 
+
+///////////////////////////////////////////////////////////////////////////
+// UniformData
+UniformData::UniformData()
+    : m_Data{ 0 }
+{}
+
+UniformData::UniformData()
+    : m_Data{ 0 }
+{
+}
+
+void UniformData::UpdateData(void const* data, std::uint32_t size)
+{
+    assert(size <= C_MAX_DATA_SIZE && "Exceeded max UniformData size");
+    std::memcpy(m_Data, data, size);
+}
+
+void UniformData::SetData(UniformProxy& proxy)
+{
+
+}
+
+
 }
 

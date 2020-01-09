@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstring>
 #include <memory>
 #include <string>
 
@@ -136,8 +137,36 @@ public:
 private:
     bgfx_uniform_handle_t   m_UniformHandle;
     bgfx_uniform_info_t     m_MetaData;
-    
+
 };
+
+using SharedUniformProxy = std::shared_ptr<UniformProxy>;
+
+
+
+////////////////////////////////////////////////
+
+class UniformData
+{
+public:
+    static std::uint32_t constexpr C_MAX_DATA_SIZE = 128;
+
+    UniformData();
+    void UpdateData(void const* data, std::uint32_t size);
+
+    template<typename T>
+    void UpdateData(T const& data)
+    {
+        SetData(&data, static_cast<std::uint32_t>(sizeof(T)));
+    }
+
+    void SetData(UniformProxy& proxy);
+
+private:
+    std::uint8_t m_Data[C_MAX_DATA_SIZE];
+
+};
+
 
 }
 
