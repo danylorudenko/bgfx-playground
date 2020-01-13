@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <memory>
@@ -145,28 +146,54 @@ using SharedUniformProxy = std::shared_ptr<UniformProxy>;
 
 
 ////////////////////////////////////////////////
-
-class UniformData
+// UniformRawDataGeneric
+template<std::uint32_t C_MAX_DATA_SIZE>
+class UniformRawDataGeneric
 {
 public:
-    static std::uint32_t constexpr C_MAX_DATA_SIZE = 128;
+    UniformRawDataGeneric()
+        : m_LastSize{ 0 }
+        , m_Data{ 0 }
+    {}
 
-    UniformData();
-    void UpdateData(void const* data, std::uint32_t size);
+    void UpdateData(void const* data, std::uint32_t size)
+    {
+        assert(size <= C_MAX_DATA_SIZE && "Exceeded max UniformData size");
+        std::memcpy(m_Data, data, size);
+        m_LastSize = size;
+    }
 
     template<typename T>
     void UpdateData(T const& data)
     {
-        SetData(&data, static_cast<std::uint32_t>(sizeof(T)));
+        UpdateData(&data, static_cast<std::uint32_t>(sizeof(T)));
     }
 
-    void SetData(UniformProxy& proxy);
+    void SendData(UniformProxy& proxy)
+    {
+        assert(m_LastSize != 0 && "Uniform data was never set.");
+        proxy.SetData(m_Data, m_LastSize);
+    }
 
 private:
-    std::uint8_t m_Data[C_MAX_DATA_SIZE];
+    std::uint32_t m_LastSize;
+    std::uint8_t  m_Data[C_MAX_DATA_SIZE];
 
 };
 
+using UniformRawData = UniformRawDataGeneric<128u>;
+
+
+class UniformTextureData
+{
+public:
+    UniformTextureData();
+
+    void SendData();
+
+private:
+   SharedTexture m_SharedTexture;
+};
 
 }
 

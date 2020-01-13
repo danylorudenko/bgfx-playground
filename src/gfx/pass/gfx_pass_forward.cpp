@@ -11,8 +11,6 @@
 namespace pg::gfx
 {
 
-//UniformProxy u_PosAdjustment;
-
 PassForward::PassForward(PassId scheduleId)
     : PassBase{ scheduleId }
 {
@@ -71,14 +69,6 @@ void PassForward::Render(Scene* scene)
 
         auto entityDelegate = [passId, &counter](Entity& entity)
         {
-            // 1. set model uniform
-            // 2. set vertex index buffer
-            // 3. set texture (optional)
-            //glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
-
-            //glm::vec4 data{ counter += 3.0f, 0.0f, 0.0f, 1.0f };
-            //u_PosAdjustment.SetData(glm::value_ptr(data), 1);
-
             RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
             VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
 
