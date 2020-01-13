@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -125,7 +126,7 @@ class UniformProxy : public pg::class_features::NonCopyable
 {
 public: 
     UniformProxy();
-    UniformProxy(std::string const& name, bgfx_uniform_type type, std::uint32_t elementsCount);
+    UniformProxy(std::string const& name, bgfx_uniform_type type, std::uint32_t elementsCount = 1, std::uint8_t slot = 0);
 
     UniformProxy(UniformProxy&& rhs);
     UniformProxy& operator=(UniformProxy&& rhs);
@@ -133,11 +134,12 @@ public:
     ~UniformProxy();
 
     void SetData(void* data, std::uint32_t numberOfElements = UINT16_MAX);
-    void SetTexture(Texture* texture, int settings);
+    void SetTexture(Texture* texture, std::uint32_t settings);
 
 private:
     bgfx_uniform_handle_t   m_UniformHandle;
     bgfx_uniform_info_t     m_MetaData;
+    std::uint8_t            m_Slot;
 
 };
 
@@ -171,8 +173,14 @@ public:
 
     void SendData(UniformProxy& proxy)
     {
-        assert(m_LastSize != 0 && "Uniform data was never set.");
-        proxy.SetData(m_Data, m_LastSize);
+        if (m_LastSize == 0)
+        {
+            std::cout << "WARNING: Uniform raw data was never set." << std::endl;
+        }
+        else
+        {
+            proxy.SetData(m_Data, m_LastSize);
+        }
     }
 
 private:
@@ -184,12 +192,15 @@ private:
 using UniformRawData = UniformRawDataGeneric<128u>;
 
 
+////////////////////////////////////////////////
+// UniformTextureData
 class UniformTextureData
 {
 public:
     UniformTextureData();
+    UniformTextureData(SharedTexture const& texture);
 
-    void SendData();
+    void SendData(UniformProxy& uniformProxy);
 
 private:
    SharedTexture m_SharedTexture;

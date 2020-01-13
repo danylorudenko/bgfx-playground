@@ -288,9 +288,10 @@ UniformProxy::UniformProxy()
     , m_MetaData{}
 {}
 
-UniformProxy::UniformProxy(std::string const& name, bgfx_uniform_type type, std::uint32_t elementsCount)
+UniformProxy::UniformProxy(std::string const& name, bgfx_uniform_type type, std::uint32_t elementsCount, std::uint8_t slot)
     : m_UniformHandle{ BGFX_INVALID_HANDLE }
     , m_MetaData{}
+    , m_Slot{ slot }
 {
     m_UniformHandle = bgfx_create_uniform(name.c_str(), type, static_cast<std::uint16_t>(elementsCount));
     bgfx_get_uniform_info(m_UniformHandle, &m_MetaData);
@@ -307,6 +308,7 @@ UniformProxy& UniformProxy::operator=(UniformProxy&& rhs)
 {
     std::swap(m_UniformHandle, rhs.m_UniformHandle);
     m_MetaData = rhs.m_MetaData;
+    m_Slot = rhs.m_Slot;
 
     return *this;
 }
@@ -328,12 +330,33 @@ void UniformProxy::SetData(void* data, std::uint32_t elementsCount)
     bgfx_set_uniform(m_UniformHandle, data, static_cast<std::uint16_t>(elementsCount));
 }
 
-void UniformProxy::SetTexture(Texture* texture, int settings)
+void UniformProxy::SetTexture(Texture* texture, std::uint32_t settings)
 {
     assert(BGFX_HANDLE_IS_VALID(m_UniformHandle) && "Attempt to set data to invalid uniform");
     assert(m_MetaData.type == BGFX_UNIFORM_TYPE_SAMPLER && "Attempt to set texture to a non-sampler uniform.");
 
-    bgfx_set_texture(0, m_UniformHandle, texture->GetHandle(), BGFX_SAMPLER_UVW_CLAMP);
+    bgfx_set_texture(m_Slot, m_UniformHandle, texture->GetHandle(), settings);
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// UniformTextureData
+UniformTextureData::UniformTextureData() = default;
+
+UniformTextureData::UniformTextureData(SharedTexture const& texture)
+    : m_SharedTexture{ texture }
+{}
+
+void UniformTextureData::SendData(UniformProxy& uniformProxy)
+{
+    if (m_SharedTexture && BGFX_HANDLE_IS_VALID(m_SharedTexture->GetHandle()))
+    {
+        uniformProxy.SetTexture(m_SharedTexture.get(), BGFX_SAMPLER_UVW_CLAMP);
+    }
+    else
+    {
+        std::cout << "WARNING: uniform texture data was never set." << std::endl;
+    }
 }
 
 

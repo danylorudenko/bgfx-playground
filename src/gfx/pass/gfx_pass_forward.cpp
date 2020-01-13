@@ -11,9 +11,14 @@
 namespace pg::gfx
 {
 
+UniformProxy g_RawDataProxy;
+UniformProxy g_TextureProxy;
+
 PassForward::PassForward(PassId scheduleId)
     : PassBase{ scheduleId }
 {
+    g_RawDataProxy = UniformProxy{ "u_RAW", BGFX_UNIFORM_TYPE_MAT4, 2 };
+    g_TextureProxy = UniformProxy{ "u_Texture", BGFX_UNIFORM_TYPE_SAMPLER, 1 };
 }
 
 PassForward::PassForward(PassForward&& rhs)
@@ -65,11 +70,9 @@ void PassForward::Render(Scene* scene)
     }
 
     {
-        float counter = -3.0f;
-
-        auto entityDelegate = [passId, &counter](Entity& entity)
+        auto entityDelegate = [passId](Entity& entity)
         {
-            RenderableComponent const& renderableComponent = entity.GetRenderableComponentRef();
+            RenderableComponent& renderableComponent = entity.GetRenderableComponentRef();
             VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
 
             glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
@@ -77,7 +80,8 @@ void PassForward::Render(Scene* scene)
 
             bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
 
-            bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram->GetHandle();
+            renderableComponent.m_RawData.SendData(g_RawDataProxy);
+            renderableComponent.m_TextureData.SendData(g_TextureProxy);
 
             bgfx_set_state(0
                 | BGFX_STATE_WRITE_RGB
@@ -87,6 +91,8 @@ void PassForward::Render(Scene* scene)
                 | BGFX_STATE_CULL_CCW // we have a cube with CCW vertices
                 | BGFX_STATE_MSAA, 0);
 
+
+            bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram->GetHandle();
             bgfx_submit(passId, program, 0, false);
         };
 

@@ -12,8 +12,11 @@ struct RenderableComponent
         , m_VertexBuffer{ vertexBuffer }
     {}
 
-    gfx::SharedShaderProgram                        m_ShaderProgram;
-    gfx::SharedVertexBuffer                         m_VertexBuffer;
+    gfx::SharedShaderProgram        m_ShaderProgram;
+    gfx::SharedVertexBuffer         m_VertexBuffer;
+
+    gfx::UniformRawData             m_RawData;
+    gfx::UniformTextureData         m_TextureData;
 };
 
 } // namespace pg
