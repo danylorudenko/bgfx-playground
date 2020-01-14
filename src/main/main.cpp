@@ -146,14 +146,17 @@ int main()
 
         g_TestEntity[0] = rootEntity.AddChild("testEntity0");
         g_TestEntity[0]->InitRenderableComponent(mainProgram, vertexBuffer);
+        g_TestEntity[0]->GetRenderableComponentRef().m_TextureData = std::make_shared<gfx::Texture>("assets\\wood.png");
 
         g_TestEntity[1] = g_TestEntity[0]->AddChild("testEntity1");
         g_TestEntity[1]->InitRenderableComponent(mainProgram, vertexBuffer);
+        g_TestEntity[1]->GetRenderableComponentRef().m_TextureData = std::make_shared<gfx::Texture>("assets\\wood.png");
         g_TestEntity[1]->SetPosition({ 2.5f, 0.0f, 0.0f });
         g_TestEntity[1]->SetRotation(glm::quat{{ 45.0f, 0.0f, 0.0f }});
 
         g_TestEntity[2] = g_TestEntity[0]->AddChild("testEntity2");
         g_TestEntity[2]->InitRenderableComponent(mainProgram, vertexBuffer);
+        g_TestEntity[2]->GetRenderableComponentRef().m_TextureData = std::make_shared<gfx::Texture>("assets\\wood.png");
         g_TestEntity[2]->SetPosition({ -0.5f, 0.0f, 1.5f });
         g_TestEntity[2]->SetRotation(glm::quat{ { 0.0f, 0.0f, 0.0f } });
         g_TestEntity[2]->SetScale({ 0.5f, 2.0f, 0.5f });
