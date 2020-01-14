@@ -28,6 +28,7 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/gfx_resourcemap.cpp
 	src/gfx/gfx_settings.h
 	src/gfx/gfx_settings.cpp
+	src/gfx/gfx_vertex.h
 	src/gfx/pass/gfx_pass_forward.h
 	src/gfx/pass/gfx_pass_forward.cpp
 	src/gfx/pass/gfx_pass_schedule.h
@@ -49,6 +50,8 @@ target_sources(bgfx-application PUBLIC
 	src/scene/renderable_component.cpp
 	src/scene/scene.h
 	src/scene/scene.cpp
+	src/scene/scene_importer.h
+	src/scene/scene_importer.cpp
 	src/system/window.h
 	src/system/window.cpp
 )
