@@ -22,6 +22,8 @@ public:
 
     ~Scene();
 
+    void LoadFromFile(std::string fileName);
+
     void            Update(float dt);
 
     Entity&         GetRootEntityRef() { return *m_RootEntity; }
