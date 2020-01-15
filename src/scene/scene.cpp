@@ -3,6 +3,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+#include <scene/scene_importer.h>
+
 namespace pg
 {
 
@@ -25,22 +27,8 @@ void Scene::LoadFromFile(std::string fileName)
 {
     assert(m_RootEntity->GetChildCount() == 0 && "Scene can only parse files when being empty.");
 
-    Assimp::Importer importer;
+    SceneImporter importer;
 
-    aiScene const* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
-    assert(scene != nullptr && "Failed to load scene");
-
-    std::uint32_t const meshCount = static_cast<std::uint32_t>(scene->mNumMeshes);
-    for (std::uint32_t i = 0; i < meshCount; i++)
-    {
-        processMesh(scene->mMeshes[i]);
-    }
-
-}
-
-void processMesh(aiMesh* mesh)
-{
-    mesh->
 }
 
 void Scene::Update(float dt)

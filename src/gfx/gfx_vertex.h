@@ -24,6 +24,14 @@ struct SimpleVertex
 
 struct Vertex
 {
+    Vertex()
+        : m_Pos{ 0.0f, 0.0f, 0.0f }
+        , m_Normal{ 0.0f, 0.0f, 0.0f }
+        , m_Tangent{ 0.0f, 0.0f, 0.0f }
+        , m_Bitangent{ 0.0f, 0.0f, 0.0f }
+        , m_UV{ 0.0f, 0.0f }
+    {}
+
     Vertex(float x, float y, float z, float nX, float nY, float nZ, float tX, float tY, float tZ, float btX, float btY, float btZ, float u, float v)
         : m_Pos{ x, y, z }
         , m_Normal{ nX, nY, nZ }
