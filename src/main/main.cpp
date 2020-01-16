@@ -110,6 +110,7 @@ int main()
     input::InputSystem::CreateInstance(application->GetMainWindow()->NativeHandle());
     gfx::Renderer::CreateInstance();
     Scene* scene = Scene::CreateInstance();
+    scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
 
     {
         gfx::SharedShaderProgram mainProgram = std::make_shared<gfx::ShaderProgram>("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
