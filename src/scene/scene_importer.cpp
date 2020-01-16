@@ -1,6 +1,6 @@
 #include <scene/scene_importer.h>
 
-#include <cstdint>
+#include <utility>
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -34,29 +34,39 @@ void SceneImporter::ImportScene(std::string file, Scene* scene)
     assert(scene != nullptr && "Failed to load scene");
     m_ImportedScene = aiscene;
 
-    std::uint32_t const meshCount = static_cast<std::uint32_t>(aiscene->mNumMeshes);
-    for (std::uint32_t i = 0; i < meshCount; i++)
-    {
-        ParseMesh(aiscene->mMeshes[i]);
-    }
+    ParseNodeToMeshInternalHierarchy(aiscene->mRootNode, m_RootMesh);
 }
 
-void SceneImporter::ParseNode(aiNode* node)
+void SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal& nodeMesh)
 {
+    auto nodeTransform = node->mTransformation;
+
     std::uint32_t const meshCount = node->mNumMeshes;
     for (std::uint32_t i = 0; i < meshCount; i++)
     {
-        aiMesh* mesh = m_ImportedScene->mMeshes[node->mMeshes[i]];
-        auto parsedMesh = m_ParsedMeshes.find(mesh);
+        std::uint32_t const meshId = node->mMeshes[i];
+        auto parsedMesh = m_ParsedMeshes.find(meshId);
         if (parsedMesh == m_ParsedMeshes.end())
         {
-            ParseMesh(mesh);
+            aiMesh* mesh = m_ImportedScene->mMeshes[meshId];
+            nodeMesh.m_SubMeshes.emplace_back(ParseMeshVertexData(mesh));
+        }
+        else
+        {
+            nodeMesh.m_SubMeshes.emplace_back(parsedMesh->second);
         }
     }
-    //for(std::uint32_t)
+
+    std::uint32_t const childNodeCount = node->mNumChildren;
+    for (std::uint32_t i = 0; i < childNodeCount; i++)
+    {
+        nodeMesh.m_SubMeshes.emplace_back();
+        MeshInternal& childNodeMesh = nodeMesh.m_SubMeshes.back();
+        ParseNodeToMeshInternalHierarchy(node->mChildren[i], childNodeMesh);
+    }
 }
 
-SceneImporter::MeshInternal SceneImporter::ParseMesh(aiMesh* mesh)
+SceneImporter::MeshInternal SceneImporter::ParseMeshVertexData(aiMesh* mesh)
 {
     assert(mesh->HasFaces()             && "SceneImporter: no faces found.");
     assert(mesh->mFaces->mNumIndices == 3 && "SceneImporter: faces contain not only triangles.");
@@ -110,20 +120,27 @@ SceneImporter::MeshInternal SceneImporter::ParseMesh(aiMesh* mesh)
     }
 
 
-    std::vector<std::uint32_t> indicies;
+    std::vector<std::uint16_t> importedIndicies;
 
     std::uint32_t const indiciesCount = mesh->mNumFaces * 3;
-    indicies.resize(indiciesCount);
+    importedIndicies.resize(indiciesCount);
     for (std::uint32_t i = 0; i < mesh->mNumFaces; i++)
     {
         assert(mesh->mFaces[i].mIndices[0] < UINT16_MAX && "Indicies are greater than UINT16_MAX");
         assert(mesh->mFaces[i].mIndices[1] < UINT16_MAX && "Indicies are greater than UINT16_MAX");
         assert(mesh->mFaces[i].mIndices[2] < UINT16_MAX && "Indicies are greater than UINT16_MAX");
 
-        indicies[i * 3 + 0] = static_cast<std::uint32_t>(mesh->mFaces[i].mIndices[0]);
-        indicies[i * 3 + 1] = static_cast<std::uint32_t>(mesh->mFaces[i].mIndices[1]);
-        indicies[i * 3 + 2] = static_cast<std::uint32_t>(mesh->mFaces[i].mIndices[2]);
+        importedIndicies[i * 3 + 0] = static_cast<std::uint16_t>(mesh->mFaces[i].mIndices[0]);
+        importedIndicies[i * 3 + 1] = static_cast<std::uint16_t>(mesh->mFaces[i].mIndices[1]);
+        importedIndicies[i * 3 + 2] = static_cast<std::uint16_t>(mesh->mFaces[i].mIndices[2]);
     }
+
+
+    MeshInternal result;
+    result.m_Vertices = std::move(importedVertices);
+    result.m_Indicies = std::move(importedIndicies);
+
+    return result;
 
 }
 

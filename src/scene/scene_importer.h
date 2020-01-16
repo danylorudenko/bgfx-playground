@@ -1,11 +1,16 @@
 #pragma once
 
-#include <string>
+#include <cstdint>
 #include <map>
+#include <string>
+#include <vector>
 
 #include <assimp/mesh.h>
 #include <assimp/scene.h>
+
+#include <gfx/gfx_vertex.h>
 #include <class_features/class_features.hpp>
+#include <scene/entity.h>
 
 namespace pg
 {
@@ -28,16 +33,21 @@ public:
 private:
     struct MeshInternal
     {
-        int kek;
+        std::string                 m_Name;
+        std::vector<gfx::Vertex>    m_Vertices;
+        std::vector<std::uint16_t>  m_Indicies;
+        std::vector<MeshInternal>   m_SubMeshes;
     };
 
-    void ParseNode(aiNode* node);
-    MeshInternal ParseMesh(aiMesh* mesh);
+    void ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal& nodeMesh);
+    void ParseMeshInternalHierarchyToScene(Scene* scene);
+    MeshInternal ParseMeshVertexData(aiMesh* mesh);
 
 private:
 
-    aiScene const*                  m_ImportedScene;
-    std::map<aiMesh*, MeshInternal> m_ParsedMeshes;
+    aiScene const*                          m_ImportedScene;
+    std::map<std::uint32_t, MeshInternal>   m_ParsedMeshes;
+    MeshInternal                            m_RootMesh;
 };
 
 
