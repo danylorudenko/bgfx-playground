@@ -37,9 +37,10 @@ void SceneImporter::ImportScene(std::string file, Scene* scene)
     ParseNodeToMeshInternalHierarchy(aiscene->mRootNode, m_RootMesh);
 }
 
-void SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal& nodeMesh)
+std::uint32_t SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal& nodeMesh)
 {
-    auto nodeTransform = node->mTransformation;
+    // TODO: later :D
+    //auto nodeTransform = node->mTransformation;
 
     std::uint32_t const meshCount = node->mNumMeshes;
     for (std::uint32_t i = 0; i < meshCount; i++)
@@ -60,10 +61,14 @@ void SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal&
     std::uint32_t const childNodeCount = node->mNumChildren;
     for (std::uint32_t i = 0; i < childNodeCount; i++)
     {
-        nodeMesh.m_SubMeshes.emplace_back();
-        MeshInternal& childNodeMesh = nodeMesh.m_SubMeshes.back();
-        ParseNodeToMeshInternalHierarchy(node->mChildren[i], childNodeMesh);
+        MeshInternal childNodeMesh;
+        if (0 < ParseNodeToMeshInternalHierarchy(node->mChildren[i], childNodeMesh))
+        {
+            nodeMesh.m_SubMeshes.emplace_back(childNodeMesh);
+        }
     }
+
+    return meshCount;
 }
 
 SceneImporter::MeshInternal SceneImporter::ParseMeshVertexData(aiMesh* mesh)
@@ -114,25 +119,21 @@ SceneImporter::MeshInternal SceneImporter::ParseMeshVertexData(aiMesh* mesh)
 
     for (std::uint32_t i = 0; i < vertexCount; i++)
     {
-        auto& uv = mesh->mTextureCoords[i][0];
+        auto& uv = mesh->mTextureCoords[0][i];
         importedVertices[i].m_UV[0] = uv.x;
         importedVertices[i].m_UV[1] = uv.y;
     }
 
 
-    std::vector<std::uint16_t> importedIndicies;
+    std::vector<std::uint32_t> importedIndicies;
 
     std::uint32_t const indiciesCount = mesh->mNumFaces * 3;
     importedIndicies.resize(indiciesCount);
     for (std::uint32_t i = 0; i < mesh->mNumFaces; i++)
     {
-        assert(mesh->mFaces[i].mIndices[0] < UINT16_MAX && "Indicies are greater than UINT16_MAX");
-        assert(mesh->mFaces[i].mIndices[1] < UINT16_MAX && "Indicies are greater than UINT16_MAX");
-        assert(mesh->mFaces[i].mIndices[2] < UINT16_MAX && "Indicies are greater than UINT16_MAX");
-
-        importedIndicies[i * 3 + 0] = static_cast<std::uint16_t>(mesh->mFaces[i].mIndices[0]);
-        importedIndicies[i * 3 + 1] = static_cast<std::uint16_t>(mesh->mFaces[i].mIndices[1]);
-        importedIndicies[i * 3 + 2] = static_cast<std::uint16_t>(mesh->mFaces[i].mIndices[2]);
+        importedIndicies[i * 3 + 0] = static_cast<std::uint32_t>(mesh->mFaces[i].mIndices[0]);
+        importedIndicies[i * 3 + 1] = static_cast<std::uint32_t>(mesh->mFaces[i].mIndices[1]);
+        importedIndicies[i * 3 + 2] = static_cast<std::uint32_t>(mesh->mFaces[i].mIndices[2]);
     }
 
 

@@ -35,11 +35,12 @@ private:
     {
         std::string                 m_Name;
         std::vector<gfx::Vertex>    m_Vertices;
-        std::vector<std::uint16_t>  m_Indicies;
+        std::vector<std::uint32_t>  m_Indicies;
         std::vector<MeshInternal>   m_SubMeshes;
     };
 
-    void ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal& nodeMesh);
+    // returns number of imported meshes
+    std::uint32_t ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal& nodeMesh);
     void ParseMeshInternalHierarchyToScene(Scene* scene);
     MeshInternal ParseMeshVertexData(aiMesh* mesh);
 
