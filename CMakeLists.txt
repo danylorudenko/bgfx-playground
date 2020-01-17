@@ -58,6 +58,7 @@ target_sources(bgfx-application PUBLIC
 
 
 # ========== ASSIMP SUBMODULE ==========
+option(BUILD_SHARED_LIBS "This is a CMake option that defaults ADD_LIBRARY behavour" FALSE)
 add_subdirectory(submodules/assimp)
 target_include_directories(bgfx-application PUBLIC submodules/assimp/inlcude)
 target_link_libraries(bgfx-application PUBLIC assimp)
