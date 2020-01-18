@@ -52,7 +52,6 @@ ShaderProgram::~ShaderProgram()
     if (BGFX_HANDLE_IS_VALID(m_ProgramHandle))
     {
         bgfx_destroy_program(m_ProgramHandle);
-        m_ProgramHandle = BGFX_INVALID_HANDLE;
     }
 }
 
@@ -71,9 +70,9 @@ Texture::Texture(std::string const& textureFileName)
     , m_Width{ 0 }
     , m_Height{ 0 }
 {
-    int const componentsCount = 3;
+    int const forceComponentsCount = 3;
     int width = 0, height = 0, components = 0;
-    void* textureData = stbi_load(textureFileName.c_str(), &width, &height, &components, componentsCount);
+    void* textureData = stbi_load(textureFileName.c_str(), &width, &height, &components, forceComponentsCount);
 
     assert(width && height && components && "stbi failed to load texture.");
 
@@ -81,7 +80,7 @@ Texture::Texture(std::string const& textureFileName)
     m_Height = static_cast<std::uint32_t>(height);
 
     bgfx_texture_format_t textureFormat = BGFX_TEXTURE_FORMAT_COUNT;
-    switch (componentsCount)
+    switch (forceComponentsCount)
     {
     case 4:
         textureFormat = BGFX_TEXTURE_FORMAT_RGBA8;
@@ -94,7 +93,7 @@ Texture::Texture(std::string const& textureFileName)
     }
 
     bgfx_release_fn_t stbiFreeDelegate = (bgfx_release_fn_t)[](void* memory, void* userData) { stbi_image_free(memory); };
-    bgfx_memory_t const* textureDataBgfx = bgfx_make_ref_release(textureData, width * height * components, stbiFreeDelegate, nullptr);
+    bgfx_memory_t const* textureDataBgfx = bgfx_make_ref_release(textureData, width * height * forceComponentsCount, stbiFreeDelegate, nullptr);
 
     m_TextureHandle = bgfx_create_texture_2d(width, height, false, 1, textureFormat, BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE, textureDataBgfx);
 }
@@ -140,7 +139,6 @@ Texture::~Texture()
     if (BGFX_HANDLE_IS_VALID(m_TextureHandle))
     {
         bgfx_destroy_texture(m_TextureHandle);
-        m_TextureHandle = BGFX_INVALID_HANDLE;
     }
 }
 
@@ -266,7 +264,6 @@ VertexBuffer::~VertexBuffer()
     if (BGFX_HANDLE_IS_VALID(m_VertexBufferHandle))
     {
         bgfx_destroy_vertex_buffer(m_VertexBufferHandle);
-        m_VertexBufferHandle = BGFX_INVALID_HANDLE;
     }
 }
 
@@ -278,6 +275,57 @@ bgfx_vertex_buffer_handle_t VertexBuffer::GetHandle() const
 std::uint32_t VertexBuffer::GetVertexCount() const
 {
     return m_VertexCount;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// IndexBuffer
+IndexBuffer::IndexBuffer()
+    : m_IndexCount{ 0 }
+    , m_IndexBufferHandle{ BGFX_INVALID_HANDLE }
+{}
+
+IndexBuffer::IndexBuffer(std::uint32_t indexCount, std::uint32_t* data)
+    : m_IndexCount{ indexCount }
+    , m_IndexBufferHandle{ BGFX_INVALID_HANDLE }
+{
+    bgfx_memory_t const* bgfxMemory = bgfx_make_ref(data, indexCount * 4);
+
+    m_IndexBufferHandle = bgfx_create_index_buffer(bgfxMemory, BGFX_BUFFER_INDEX32);
+    assert(BGFX_HANDLE_IS_VALID(m_IndexBufferHandle) && "Failed to create index buffer.");
+}
+
+IndexBuffer::IndexBuffer(IndexBuffer&& rhs)
+    : m_IndexCount{ 0 }
+    , m_IndexBufferHandle{ BGFX_INVALID_HANDLE }
+{
+    operator=(std::move(rhs));
+}
+
+IndexBuffer& IndexBuffer::operator=(IndexBuffer&& rhs)
+{
+    std::swap(m_IndexCount, rhs.m_IndexCount);
+    std::swap(m_IndexBufferHandle, rhs.m_IndexBufferHandle);
+
+    return *this;
+}
+
+IndexBuffer::~IndexBuffer()
+{
+    if (BGFX_HANDLE_IS_VALID(m_IndexBufferHandle))
+    {
+        bgfx_destroy_index_buffer(m_IndexBufferHandle);
+    }
+}
+
+bgfx_index_buffer_handle_t IndexBuffer::GetHandle() const
+{
+    return m_IndexBufferHandle;
+}
+
+std::uint32_t IndexBuffer::GetIndexCount() const
+{
+    return m_IndexCount;
 }
 
 
@@ -318,7 +366,6 @@ UniformProxy::~UniformProxy()
     if (BGFX_HANDLE_IS_VALID(m_UniformHandle))
     {
         bgfx_destroy_uniform(m_UniformHandle);
-        m_UniformHandle = BGFX_INVALID_HANDLE;
     }
 }
 

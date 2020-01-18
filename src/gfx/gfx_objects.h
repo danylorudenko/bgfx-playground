@@ -93,6 +93,7 @@ private:
 
 using SharedVertexLayout = std::shared_ptr<VertexLayout>;
 
+
 ////////////////////////////////////////////////
 
 class VertexBuffer : public pg::class_features::NonCopyable
@@ -118,6 +119,30 @@ private:
 };
 
 using SharedVertexBuffer = std::shared_ptr<VertexBuffer>;
+
+
+////////////////////////////////////////////////
+
+class IndexBuffer : public pg::class_features::NonCopyable
+{
+public:
+    IndexBuffer();
+    IndexBuffer(std::uint32_t indexCount, std::uint32_t* data);
+    
+    IndexBuffer(IndexBuffer&& rhs);
+    IndexBuffer& operator=(IndexBuffer&& rhs);
+
+    ~IndexBuffer();
+
+    bgfx_index_buffer_handle_t GetHandle() const;
+    std::uint32_t GetIndexCount() const;
+
+private:
+    std::uint32_t              m_IndexCount;
+    bgfx_index_buffer_handle_t m_IndexBufferHandle;
+};
+
+using SharedIndexBuffer = std::shared_ptr<IndexBuffer>;
 
 
 ////////////////////////////////////////////////

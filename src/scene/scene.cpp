@@ -30,7 +30,7 @@ void Scene::LoadFromFile(std::string fileName)
     assert(m_RootEntity->GetChildCount() == 0 && "Scene can only parse files when being empty.");
 
     SceneImporter importer;
-    importer.ImportScene(std::move(fileName), this);
+    importer.ImportScene(std::move(fileName), *this);
 
 }
 

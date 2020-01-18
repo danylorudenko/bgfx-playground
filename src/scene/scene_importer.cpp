@@ -5,6 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
+#include <gfx/gfx_objects.h>
 #include <gfx/gfx_vertex.h>
 
 #include <scene/scene.h>
@@ -22,22 +23,25 @@ SceneImporter& SceneImporter::operator=(SceneImporter&& rhs) = default;
 
 SceneImporter::~SceneImporter() = default;
 
-void SceneImporter::ImportScene(std::string file, Scene* scene)
+void SceneImporter::ImportScene(std::string file, Scene& scene)
 {
-    assert(scene->GetRootEntityRef().GetChildCount() == 0 && "Scene can only parse files when being empty.");
+    m_ImportedScenePath = file;
 
+    m_RootMesh.m_SubMeshes.clear();
     m_ParsedMeshes.clear();
+    m_ParsedMaterials.clear();
 
     Assimp::Importer importer;
 
-    aiScene const* aiscene = importer.ReadFile(file, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
-    assert(scene != nullptr && "Failed to load scene");
+    aiScene const* aiscene = importer.ReadFile(file, aiProcessPreset_TargetRealtime_Fast | aiProcess_ConvertToLeftHanded);
+    assert(aiscene != nullptr && "Failed to load scene");
     m_ImportedScene = aiscene;
 
-    ParseNodeToMeshInternalHierarchy(aiscene->mRootNode, m_RootMesh);
+    ParseNodeToMeshInternalRecursive(aiscene->mRootNode, m_RootMesh);
+    ParseMeshInternalHierarchyToScene(scene);
 }
 
-std::uint32_t SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, MeshInternal& nodeMesh)
+std::uint32_t SceneImporter::ParseNodeToMeshInternalRecursive(aiNode* node, MeshInternal& nodeMesh)
 {
     // TODO: later :D
     //auto nodeTransform = node->mTransformation;
@@ -50,7 +54,11 @@ std::uint32_t SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, Mesh
         if (parsedMesh == m_ParsedMeshes.end())
         {
             aiMesh* mesh = m_ImportedScene->mMeshes[meshId];
-            nodeMesh.m_SubMeshes.emplace_back(ParseMeshVertexData(mesh));
+
+            MeshInternal internalMesh;
+            ParseMeshVertexData(mesh, internalMesh);
+            ParseMeshMaterials(mesh, internalMesh);
+            nodeMesh.m_SubMeshes.emplace_back(std::move(internalMesh));
         }
         else
         {
@@ -62,7 +70,7 @@ std::uint32_t SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, Mesh
     for (std::uint32_t i = 0; i < childNodeCount; i++)
     {
         MeshInternal childNodeMesh;
-        if (0 < ParseNodeToMeshInternalHierarchy(node->mChildren[i], childNodeMesh))
+        if (0 < ParseNodeToMeshInternalRecursive(node->mChildren[i], childNodeMesh))
         {
             nodeMesh.m_SubMeshes.emplace_back(childNodeMesh);
         }
@@ -71,7 +79,7 @@ std::uint32_t SceneImporter::ParseNodeToMeshInternalHierarchy(aiNode* node, Mesh
     return meshCount;
 }
 
-SceneImporter::MeshInternal SceneImporter::ParseMeshVertexData(aiMesh* mesh)
+void SceneImporter::ParseMeshVertexData(aiMesh* mesh, MeshInternal& result)
 {
     assert(mesh->HasFaces()             && "SceneImporter: no faces found.");
     assert(mesh->mFaces->mNumIndices == 3 && "SceneImporter: faces contain not only triangles.");
@@ -137,12 +145,74 @@ SceneImporter::MeshInternal SceneImporter::ParseMeshVertexData(aiMesh* mesh)
     }
 
 
-    MeshInternal result;
     result.m_Vertices = std::move(importedVertices);
     result.m_Indicies = std::move(importedIndicies);
+}
 
-    return result;
+void SceneImporter::ParseMeshMaterials(aiMesh* mesh, MeshInternal& result)
+{
+    assert(m_ImportedScene->mNumMaterials > 0 && "Imported scene has no materials.");
 
+    aiMaterial* material = m_ImportedScene->mMaterials[mesh->mMaterialIndex];
+    assert((0 < material->GetTextureCount(aiTextureType_DIFFUSE)) && "Material has no diffuse texture.");
+
+    result.m_MaterialIndex = mesh->mMaterialIndex;
+
+    auto materialInternalIt = m_ParsedMaterials.find(mesh->mMaterialIndex);
+    if (materialInternalIt != m_ParsedMaterials.end())
+    {
+        return;
+    }
+
+    MaterialInternal& materialInternal = m_ParsedMaterials[mesh->mMaterialIndex];
+    materialInternal.m_Name = material->GetName().C_Str();
+
+    aiString aiDiffuseLocalPath;
+    aiReturn resultCode = material->GetTexture(aiTextureType_DIFFUSE, 0, &aiDiffuseLocalPath);
+
+    std::string const diffuseLocalPath = aiDiffuseLocalPath.C_Str();
+    auto textureIt = m_ParsedTextures.find(diffuseLocalPath);
+    if (textureIt != m_ParsedTextures.end())
+    {
+        materialInternal.m_DiffuseTexture = textureIt->second;
+        return;
+    }
+
+    assert(resultCode == aiReturn_SUCCESS   && "Failed to retreive material texture.");
+    assert(diffuseLocalPath[0] != '*'       && "Material references embedded texture which is not currently supported.");
+
+    std::string sceneGlobalPath = m_ImportedScenePath;
+    auto pathEnd = sceneGlobalPath.find_last_of('\\');
+    assert(pathEnd != std::string::npos && "There are no path separators in scene path. We now support only global paths.");
+    sceneGlobalPath.resize(pathEnd + 1);
+
+    materialInternal.m_DiffuseTexture = std::make_shared<gfx::Texture>(sceneGlobalPath + diffuseLocalPath);
+    m_ParsedTextures[diffuseLocalPath] = materialInternal.m_DiffuseTexture;
+}
+
+void SceneImporter::ParseMeshInternalHierarchyToScene(Scene& scene)
+{
+    Entity& rootEntity = scene.GetRootEntityRef();
+    Entity* importedSceneEntity = rootEntity.AddChild("imported_scene");
+
+    MeshInternalToEntitiesRecursive(m_RootMesh, *importedSceneEntity);
+}
+
+void SceneImporter::MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, Entity& entity)
+{
+    // this is 
+    if (!meshInternal.m_Vertices.empty())
+    {
+        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(layout);
+    }
+
+    std::uint32_t const subMeshCount = static_cast<std::uint32_t>(meshInternal.m_SubMeshes.size());
+    for (std::uint32_t i = 0; i < subMeshCount; i++)
+    {
+        MeshInternal& submesh = meshInternal.m_SubMeshes[i];
+        Entity* childEntity = entity.AddChild(submesh.m_Name);
+        MeshInternalToEntitiesRecursive(submesh, *childEntity);
+    }
 }
 
 } // namespace pg
