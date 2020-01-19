@@ -14,6 +14,7 @@ struct RenderableComponent
 
     gfx::SharedShaderProgram        m_ShaderProgram;
     gfx::SharedVertexBuffer         m_VertexBuffer;
+    gfx::SharedIndexBuffer          m_IndexBuffer;
 
     gfx::UniformRawData             m_RawData;
     gfx::UniformTextureData         m_TextureData;

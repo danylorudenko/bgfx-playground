@@ -31,6 +31,8 @@ public:
     ~SceneImporter();
 
     void ImportScene(std::string file, Scene& importedScene);
+
+    gfx::SharedVertexLayout const& GetDefaultVertexLayout() const;
     
 private:
     struct MaterialInternal
@@ -49,6 +51,9 @@ private:
 
     };
 
+    void InitDefaultVertexLayout();
+    void InitDefaultShader();
+
     // returns number of imported meshes
     std::uint32_t ParseNodeToMeshInternalRecursive(aiNode* node, MeshInternal& nodeMesh);
 
@@ -59,6 +64,8 @@ private:
     void MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, Entity& entity);
 
 private:
+    gfx::SharedVertexLayout                     m_DefaultVertexLayout;
+    gfx::SharedShaderProgram                    m_DefaultShader;
 
     std::string                                 m_ImportedScenePath;
     aiScene const*                              m_ImportedScene;

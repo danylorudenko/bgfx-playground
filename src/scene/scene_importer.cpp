@@ -15,13 +15,36 @@ namespace pg
 
 SceneImporter::SceneImporter()
     : m_ImportedScene{ nullptr }
-{}
+{
+}
 
 SceneImporter::SceneImporter(SceneImporter&& rhs) = default;
 
 SceneImporter& SceneImporter::operator=(SceneImporter&& rhs) = default;
 
 SceneImporter::~SceneImporter() = default;
+
+gfx::SharedVertexLayout const& SceneImporter::GetDefaultVertexLayout() const
+{
+    return m_DefaultVertexLayout;
+}
+
+void SceneImporter::InitDefaultVertexLayout()
+{
+    m_DefaultVertexLayout = std::make_shared<gfx::VertexLayout>();
+    m_DefaultVertexLayout->AddAtribute(BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false);
+    m_DefaultVertexLayout->AddAtribute(BGFX_ATTRIB_NORMAL, 3, BGFX_ATTRIB_TYPE_FLOAT, false);
+    m_DefaultVertexLayout->AddAtribute(BGFX_ATTRIB_TANGENT, 3, BGFX_ATTRIB_TYPE_FLOAT, false);
+    m_DefaultVertexLayout->AddAtribute(BGFX_ATTRIB_BITANGENT, 3, BGFX_ATTRIB_TYPE_FLOAT, false);
+    m_DefaultVertexLayout->AddAtribute(BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false);
+
+    m_DefaultVertexLayout->Bake();
+}
+
+void SceneImporter::InitDefaultShader()
+{
+    m_DefaultShader = nullptr;
+}
 
 void SceneImporter::ImportScene(std::string file, Scene& scene)
 {
@@ -36,6 +59,8 @@ void SceneImporter::ImportScene(std::string file, Scene& scene)
     aiScene const* aiscene = importer.ReadFile(file, aiProcessPreset_TargetRealtime_Fast | aiProcess_ConvertToLeftHanded);
     assert(aiscene != nullptr && "Failed to load scene");
     m_ImportedScene = aiscene;
+
+    InitDefaultVertexLayout();
 
     ParseNodeToMeshInternalRecursive(aiscene->mRootNode, m_RootMesh);
     ParseMeshInternalHierarchyToScene(scene);
@@ -200,10 +225,19 @@ void SceneImporter::ParseMeshInternalHierarchyToScene(Scene& scene)
 
 void SceneImporter::MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, Entity& entity)
 {
-    // this is 
+    // this is not just a hierarchical node
     if (!meshInternal.m_Vertices.empty())
     {
-        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(layout);
+        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(*m_DefaultVertexLayout, meshInternal.m_Vertices.size(), meshInternal.m_Vertices.data(), sizeof(gfx::Vertex));
+        entity.InitRenderableComponent(m_DefaultShader, vertexBuffer);
+
+        if (!meshInternal.m_Indicies.empty())
+        {
+            entity.GetRenderableComponentRef().m_IndexBuffer = std::make_shared<gfx::IndexBuffer>(meshInternal.m_Indicies.size(), meshInternal.m_Indicies.data());
+        }
+
+        MaterialInternal& material = m_ParsedMaterials[meshInternal.m_MaterialIndex];
+        entity.GetRenderableComponentRef().m_TextureData = gfx::UniformTextureData{ material.m_DiffuseTexture };
     }
 
     std::uint32_t const subMeshCount = static_cast<std::uint32_t>(meshInternal.m_SubMeshes.size());
