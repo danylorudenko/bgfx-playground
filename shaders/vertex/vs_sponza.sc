@@ -4,7 +4,7 @@ $output v_normal, v_texcoord0
 #include <bgfx_shader.sh>
 
 uniform mat4 u_RAW[2];
-SAMPLER2D(s_Texture,  0);
+SAMPLER2D(u_Texture,  0);
 
 void main()
 {

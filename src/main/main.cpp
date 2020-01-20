@@ -110,8 +110,6 @@ int main()
     input::InputSystem::CreateInstance(application->GetMainWindow()->NativeHandle());
     gfx::Renderer::CreateInstance();
     Scene* scene = Scene::CreateInstance();
-    scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
-    //scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
 
     {
         gfx::SharedShaderProgram mainProgram = std::make_shared<gfx::ShaderProgram>("shaders\\vs_triangle.bin", "shaders\\fs_triangle.bin");
@@ -162,6 +160,12 @@ int main()
         g_TestEntity[2]->SetPosition({ -0.5f, 0.0f, 1.5f });
         g_TestEntity[2]->SetRotation(glm::quat{ { 0.0f, 0.0f, 0.0f } });
         g_TestEntity[2]->SetScale({ 0.5f, 2.0f, 0.5f });
+
+        /////////////////
+
+        //scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
+        Entity* importedEntity = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
+        importedEntity->SetPosition({ 0.0f, 0.0f, 5.0f });
 
         /////////////////
 

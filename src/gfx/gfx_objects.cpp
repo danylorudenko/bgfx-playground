@@ -255,7 +255,7 @@ VertexBuffer::VertexBuffer(SharedVertexLayout const& layout, std::uint32_t verte
     , m_VertexBufferHandle{ BGFX_INVALID_HANDLE }
     , m_Layout{ layout }
 {
-    bgfx_memory_t const* memory = bgfx_make_ref(buffer, bytesCount);
+    bgfx_memory_t const* memory = bgfx_copy(buffer, bytesCount);
     m_VertexBufferHandle = bgfx_create_vertex_buffer(memory, m_Layout->GetHandle(), BGFX_BUFFER_NONE);
 }
 
@@ -289,7 +289,7 @@ IndexBuffer::IndexBuffer(std::uint32_t indexCount, std::uint32_t* data)
     : m_IndexCount{ indexCount }
     , m_IndexBufferHandle{ BGFX_INVALID_HANDLE }
 {
-    bgfx_memory_t const* bgfxMemory = bgfx_make_ref(data, indexCount * 4);
+    bgfx_memory_t const* bgfxMemory = bgfx_copy(data, static_cast<std::uint32_t>(indexCount * sizeof(std::uint32_t)));
 
     m_IndexBufferHandle = bgfx_create_index_buffer(bgfxMemory, BGFX_BUFFER_INDEX32);
     assert(BGFX_HANDLE_IS_VALID(m_IndexBufferHandle) && "Failed to create index buffer.");

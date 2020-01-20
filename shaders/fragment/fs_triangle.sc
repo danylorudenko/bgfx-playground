@@ -2,7 +2,7 @@ $input v_color0
 
 #include <bgfx_shader.sh>
 
-SAMPLER2D(mainTexture, 0);
+SAMPLER2D(u_Texture, 0);
 
 void main()
 {

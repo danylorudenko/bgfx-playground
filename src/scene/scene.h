@@ -22,7 +22,7 @@ public:
 
     ~Scene();
 
-    void LoadFromFile(std::string fileName);
+    Entity* LoadFromFile(std::string fileName);
 
     void            Update(float dt);
 

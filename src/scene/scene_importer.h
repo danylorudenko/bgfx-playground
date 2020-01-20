@@ -30,7 +30,7 @@ public:
 
     ~SceneImporter();
 
-    void ImportScene(std::string file, Scene& importedScene);
+    Entity* ImportScene(std::string file, Scene& importedScene);
 
     gfx::SharedVertexLayout const& GetDefaultVertexLayout() const;
     
@@ -60,7 +60,7 @@ private:
     void ParseMeshVertexData(aiMesh* mesh, MeshInternal& result);
     void ParseMeshMaterials(aiMesh* mesh, MeshInternal& result);
 
-    void ParseMeshInternalHierarchyToScene(Scene& scene);
+    Entity* ParseMeshInternalHierarchyToScene(Scene& scene);
     void MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, Entity& entity);
 
 private:

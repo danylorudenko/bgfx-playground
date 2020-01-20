@@ -25,13 +25,10 @@ Scene& Scene::operator=(Scene&&) = default;
 
 Scene::~Scene() = default;
 
-void Scene::LoadFromFile(std::string fileName)
+Entity* Scene::LoadFromFile(std::string fileName)
 {
-    assert(m_RootEntity->GetChildCount() == 0 && "Scene can only parse files when being empty.");
-
     SceneImporter importer;
-    importer.ImportScene(std::move(fileName), *this);
-
+    return importer.ImportScene(std::move(fileName), *this);
 }
 
 void Scene::Update(float dt)

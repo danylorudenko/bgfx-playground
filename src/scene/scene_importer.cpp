@@ -48,7 +48,7 @@ void SceneImporter::InitDefaultShader()
     m_DefaultShader = std::make_shared<gfx::ShaderProgram>("shaders\\vs_sponza.bin", "shaders\\fs_sponza.bin");
 }
 
-void SceneImporter::ImportScene(std::string file, Scene& scene)
+Entity* SceneImporter::ImportScene(std::string file, Scene& scene)
 {
     m_ImportedScenePath = file;
     m_NonameTemplateString = "noname_";
@@ -67,7 +67,7 @@ void SceneImporter::ImportScene(std::string file, Scene& scene)
     InitDefaultShader();
 
     ParseNodeToMeshInternalRecursive(aiscene->mRootNode, m_RootMesh);
-    ParseMeshInternalHierarchyToScene(scene);
+    return ParseMeshInternalHierarchyToScene(scene);
 }
 
 std::uint32_t SceneImporter::ParseNodeToMeshInternalRecursive(aiNode* node, MeshInternal& nodeMesh)
@@ -219,12 +219,14 @@ void SceneImporter::ParseMeshMaterials(aiMesh* mesh, MeshInternal& result)
     m_ParsedTextures[diffuseLocalPath] = materialInternal.m_DiffuseTexture;
 }
 
-void SceneImporter::ParseMeshInternalHierarchyToScene(Scene& scene)
+Entity* SceneImporter::ParseMeshInternalHierarchyToScene(Scene& scene)
 {
     Entity& rootEntity = scene.GetRootEntityRef();
     Entity* importedSceneEntity = rootEntity.AddChild("imported_scene");
 
     MeshInternalToEntitiesRecursive(m_RootMesh, *importedSceneEntity);
+
+    return importedSceneEntity;
 }
 
 void SceneImporter::MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, Entity& entity)
@@ -232,7 +234,7 @@ void SceneImporter::MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, 
     // this is not just a hierarchical node
     if (!meshInternal.m_Vertices.empty())
     {
-        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(m_DefaultVertexLayout, static_cast<std::uint32_t>(meshInternal.m_Vertices.size()), meshInternal.m_Vertices.data(), static_cast<std::uint32_t>(sizeof(gfx::Vertex)));
+        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(m_DefaultVertexLayout, static_cast<std::uint32_t>(meshInternal.m_Vertices.size()), meshInternal.m_Vertices.data(), static_cast<std::uint32_t>(sizeof(gfx::Vertex) * meshInternal.m_Vertices.size()));
         entity.InitRenderableComponent(m_DefaultShader, vertexBuffer);
 
         if (!meshInternal.m_Indicies.empty())
