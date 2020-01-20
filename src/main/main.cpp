@@ -163,9 +163,10 @@ int main()
 
         /////////////////
 
-        //scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
-        Entity* importedEntity = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
-        importedEntity->SetPosition({ 0.0f, 0.0f, 5.0f });
+        Entity* importedEntity = scene->LoadFromFile("J:\\Models\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
+        //Entity* importedEntity = scene->LoadFromFile("J:\\Models\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
+        importedEntity->SetPosition({ 0.0f, 0.0f, -5.0f });
+        importedEntity->SetScale({ 0.03f, 0.03f, 0.03f });
 
         /////////////////
 

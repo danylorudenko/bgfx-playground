@@ -398,7 +398,7 @@ void UniformTextureData::SendData(UniformProxy& uniformProxy)
 {
     if (m_SharedTexture && BGFX_HANDLE_IS_VALID(m_SharedTexture->GetHandle()))
     {
-        uniformProxy.SetTexture(m_SharedTexture.get(), BGFX_SAMPLER_UVW_CLAMP);
+        uniformProxy.SetTexture(m_SharedTexture.get(), BGFX_SAMPLER_UVW_MIRROR);
     }
     else
     {
