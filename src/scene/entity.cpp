@@ -191,6 +191,11 @@ void Entity::InitRenderableComponent(gfx::SharedShaderProgram const& shaderRef, 
     m_RenderableComponent = std::make_unique<RenderableComponent>(shaderRef, vertexBuffer);
 }
 
+bool Entity::IsRenderable() const
+{
+    return static_cast<bool>(m_RenderableComponent);
+}
+
 
 } // namespace pg
 

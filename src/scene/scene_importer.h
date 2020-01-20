@@ -73,6 +73,8 @@ private:
     std::map<std::uint32_t, MeshInternal>       m_ParsedMeshes;
     std::map<std::uint32_t, MaterialInternal>   m_ParsedMaterials;
     std::map<std::string, gfx::SharedTexture>   m_ParsedTextures;
+    std::string                                 m_NonameTemplateString;
+    std::uint32_t                               m_NonameTemplateCounter;
 };
 
 

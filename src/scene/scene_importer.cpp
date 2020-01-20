@@ -1,5 +1,6 @@
 #include <scene/scene_importer.h>
 
+#include <cstring>
 #include <utility>
 
 #include <assimp/Importer.hpp>
@@ -15,6 +16,7 @@ namespace pg
 
 SceneImporter::SceneImporter()
     : m_ImportedScene{ nullptr }
+    , m_NonameTemplateCounter{ 0 }
 {
 }
 
@@ -43,12 +45,13 @@ void SceneImporter::InitDefaultVertexLayout()
 
 void SceneImporter::InitDefaultShader()
 {
-    m_DefaultShader = nullptr;
+    m_DefaultShader = std::make_shared<gfx::ShaderProgram>("shaders\\vs_sponza.bin", "shaders\\fs_sponza.bin");
 }
 
 void SceneImporter::ImportScene(std::string file, Scene& scene)
 {
     m_ImportedScenePath = file;
+    m_NonameTemplateString = "noname_";
 
     m_RootMesh.m_SubMeshes.clear();
     m_ParsedMeshes.clear();
@@ -61,6 +64,7 @@ void SceneImporter::ImportScene(std::string file, Scene& scene)
     m_ImportedScene = aiscene;
 
     InitDefaultVertexLayout();
+    InitDefaultShader();
 
     ParseNodeToMeshInternalRecursive(aiscene->mRootNode, m_RootMesh);
     ParseMeshInternalHierarchyToScene(scene);
@@ -228,12 +232,12 @@ void SceneImporter::MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, 
     // this is not just a hierarchical node
     if (!meshInternal.m_Vertices.empty())
     {
-        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(*m_DefaultVertexLayout, meshInternal.m_Vertices.size(), meshInternal.m_Vertices.data(), sizeof(gfx::Vertex));
+        gfx::SharedVertexBuffer vertexBuffer = std::make_shared<gfx::VertexBuffer>(m_DefaultVertexLayout, static_cast<std::uint32_t>(meshInternal.m_Vertices.size()), meshInternal.m_Vertices.data(), static_cast<std::uint32_t>(sizeof(gfx::Vertex)));
         entity.InitRenderableComponent(m_DefaultShader, vertexBuffer);
 
         if (!meshInternal.m_Indicies.empty())
         {
-            entity.GetRenderableComponentRef().m_IndexBuffer = std::make_shared<gfx::IndexBuffer>(meshInternal.m_Indicies.size(), meshInternal.m_Indicies.data());
+            entity.GetRenderableComponentRef().m_IndexBuffer = std::make_shared<gfx::IndexBuffer>(static_cast<std::uint32_t>(meshInternal.m_Indicies.size()), meshInternal.m_Indicies.data());
         }
 
         MaterialInternal& material = m_ParsedMaterials[meshInternal.m_MaterialIndex];
@@ -244,7 +248,23 @@ void SceneImporter::MeshInternalToEntitiesRecursive(MeshInternal& meshInternal, 
     for (std::uint32_t i = 0; i < subMeshCount; i++)
     {
         MeshInternal& submesh = meshInternal.m_SubMeshes[i];
-        Entity* childEntity = entity.AddChild(submesh.m_Name);
+
+        std::string name;
+        if (!submesh.m_Name.empty())
+        {
+            name = submesh.m_Name;
+        }
+        else
+        {
+            char strBuffer[64];
+            std::strcpy(strBuffer, m_NonameTemplateString.c_str());
+            std::sprintf(strBuffer + m_NonameTemplateString.size(), "%u", m_NonameTemplateCounter++);
+
+            name = strBuffer;
+        }
+
+        Entity* childEntity = entity.AddChild(name);
+        
         MeshInternalToEntitiesRecursive(submesh, *childEntity);
     }
 }

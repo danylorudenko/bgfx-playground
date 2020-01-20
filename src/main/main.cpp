@@ -110,7 +110,7 @@ int main()
     input::InputSystem::CreateInstance(application->GetMainWindow()->NativeHandle());
     gfx::Renderer::CreateInstance();
     Scene* scene = Scene::CreateInstance();
-    scene->LoadFromFile("J:\\Models\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
+    scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
     //scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
 
     {

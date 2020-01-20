@@ -57,6 +57,7 @@ public:
     glm::mat4                           GetGlobalModelMatrix() const;
 
     void                                InitRenderableComponent(gfx::SharedShaderProgram const& shader, gfx::SharedVertexBuffer const& vertexBuffer);
+    bool                                IsRenderable() const;
 
     inline RenderableComponent&         GetRenderableComponentRef() { return *m_RenderableComponent; }
     inline RenderableComponent const&   GetRenderableComponentRef() const { return *m_RenderableComponent; }

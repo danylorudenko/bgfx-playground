@@ -72,28 +72,37 @@ void PassForward::Render(Scene* scene)
     {
         auto entityDelegate = [passId](Entity& entity)
         {
-            RenderableComponent& renderableComponent = entity.GetRenderableComponentRef();
-            VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
+            if (entity.IsRenderable())
+            {
+                RenderableComponent& renderableComponent = entity.GetRenderableComponentRef();
 
-            glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
-            bgfx_set_transform(glm::value_ptr(modelMatrix), 1);
+                glm::mat4 const modelMatrix = entity.GetGlobalModelMatrix();
+                bgfx_set_transform(glm::value_ptr(modelMatrix), 1);
 
-            bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
+                VertexBuffer const& vertexBuffer = *renderableComponent.m_VertexBuffer;
+                bgfx_set_vertex_buffer(0, vertexBuffer.GetHandle(), 0, vertexBuffer.GetVertexCount());
 
-            renderableComponent.m_RawData.SendData(g_RawDataProxy);
-            renderableComponent.m_TextureData.SendData(g_TextureProxy);
+                if (IndexBuffer const* indexBuffer = renderableComponent.m_IndexBuffer.get())
+                {
+                    bgfx_set_index_buffer(indexBuffer->GetHandle(), 0, indexBuffer->GetIndexCount());
+                }
 
-            bgfx_set_state(0
-                | BGFX_STATE_WRITE_RGB
-                | BGFX_STATE_WRITE_A
-                | BGFX_STATE_WRITE_Z
-                | BGFX_STATE_DEPTH_TEST_LESS
-                | BGFX_STATE_CULL_CCW // we have a cube with CCW vertices
-                | BGFX_STATE_MSAA, 0);
+                renderableComponent.m_RawData.SendData(g_RawDataProxy);
+                renderableComponent.m_TextureData.SendData(g_TextureProxy);
+
+                bgfx_set_state(0
+                    | BGFX_STATE_WRITE_RGB
+                    | BGFX_STATE_WRITE_A
+                    | BGFX_STATE_WRITE_Z
+                    | BGFX_STATE_DEPTH_TEST_LESS
+                    | BGFX_STATE_CULL_CCW // we have a cube with CCW vertices
+                    | BGFX_STATE_MSAA, 0);
 
 
-            bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram->GetHandle();
-            bgfx_submit(passId, program, 0, false);
+                bgfx_program_handle_t const program = renderableComponent.m_ShaderProgram->GetHandle();
+                bgfx_submit(passId, program, 0, false);
+            }
+            
         };
 
         scene->ForEachEntity(entityDelegate);
