@@ -15,6 +15,10 @@ public:
     virtual ~PassForward();
 
     virtual void Render(Scene* scene) override;
+
+private:
+    UniformProxy m_RawDataProxy;
+    UniformProxy m_TextureProxy;
 };
 
 } // namespace pg::gfx

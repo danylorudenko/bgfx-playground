@@ -11,31 +11,18 @@
 namespace pg::gfx
 {
 
-UniformProxy g_RawDataProxy;
-UniformProxy g_TextureProxy;
-
 PassForward::PassForward(PassId scheduleId)
     : PassBase{ scheduleId }
-{
-    g_RawDataProxy = UniformProxy{ "u_RAW", BGFX_UNIFORM_TYPE_MAT4, 2 };
-    g_TextureProxy = UniformProxy{ "u_Texture", BGFX_UNIFORM_TYPE_SAMPLER, 1 };
-}
-
-PassForward::PassForward(PassForward&& rhs)
-    : PassBase{ std::move(rhs) }
+    , m_RawDataProxy{ "u_RAW", BGFX_UNIFORM_TYPE_MAT4, 2 }
+    , m_TextureProxy{ "u_Texture", BGFX_UNIFORM_TYPE_SAMPLER, 1 }
 {
 }
 
-PassForward& PassForward::operator=(PassForward&& rhs)
-{
-    PassBase::operator=(std::move(rhs));
+PassForward::PassForward(PassForward&& rhs) = default;
 
-    return *this;
-}
+PassForward& PassForward::operator=(PassForward&& rhs) = default;
 
-PassForward::~PassForward()
-{
-}
+PassForward::~PassForward() = default;
 
 void PassForward::Render(Scene* scene)
 {
@@ -70,7 +57,7 @@ void PassForward::Render(Scene* scene)
     }
 
     {
-        auto entityDelegate = [passId](Entity& entity)
+        auto entityDelegate = [this, passId](Entity& entity)
         {
             if (entity.IsRenderable())
             {
@@ -87,15 +74,15 @@ void PassForward::Render(Scene* scene)
                     bgfx_set_index_buffer(indexBuffer->GetHandle(), 0, indexBuffer->GetIndexCount());
                 }
 
-                renderableComponent.m_RawData.SendData(g_RawDataProxy);
-                renderableComponent.m_TextureData.SendData(g_TextureProxy);
+                renderableComponent.m_RawData.SendData(m_RawDataProxy);
+                renderableComponent.m_TextureData.SendData(m_TextureProxy);
 
                 bgfx_set_state(0
                     | BGFX_STATE_WRITE_RGB
                     | BGFX_STATE_WRITE_A
                     | BGFX_STATE_WRITE_Z
                     | BGFX_STATE_DEPTH_TEST_LESS
-                    | BGFX_STATE_CULL_CCW // we have a cube with CCW vertices
+                    | BGFX_STATE_CULL_CCW // we are using left-handed system
                     | BGFX_STATE_MSAA, 0);
 
 

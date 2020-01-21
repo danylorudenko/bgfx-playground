@@ -131,8 +131,8 @@ int main()
         Camera& mainCamera = scene->GetMainCamera();
 
         mainCamera.SetFOV(60.0f);
-        mainCamera.SetPosition(glm::vec3{ 0.0f, 0.0f, -10.0f });
-        mainCamera.SetRotation(glm::identity<glm::quat>());
+        mainCamera.SetPosition(glm::vec3{ -10.0f, 10.0f, -10.0f });
+        mainCamera.SetRotation(glm::quat({ 0.0f, -45.0f, 0.0f }));
 
         View cameraView;
         cameraView.x = 0;
@@ -163,10 +163,11 @@ int main()
 
         /////////////////
 
-        Entity* importedEntity = scene->LoadFromFile("J:\\Models\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
-        //Entity* importedEntity = scene->LoadFromFile("J:\\Models\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
-        importedEntity->SetPosition({ 0.0f, 0.0f, -5.0f });
-        importedEntity->SetScale({ 0.03f, 0.03f, 0.03f });
+        Entity* sponzaRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
+        sponzaRoot->SetPosition({ 0.0f, 0.0f, 0.0f });
+        sponzaRoot->SetScale({ 0.03f, 0.03f, 0.03f });
+
+        Entity* pbrHelmetRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
 
         /////////////////
 
@@ -206,7 +207,7 @@ float g_CounterRot = 0.0f;
 void mainUpdate()
 {
     g_TestEntity[0]->SetRotation(g_TestEntity[0]->GetRotation() * glm::quat{ { 0.02f, 0.0f, 0.0f } });
-    g_TestEntity[0]->SetPosition({ glm::sin(g_CounterPos += 0.05f) * 3.0f, 0.0f, 0.0f });
+    g_TestEntity[0]->SetPosition({ glm::sin(g_CounterPos += 0.05f) * 3.0f + 20.0f, 7.0f, 0.0f });
 
 
     ///////////////////////

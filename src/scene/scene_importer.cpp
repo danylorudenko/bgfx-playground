@@ -222,7 +222,7 @@ void SceneImporter::ParseMeshMaterials(aiMesh* mesh, MeshInternal& result)
 Entity* SceneImporter::ParseMeshInternalHierarchyToScene(Scene& scene)
 {
     Entity& rootEntity = scene.GetRootEntityRef();
-    Entity* importedSceneEntity = rootEntity.AddChild("imported_scene");
+    Entity* importedSceneEntity = rootEntity.AddChild(m_ImportedScenePath);
 
     MeshInternalToEntitiesRecursive(m_RootMesh, *importedSceneEntity);
 

@@ -8,5 +8,6 @@ void main()
 {
 	vec3 n = normalize(v_normal);
 	float ndotl = dot(n, vec3(1.0, 0.0, 0.0));
-	gl_FragColor = texture2D(u_Texture, v_texcoord0) * ndotl + vec4(0.2, 0.2, 0.2, 0.0);
+	vec3 diff = texture2D(u_Texture, v_texcoord0).rgb;
+	gl_FragColor = vec4(diff * saturate(ndotl + vec3(0.2, 0.2, 0.2)), 1.0);
 }
