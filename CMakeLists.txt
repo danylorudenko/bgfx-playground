@@ -46,10 +46,12 @@ target_sources(bgfx-application PUBLIC
 	src/math/math_helpers.cpp
 	src/scene/camera.h
 	src/scene/camera.cpp
+	src/scene/component_light.h
+	src/scene/component_light.cpp
+	src/scene/component_renderable.h
+	src/scene/component_renderable.cpp
 	src/scene/entity.h
 	src/scene/entity.cpp
-	src/scene/renderable_component.h
-	src/scene/renderable_component.cpp
 	src/scene/scene.h
 	src/scene/scene.cpp
 	src/scene/scene_importer.h

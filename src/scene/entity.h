@@ -11,7 +11,7 @@
 
 #include <gfx/gfx_objects.h>
 
-#include <scene/renderable_component.h>
+#include <scene/component_renderable.h>
 
 namespace pg
 {
