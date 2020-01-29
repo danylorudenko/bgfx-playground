@@ -32,6 +32,8 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/pass/gfx_pass_forward.h
 	src/gfx/pass/gfx_pass_forward.cpp
 	src/gfx/pass/gfx_pass_schedule.h
+	src/gfx/pass/gfx_pass_shadow.h
+	src/gfx/pass/gfx_pass_shadow.cpp
 	src/gfx/pass/gfx_passbase.h
 	src/gfx/pass/gfx_passbase.cpp
 	src/input/input_system.h

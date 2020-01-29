@@ -7,6 +7,7 @@
 #include <scene/scene.h>
 
 #include <gfx/pass/gfx_pass_forward.h>
+#include <gfx/pass/gfx_pass_shadow.h>
 
 namespace pg::gfx
 {
@@ -17,6 +18,7 @@ Renderer::Renderer()
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
+    m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassId::kShadow));
     m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
 }
 
