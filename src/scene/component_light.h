@@ -1,18 +1,20 @@
 #pragma once
 
 #include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 namespace pg
 {
 
 /////////////////////////////////////
-struct LightComponent
+class LightComponent
 {
-    LightComponent()
-        : m_Color{ 1.0f, 1.0f, 1.0f }
-        , m_Intensity{ 1.0f }
-    {}
+public:
+    LightComponent();
 
+    virtual glm::mat4       GetViewMatrix() = 0;
+
+private:
     glm::vec3   m_Color;
     float       m_Intensity;
     
@@ -20,26 +22,22 @@ struct LightComponent
 
 
 /////////////////////////////////////
-struct DirectionalLightComponent : public LightComponent
+class DirectionalLightComponent : public LightComponent
 {
-    DirectionalLightComponent()
-        : LightComponent{}
-        , m_GlobalDirection{ 0.0f, 1.0f, 0.0f }
-    {}
+public:
+    DirectionalLightComponent();
 
+private:
     glm::vec3   m_GlobalDirection;
 };
 
 
 /////////////////////////////////////
-struct SpotLightComponent : public LightComponent
+class SpotLightComponent : public LightComponent
 {
-    SpotLightComponent()
-        : LightComponent{}
-        , m_MaxDistance{ 50.0f }
-        , m_FalloffDistance{ 25.0f }
-    {}
+    SpotLightComponent();
 
+private:
     glm::vec3   m_Direction;
     glm::vec3   m_MaxDistance;
     glm::vec3   m_FalloffDistance;
