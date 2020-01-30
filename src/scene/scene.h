@@ -3,8 +3,10 @@
 #include <functional>
 
 #include <class_features/class_features.hpp>
-#include <scene/entity.h>
 #include <scene/camera.h>
+#include <scene/component_light.h>
+#include <scene/entity.h>
+
 
 
 namespace pg
@@ -35,6 +37,9 @@ public:
     Camera&         GetMainCamera() { return m_MainCamera; }
     Camera const&   GetMainCamera() const { return m_MainCamera; }
 
+    DirectionalLightComponent&       GetMainDirectionalLight() { return m_MainDirectionalLight; }
+    DirectionalLightComponent const& GetMainDirectionalLight() const { return m_MainDirectionalLight; }
+
 
     using EntityGenericDelegate = std::function<void(Entity& entity)>;
     void ForEachEntity(EntityGenericDelegate entityDelegate);
@@ -44,6 +49,8 @@ private:
     std::unique_ptr<Entity> m_RootEntity;
 
     Camera                  m_MainCamera;
+
+    DirectionalLightComponent m_MainDirectionalLight;
 };
 
 } // namespace pg
