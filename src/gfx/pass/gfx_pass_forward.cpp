@@ -35,14 +35,6 @@ void PassForward::Render(Scene* scene)
 
     ////////////////////////////////
 
-    bgfx_frame_buffer_handle_t const framebuffer = m_Framebuffer.Ref();
-    if (BGFX_HANDLE_IS_VALID(framebuffer))
-    {
-        bgfx_set_view_frame_buffer(passId, framebuffer);
-    }
-
-    ////////////////////////////////
-
     {
         bgfx_set_view_clear(passId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xFFFFFFFF, 1.0f, 0);
         bgfx_set_view_rect(passId, 0, 0, gfx::settings::g_MainResolutionX, gfx::settings::g_MainResolutionY);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <class_features/class_features.hpp>
+#include <gfx/gfx_objects.h>
 #include <gfx/pass/gfx_passbase.h>
 
 namespace pg::gfx
@@ -15,6 +17,11 @@ public:
     virtual ~PassShadow();
 
     virtual void Render(Scene* scene) override;
+
+private:
+    bgfx_frame_buffer_handle_t m_Framebuffer;
+
+    SharedTexture m_ShadowMap;
 };
 
 }

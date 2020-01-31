@@ -28,20 +28,7 @@ public:
 
     virtual void Render(Scene* scene) = 0;
 
-    virtual void AddScreenSpaceAttachment();
-    virtual void Bake();
-
-
 protected:
-    struct Attachment
-    {
-        SharedTexture texture;
-        bgfx_attachment_t attachment;
-    };
-
-    std::vector<Attachment> m_Attachments;
-    class_features::AutoDestroyed<bgfx_frame_buffer_handle_t> m_Framebuffer;
-
     PassId m_PassId;
     bool m_Immutable;
 };

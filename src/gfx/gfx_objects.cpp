@@ -1,6 +1,8 @@
-#include <gfx/bgfx_helpers.h>
 #include <gfx/gfx_objects.h>
 
+#include <cassert>
+
+#include <gfx/bgfx_helpers.h>
 #include <stb/stb_image.h>
 
 namespace pg::gfx
@@ -110,6 +112,10 @@ Texture::Texture(TextureUsage usage, std::uint32_t width, std::uint32_t height, 
     case gfx::TextureUsage::RenderTarget:
         textureFlags |= BGFX_TEXTURE_RT;
         break;
+    case gfx::TextureUsage::DepthReadWrite:
+        textureFlags |= BGFX_TEXTURE_DEPTH
+    default:
+        assert(false);
     }
 
     m_TextureHandle = bgfx_create_texture_2d(width, height, false, 1, format, textureFlags, nullptr);

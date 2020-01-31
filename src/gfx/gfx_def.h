@@ -7,7 +7,10 @@ enum class TextureUsage
 {
     None,
     Sampled,
-    RenderTarget
+    RenderTarget,
+    DepthReadWrite,
+    DepthRead,
+    DepthWrite
 };
 
 }
