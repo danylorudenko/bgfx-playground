@@ -126,8 +126,8 @@ Texture::Texture(TextureUsage usage, std::uint32_t width, std::uint32_t height, 
     case gfx::TextureUsage::RenderTarget:
         textureFlags |= BGFX_TEXTURE_RT;
         break;
-    //case gfx::TextureUsage::DepthReadWrite:
-        //textureFlags |= BGFX_TEXTURE_DEPTH
+    case gfx::TextureUsage::DepthReadWrite:
+        textureFlags |= BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL;
     default:
         assert(false);
     }
@@ -346,6 +346,47 @@ bgfx_index_buffer_handle_t IndexBuffer::GetHandle() const
 std::uint32_t IndexBuffer::GetIndexCount() const
 {
     return m_IndexCount;
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+// Framebuffer
+Framebuffer::Framebuffer()
+    : m_FramebufferHandle{ BGFX_INVALID_HANDLE }
+{
+}
+
+Framebuffer::Framebuffer(std::uint32_t attachmentCount, bgfx_attachment_t* attachments)
+    : m_FramebufferHandle{ BGFX_INVALID_HANDLE }
+{
+    m_FramebufferHandle = bgfx_create_frame_buffer_from_attachment(attachmentCount, attachments, false);
+    assert(BGFX_HANDLE_IS_VALID(m_FramebufferHandle) && "Failed to create Framebuffer.");
+}
+
+Framebuffer::Framebuffer(Framebuffer&& rhs)
+    : m_FramebufferHandle{ BGFX_INVALID_HANDLE }
+{
+    operator=(std::move(rhs));
+}
+
+Framebuffer& Framebuffer::operator=(Framebuffer&& rhs)
+{
+    std::swap(m_FramebufferHandle, rhs.m_FramebufferHandle);
+
+    return *this;
+}
+
+Framebuffer::~Framebuffer()
+{
+    if (BGFX_HANDLE_IS_VALID(m_FramebufferHandle))
+    {
+        bgfx_destroy_frame_buffer(m_FramebufferHandle);
+    }
+}
+
+bgfx_frame_buffer_handle_t Framebuffer::GetHandle() const
+{
+    return m_FramebufferHandle;
 }
 
 

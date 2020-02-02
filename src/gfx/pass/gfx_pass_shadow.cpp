@@ -1,6 +1,8 @@
 #include <gfx/pass/gfx_pass_shadow.h>
 
 #include <bgfx/c99/bgfx.h>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <scene/scene.h>
 
 namespace pg::gfx
@@ -10,9 +12,14 @@ constexpr std::uint16_t C_SHADOWMAP_DIMENTIONS[2] = { 600, 600 };
 
 PassShadow::PassShadow(PassId passId)
     : PassBase{ passId }
-    , m_Framebuffer{ BGFX_INVALID_HANDLE }
-    , m_ShadowMap{ std::make_shared<Texture>(TextureUsage::DepthReadWrite, C_SHADOWMAP_DIMENTIONS[0], C_SHADOWMAP_DIMENTIONS[1], BGFX_TEXTURE_FORMAT_D24) }
+    , m_Framebuffer{}
+    , m_ShadowMap{ std::make_shared<Texture>(TextureUsage::DepthReadWrite, C_SHADOWMAP_DIMENTIONS[0], C_SHADOWMAP_DIMENTIONS[1], BGFX_TEXTURE_FORMAT_D16) }
+    , m_ShadowGenProgram{ std::make_shared<ShaderProgram>("", "") }
 {
+    bgfx_attachment_t attachmentDesc;
+    bgfx_attachment_init(&attachmentDesc, m_ShadowMap->GetHandle(), BGFX_ACCESS_READWRITE, 0, 0, BGFX_RESOLVE_NONE);
+
+    m_Framebuffer = std::make_shared<Framebuffer>(1, &attachmentDesc);
 }
 
 PassShadow::PassShadow(PassShadow&& rhs) = default;
@@ -37,7 +44,21 @@ void PassShadow::Render(Scene* scene)
     bgfx_set_view_rect(passId, 0, 0, C_SHADOWMAP_DIMENTIONS[0], C_SHADOWMAP_DIMENTIONS[1]);
     bgfx_set_view_scissor(passId, 0, 0, C_SHADOWMAP_DIMENTIONS[0], C_SHADOWMAP_DIMENTIONS[1]);
 
-    //bgfx_set_view_transform()
+    bgfx_set_view_frame_buffer(passId, m_Framebuffer->GetHandle());
+
+    glm::mat4 const view = mainLight.GetViewMatrix();
+    glm::mat4 const proj = mainLight.GetProjectionMatrix();
+    bgfx_set_view_transform(passId, glm::value_ptr(view), glm::value_ptr(proj));
+
+    auto entityDelegate = [passId, this](Entity& entity)
+    {
+        glm::mat4 const model = entity.GetGlobalModelMatrix();
+        bgfx_set_transform(glm::value_ptr(model), 1);
+        bgfx_set_state(BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LEQUAL | BGFX_STATE_CULL_CCW, 0);
+        bgfx_submit(passId, m_ShadowGenProgram->GetHandle(), 0, false);
+    };
+
+    scene->ForEachEntity(entityDelegate);
 }
 
 }

@@ -19,9 +19,10 @@ public:
     virtual void Render(Scene* scene) override;
 
 private:
-    bgfx_frame_buffer_handle_t m_Framebuffer;
+    SharedFramebuffer m_Framebuffer;
 
     SharedTexture m_ShadowMap;
+    SharedShaderProgram m_ShadowGenProgram;
 };
 
 }

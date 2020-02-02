@@ -18,7 +18,12 @@ DirectionalLightComponent::DirectionalLightComponent()
     , m_ViewWidth{ 600.0f }
 {}
 
-glm::mat4 DirectionalLightComponent::GetViewProjectionMatrix() const
+glm::mat4 DirectionalLightComponent::GetViewMatrix() const
+{
+    return glm::identity<glm::mat4>();
+}
+
+glm::mat4 DirectionalLightComponent::GetProjectionMatrix() const
 {
     return glm::identity<glm::mat4>();
 }
@@ -31,7 +36,7 @@ SpotLightComponent::SpotLightComponent()
     , m_FalloffDistance{ 10.0f }
 {}
 
-glm::mat4 SpotLightComponent::GetViewProjectionMatrix() const
+glm::mat4 SpotLightComponent::GetViewMatrix() const
 {
     //float const viewExpansion = m_ViewWidth / 2;
     //
@@ -42,7 +47,12 @@ glm::mat4 SpotLightComponent::GetViewProjectionMatrix() const
     //glm::mat4 const proj = glm::orthoLH(viewExpansion, viewExpansion, viewExpansion, viewExpansion, 0.0f, m_ViewWidth);
     //
     //return view * proj;
-    return {};
+    return glm::identity<glm::mat4>();
+}
+
+glm::mat4 SpotLightComponent::GetProjectionMatrix() const
+{
+    return glm::identity<glm::mat4>();
 }
 
 }

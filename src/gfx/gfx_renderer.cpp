@@ -19,7 +19,7 @@ Renderer::Renderer()
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
 
-    //m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassId::kShadow));
+    m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassId::kShadow));
     m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
 }
 
@@ -61,7 +61,8 @@ void Renderer::RegisterShader(ShaderProgram* program)
 
 void Renderer::UnregisterShader(ShaderProgram* program)
 {
-    std::remove(m_LoadedShaders.begin(), m_LoadedShaders.end(), program);
+    auto eraseBegin = std::remove(m_LoadedShaders.begin(), m_LoadedShaders.end(), program);
+    m_LoadedShaders.erase(eraseBegin, m_LoadedShaders.end());
 }
 
 

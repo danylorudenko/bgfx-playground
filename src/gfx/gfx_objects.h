@@ -148,6 +148,31 @@ private:
 using SharedIndexBuffer = std::shared_ptr<IndexBuffer>;
 
 
+
+////////////////////////////////////////////////
+
+class Framebuffer : public pg::class_features::NonCopyable
+{
+public:
+    Framebuffer();
+
+    Framebuffer(std::uint32_t attachment, bgfx_attachment_t* attachments);
+    
+    Framebuffer(Framebuffer&& rhs);
+    Framebuffer& operator=(Framebuffer&& rhs);
+
+    ~Framebuffer();
+
+    bgfx_frame_buffer_handle_t GetHandle() const;
+
+private:
+    bgfx_frame_buffer_handle_t m_FramebufferHandle;
+};
+
+using SharedFramebuffer = std::shared_ptr<Framebuffer>;
+
+
+
 ////////////////////////////////////////////////
 
 class UniformProxy : public pg::class_features::NonCopyable
