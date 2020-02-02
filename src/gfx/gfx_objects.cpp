@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <gfx/bgfx_helpers.h>
+#include <gfx/gfx_renderer.h>
 #include <stb/stb_image.h>
 
 namespace pg::gfx
@@ -13,23 +14,19 @@ ShaderProgram::ShaderProgram()
     , m_FragmentShaderHandle{ nullptr }
     , m_ProgramHandle{ BGFX_INVALID_HANDLE }
 {
-
+    Renderer::GetInstance()->RegisterShader(this);
 }
 
 ShaderProgram::ShaderProgram(std::string const& vertexShaderFile, std::string const& fragmentShaderFile)
-    : m_VertexShaderHandle{ bgfx_helpers::makeSharedShader(vertexShaderFile) }
+    : m_VertexShaderFileName{ vertexShaderFile }
+    , m_FragmentShaderFileName{ fragmentShaderFile }
+    , m_VertexShaderHandle{ bgfx_helpers::makeSharedShader(vertexShaderFile) }
     , m_FragmentShaderHandle{ bgfx_helpers::makeSharedShader(fragmentShaderFile) }
     , m_ProgramHandle{ BGFX_INVALID_HANDLE }
 {
     m_ProgramHandle = bgfx_create_program(*m_VertexShaderHandle, *m_FragmentShaderHandle, false);
-}
 
-ShaderProgram::ShaderProgram(std::shared_ptr<bgfx_shader_handle_t> const& vertexShader, std::shared_ptr<bgfx_shader_handle_t> const& fragmentShader)
-    : m_VertexShaderHandle{ vertexShader }
-    , m_FragmentShaderHandle{ fragmentShader }
-    , m_ProgramHandle{ BGFX_INVALID_HANDLE }
-{
-    m_ProgramHandle = bgfx_create_program(*m_VertexShaderHandle, *m_FragmentShaderHandle, false);
+    Renderer::GetInstance()->RegisterShader(this);
 }
 
 ShaderProgram::ShaderProgram(ShaderProgram&& rhs)
@@ -42,6 +39,8 @@ ShaderProgram::ShaderProgram(ShaderProgram&& rhs)
 
 ShaderProgram& ShaderProgram::operator=(ShaderProgram&& rhs)
 {
+    std::swap(m_VertexShaderFileName, rhs.m_VertexShaderFileName);
+    std::swap(m_FragmentShaderFileName, rhs.m_FragmentShaderFileName);
     std::swap(m_VertexShaderHandle, rhs.m_VertexShaderHandle);
     std::swap(m_FragmentShaderHandle, rhs.m_FragmentShaderHandle);
     std::swap(m_ProgramHandle, rhs.m_ProgramHandle);
@@ -55,11 +54,26 @@ ShaderProgram::~ShaderProgram()
     {
         bgfx_destroy_program(m_ProgramHandle);
     }
+
+    Renderer::GetInstance()->UnregisterShader(this);
 }
 
 bgfx_program_handle_t ShaderProgram::GetHandle() const
 {
     return m_ProgramHandle;
+}
+
+void ShaderProgram::Reload()
+{
+    if (!BGFX_HANDLE_IS_VALID(m_ProgramHandle))
+        return;
+    
+    m_VertexShaderHandle = bgfx_helpers::makeSharedShader(m_VertexShaderFileName);
+    m_FragmentShaderHandle = bgfx_helpers::makeSharedShader(m_FragmentShaderFileName);
+
+    bgfx_destroy_program(m_ProgramHandle);
+    m_ProgramHandle = bgfx_create_program(*m_VertexShaderHandle, *m_FragmentShaderHandle, false);
+    assert(BGFX_HANDLE_IS_VALID(m_ProgramHandle) && "Failed to reload shader!");
 }
 
 
@@ -112,8 +126,8 @@ Texture::Texture(TextureUsage usage, std::uint32_t width, std::uint32_t height, 
     case gfx::TextureUsage::RenderTarget:
         textureFlags |= BGFX_TEXTURE_RT;
         break;
-    case gfx::TextureUsage::DepthReadWrite:
-        textureFlags |= BGFX_TEXTURE_DEPTH
+    //case gfx::TextureUsage::DepthReadWrite:
+        //textureFlags |= BGFX_TEXTURE_DEPTH
     default:
         assert(false);
     }

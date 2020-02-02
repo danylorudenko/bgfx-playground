@@ -1,6 +1,7 @@
 #include <gfx/pass/gfx_pass_shadow.h>
 
 #include <bgfx/c99/bgfx.h>
+#include <scene/scene.h>
 
 namespace pg::gfx
 {

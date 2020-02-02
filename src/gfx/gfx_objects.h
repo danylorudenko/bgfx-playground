@@ -21,7 +21,6 @@ class ShaderProgram
 public:
     ShaderProgram();
     ShaderProgram(std::string const& vertexShaderFile, std::string const& fragmentShaderFile);
-    ShaderProgram(std::shared_ptr<bgfx_shader_handle_t> const& vertexShader, std::shared_ptr<bgfx_shader_handle_t> const& fragmentShader);
 
     ShaderProgram(ShaderProgram&& rhs);
     ShaderProgram& operator=(ShaderProgram&& rhs);
@@ -29,9 +28,13 @@ public:
     ~ShaderProgram();
 
     bgfx_program_handle_t GetHandle() const;
+    void Reload();
 
 
 private:
+    std::string m_VertexShaderFileName;
+    std::string m_FragmentShaderFileName;
+
     std::shared_ptr<bgfx_shader_handle_t> m_VertexShaderHandle;
     std::shared_ptr<bgfx_shader_handle_t> m_FragmentShaderHandle;
 

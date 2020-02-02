@@ -13,8 +13,7 @@ namespace pg::gfx
 auto DestroyFramebuffer = [](bgfx_frame_buffer_handle_t& handle) { if(BGFX_HANDLE_IS_VALID(handle)) bgfx_destroy_frame_buffer(handle); };
 
 PassBase::PassBase(PassId scheduleId)
-    : m_Framebuffer{ DestroyFramebuffer, bgfx_frame_buffer_handle_t{ BGFX_INVALID_HANDLE } }
-    , m_PassId{ scheduleId }
+    : m_PassId{ scheduleId }
     , m_Immutable{ false }
 {}
 

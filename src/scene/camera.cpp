@@ -38,7 +38,7 @@ void Camera::Update(float dt)
 
     InputSystem* inputSystem = InputSystem::GetInstance();
 
-    if (inputSystem->GetKeyboardButtonJustReleased(Keys::R))
+    if (inputSystem->GetKeyboardButtonJustReleased(Keys::C))
     {
         m_Position = { 0.0f, 0.0f, 0.0f };
         m_OrientationEuler = { 0.0f, 0.0f, 0.0f };

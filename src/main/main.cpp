@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdlib>
 #include <iostream>
 #include <Windows.h>
 
@@ -163,11 +164,11 @@ int main()
 
         /////////////////
 
-        Entity* sponzaRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
+        Entity* sponzaRoot = scene->LoadFromFile("J:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
         sponzaRoot->SetPosition({ 0.0f, 0.0f, 0.0f });
         sponzaRoot->SetScale({ 0.03f, 0.03f, 0.03f });
 
-        Entity* pbrHelmetRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
+        Entity* pbrHelmetRoot = scene->LoadFromFile("J:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
 
         /////////////////
 
@@ -204,6 +205,8 @@ float g_CounterPos = 0.0f;
 float g_CounterScale = 0.0f;
 float g_CounterRot = 0.0f;
 
+void checkShaderReloadInput();
+
 void mainUpdate()
 {
     g_TestEntity[0]->SetRotation(g_TestEntity[0]->GetRotation() * glm::quat{ { 0.02f, 0.0f, 0.0f } });
@@ -213,8 +216,22 @@ void mainUpdate()
     ///////////////////////
 
     input::InputSystem::GetInstance()->Update(0.0f);
+    checkShaderReloadInput();
+
     Scene::GetInstance()->Update(0.0f);
     gfx::Renderer::GetInstance()->Update(0.0f);
+}
+
+void checkShaderReloadInput()
+{
+    using namespace pg::input;
+
+    if (InputSystem::GetInstance()->GetKeyboardButtonJustReleased(Keys::R))
+    {
+        assert(0 == system("..\\process_user_shaders_dx11_internal.bat") && "Failed to hot-reload shaders.");
+        gfx::Renderer::GetInstance()->ReloadAllShaders();
+
+    }
 }
 
 } // namespace pg

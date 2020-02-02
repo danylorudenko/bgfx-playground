@@ -33,15 +33,16 @@ SpotLightComponent::SpotLightComponent()
 
 glm::mat4 SpotLightComponent::GetViewProjectionMatrix() const
 {
-    float const viewExpansion = m_ViewWidth / 2;
-    
-    glm::vec3 const forwardVector = GetForward();
-    glm::vec3 constexpr upVector{ 0.0f, 1.0f, 0.0f };
-
-    glm::mat4 const view = glm::lookAtLH(m_Position, m_Position + forwardVector, upVector);
-    glm::mat4 const proj = glm::orthoLH(viewExpansion, viewExpansion, viewExpansion, viewExpansion, 0.0f, m_ViewWidth);
-
-    return view * proj;
+    //float const viewExpansion = m_ViewWidth / 2;
+    //
+    //glm::vec3 const forwardVector = GetForward();
+    //glm::vec3 constexpr upVector{ 0.0f, 1.0f, 0.0f };
+    //
+    //glm::mat4 const view = glm::lookAtLH(m_Position, m_Position + forwardVector, upVector);
+    //glm::mat4 const proj = glm::orthoLH(viewExpansion, viewExpansion, viewExpansion, viewExpansion, 0.0f, m_ViewWidth);
+    //
+    //return view * proj;
+    return {};
 }
 
 }
