@@ -60,7 +60,6 @@ public:
 private:
     glm::vec3 m_Position;
     glm::vec3 m_OrientationEuler;
-    //glm::quat m_Rotation;
     float     m_FOV;
 
     View      m_View;

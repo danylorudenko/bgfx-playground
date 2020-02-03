@@ -18,9 +18,6 @@ Renderer::Renderer()
     bgfx_init_t initStruct = pg::bgfx_helpers::bgfxInitDefault();
     bool result = bgfx_init(&initStruct);
     assert(result && "bgfx failed to initialize!");
-
-    m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassId::kShadow));
-    m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
 }
 
 Renderer::Renderer(Renderer&&) = default;
@@ -28,6 +25,12 @@ Renderer::Renderer(Renderer&&) = default;
 Renderer& Renderer::operator=(Renderer&& rhs) = default;
 
 Renderer::~Renderer() = default;
+
+void Renderer::InitRenderGraph()
+{
+    m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassId::kShadow));
+    m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
+}
 
 void Renderer::Update(float dt)
 {

@@ -18,6 +18,7 @@ public:
 
     ~Renderer();
 
+    void InitRenderGraph();
 
     void Update(float dt);
 

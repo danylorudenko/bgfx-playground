@@ -128,11 +128,13 @@ Texture::Texture(TextureUsage usage, std::uint32_t width, std::uint32_t height, 
         break;
     case gfx::TextureUsage::DepthReadWrite:
         textureFlags |= BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL;
+        break;
     default:
         assert(false);
     }
 
     m_TextureHandle = bgfx_create_texture_2d(width, height, false, 1, format, textureFlags, nullptr);
+    assert(BGFX_HANDLE_IS_VALID(m_TextureHandle) && "Failed to create a texture.");
 }
 
 Texture::Texture(Texture&& rhs)

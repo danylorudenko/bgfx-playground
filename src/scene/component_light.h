@@ -12,7 +12,7 @@ class LightComponent
 public:
     LightComponent();
 
-    virtual glm::mat4       GetViewMatrix() const = 0;
+    virtual glm::mat4       GetViewMatrix(glm::vec3 const& pos, glm::vec3 const& forward) const = 0;
     virtual glm::mat4       GetProjectionMatrix() const = 0;
 
 private:
@@ -28,7 +28,7 @@ class DirectionalLightComponent : public LightComponent
 public:
     DirectionalLightComponent();
 
-    virtual glm::mat4       GetViewMatrix() const override;
+    virtual glm::mat4       GetViewMatrix(glm::vec3 const& pos, glm::vec3 const& forward) const override;
     virtual glm::mat4       GetProjectionMatrix() const override;
 
 private:
@@ -42,7 +42,7 @@ class SpotLightComponent : public LightComponent
 {
     SpotLightComponent();
 
-    virtual glm::mat4       GetViewMatrix() const override;
+    virtual glm::mat4       GetViewMatrix(glm::vec3 const& pos, glm::vec3 const& forward) const override;
     virtual glm::mat4       GetProjectionMatrix() const override;
 
 private:
