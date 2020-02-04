@@ -29,6 +29,8 @@ target_sources(bgfx-application PUBLIC
 	src/gfx/gfx_settings.h
 	src/gfx/gfx_settings.cpp
 	src/gfx/gfx_vertex.h
+	src/gfx/pass/gfx_pass_debugview.h
+	src/gfx/pass/gfx_pass_debugview.cpp
 	src/gfx/pass/gfx_pass_forward.h
 	src/gfx/pass/gfx_pass_forward.cpp
 	src/gfx/pass/gfx_pass_schedule.h

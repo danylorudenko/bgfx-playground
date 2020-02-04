@@ -3,6 +3,7 @@
 #include <bgfx/c99/bgfx.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <gfx/gfx_resourcemap.h>
 #include <scene/scene.h>
 
 namespace pg::gfx
@@ -16,6 +17,8 @@ PassShadow::PassShadow(PassId passId)
     , m_ShadowMap{ std::make_shared<Texture>(TextureUsage::DepthReadWrite, C_SHADOWMAP_DIMENTIONS[0], C_SHADOWMAP_DIMENTIONS[1], BGFX_TEXTURE_FORMAT_D16) }
     , m_ShadowGenProgram{ std::make_shared<ShaderProgram>("shaders\\vs_shadowmap_gen.bin", "shaders\\fs_shadowmap_gen.bin") }
 {
+    g_TextureMap[TextureName::kShadowMap] = m_ShadowMap;
+
     bgfx_attachment_t attachmentDesc;
     bgfx_attachment_init(&attachmentDesc, m_ShadowMap->GetHandle(), BGFX_ACCESS_READWRITE, 0, 0, BGFX_RESOLVE_NONE);
 
@@ -41,6 +44,7 @@ void PassShadow::Render(Scene* scene)
 
     DirectionalLightComponent const& mainLight = scene->GetMainDirectionalLight();
 
+    bgfx_set_view_clear(passId, BGFX_CLEAR_DEPTH, 0, 1.0f, 0);
     bgfx_set_view_rect(passId, 0, 0, C_SHADOWMAP_DIMENTIONS[0], C_SHADOWMAP_DIMENTIONS[1]);
     bgfx_set_view_scissor(passId, 0, 0, C_SHADOWMAP_DIMENTIONS[0], C_SHADOWMAP_DIMENTIONS[1]);
 

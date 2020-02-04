@@ -6,6 +6,8 @@
 namespace pg::gfx
 {
 
+class PassDebugView;
+
 class Renderer
     : public pg::class_features::NonCopyable
     , public pg::class_features::StaticSingleton<Renderer>
@@ -29,6 +31,8 @@ public:
 private:
     std::vector<std::unique_ptr<PassBase>> m_PassQueue;
     std::vector<ShaderProgram*> m_LoadedShaders;
+
+    PassDebugView* m_DebugView;
 };
 
 } // namespace pf::gfx

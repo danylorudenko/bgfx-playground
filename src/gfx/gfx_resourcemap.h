@@ -7,21 +7,15 @@
 namespace pg::gfx
 {
 
-enum TextureId
+enum TextureName
 {
-    kNone = -1
+    kNone = -1,
+    kSwapchain = 0,
+    kShadowMap
 };
 
-//enum BufferId
-//{
-//    kNone = -1
-//};
-
-using TextureMap = std::unordered_map<TextureId, Texture>;
+using TextureMap = std::unordered_map<TextureName, SharedTexture>;
 extern TextureMap g_TextureMap;
-
-//using BufferMap = 
-
 
 
 } // namespace pg::gfx

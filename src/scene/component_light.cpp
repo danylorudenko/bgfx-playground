@@ -15,7 +15,7 @@ LightComponent::LightComponent()
 DirectionalLightComponent::DirectionalLightComponent()
     : LightComponent{}
     , m_GlobalDirection{ 0.0f, -1.0f, 0.0f }
-    , m_ViewWidth{ 600.0f }
+    , m_ViewWidth{ 200.0f }
 {}
 
 glm::mat4 DirectionalLightComponent::GetViewMatrix(glm::vec3 const& pos, glm::vec3 const& forward) const
@@ -27,7 +27,7 @@ glm::mat4 DirectionalLightComponent::GetViewMatrix(glm::vec3 const& pos, glm::ve
 glm::mat4 DirectionalLightComponent::GetProjectionMatrix() const
 {
     float const viewExpansion = m_ViewWidth / 2;
-    return glm::orthoLH(viewExpansion, viewExpansion, viewExpansion, viewExpansion, -viewExpansion, viewExpansion);
+    return glm::orthoLH(-viewExpansion, viewExpansion, -viewExpansion, viewExpansion, -viewExpansion, viewExpansion);
 }
 
 /////////////////////////////////////

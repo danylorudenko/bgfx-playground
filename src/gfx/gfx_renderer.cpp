@@ -7,6 +7,7 @@
 #include <gfx/bgfx_helpers.h>
 #include <scene/scene.h>
 
+#include <gfx/pass/gfx_pass_debugview.h>
 #include <gfx/pass/gfx_pass_forward.h>
 #include <gfx/pass/gfx_pass_shadow.h>
 
@@ -14,6 +15,7 @@ namespace pg::gfx
 {
 
 Renderer::Renderer()
+    : m_DebugView{ nullptr }
 {
     bgfx_init_t initStruct = pg::bgfx_helpers::bgfxInitDefault();
     bool result = bgfx_init(&initStruct);
@@ -30,6 +32,9 @@ void Renderer::InitRenderGraph()
 {
     m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassId::kShadow));
     m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
+
+    m_PassQueue.emplace_back(std::make_unique<PassDebugView>(PassId::kDebugView));
+    m_DebugView = reinterpret_cast<PassDebugView*>(m_PassQueue.back().get());
 }
 
 void Renderer::Update(float dt)
