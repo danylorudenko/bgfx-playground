@@ -19,10 +19,8 @@ public:
     virtual void Render(Scene* scene) override;
 
 private:
-    //SharedFramebuffer m_Framebuffer;
-    //
-    //SharedTexture m_ShadowMap;
-    //SharedShaderProgram m_ShadowGenProgram;
+    SharedShaderProgram m_RectDrawProgram;
+    SharedUniformProxy  m_DebugTextureUniformProxy;
 };
 
 }

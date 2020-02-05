@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bgfx/c99/bgfx.h>
+
 namespace pg::gfx
 {
 
-enum PassId
+enum class PassId
 {
     kNone = -1,
     kShadow = 0,

@@ -7,7 +7,7 @@
 namespace pg::gfx
 {
 
-enum TextureName
+enum class TextureName
 {
     kNone = -1,
     kSwapchain = 0,
