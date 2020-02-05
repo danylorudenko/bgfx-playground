@@ -21,6 +21,8 @@ public:
 private:
     SharedShaderProgram m_RectDrawProgram;
     SharedUniformProxy  m_DebugTextureUniformProxy;
+    SharedVertexLayout  m_QuadVertexLayout;
+    SharedVertexBuffer  m_QuadVertexBuffer;
 };
 
 }

@@ -165,11 +165,11 @@ int main()
 
         /////////////////
 
-        Entity* sponzaRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
+        Entity* sponzaRoot = scene->LoadFromFile("J:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
         sponzaRoot->SetPosition({ 0.0f, 0.0f, 0.0f });
         sponzaRoot->SetScale({ 0.03f, 0.03f, 0.03f });
 
-        Entity* pbrHelmetRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
+        Entity* pbrHelmetRoot = scene->LoadFromFile("J:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
 
         /////////////////
 

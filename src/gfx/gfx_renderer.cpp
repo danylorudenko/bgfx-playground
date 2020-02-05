@@ -30,10 +30,10 @@ Renderer::~Renderer() = default;
 
 void Renderer::InitRenderGraph()
 {
-    m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassId::kShadow));
-    m_PassQueue.emplace_back(std::make_unique<PassForward>(PassId::kForward));
+    m_PassQueue.emplace_back(std::make_unique<PassShadow>(PassIdKey::kShadow));
+    m_PassQueue.emplace_back(std::make_unique<PassForward>(PassIdKey::kForward));
 
-    m_PassQueue.emplace_back(std::make_unique<PassDebugView>(PassId::kDebugView));
+    m_PassQueue.emplace_back(std::make_unique<PassDebugView>(PassIdKey::kDebugView));
     m_DebugView = reinterpret_cast<PassDebugView*>(m_PassQueue.back().get());
 }
 
@@ -41,7 +41,7 @@ void Renderer::Update(float dt)
 {
     bgfx_touch(0);
 
-    PassId scheduleGuard = PassId::kNone;
+    PassId scheduleGuard = PassId{};
     for (auto& pass : m_PassQueue)
     {
         PassId passId = pass->GetPassId();
