@@ -214,6 +214,8 @@ void mainUpdate()
     g_TestEntity[0]->SetRotation(g_TestEntity[0]->GetRotation() * glm::quat{ { 0.02f, 0.0f, 0.0f } });
     g_TestEntity[0]->SetPosition({ glm::sin(g_CounterPos += 0.05f) * 3.0f + 20.0f, 7.0f, 0.0f });
 
+    pg::Scene::GetInstance()->GetMainDirectionalLight().SetDirection({ glm::sin(g_CounterRot += 0.1f) * 360.0f, glm::sin(g_CounterRot += 0.1f) * 360.0f, 0.0f });
+
 
     ///////////////////////
 

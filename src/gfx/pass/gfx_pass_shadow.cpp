@@ -52,7 +52,7 @@ void PassShadow::Render(Scene* scene)
 
     Camera const& mainCamera = scene->GetMainCamera();
 
-    glm::mat4 const view = mainLight.GetViewMatrix(mainCamera.GetPosition(), mainCamera.GetForward());
+    glm::mat4 const view = mainLight.GetViewMatrix(mainCamera.GetPosition());
     glm::mat4 const proj = mainLight.GetProjectionMatrix();
     bgfx_set_view_transform(passId, glm::value_ptr(view), glm::value_ptr(proj));
 
