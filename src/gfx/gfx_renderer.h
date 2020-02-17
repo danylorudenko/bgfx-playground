@@ -21,6 +21,8 @@ public:
     ~Renderer();
 
     void InitRenderGraph();
+    void SetDebugViewEnabled(bool value);
+    bool GetDebugViewEnabled() const;
 
     void Update(float dt);
 

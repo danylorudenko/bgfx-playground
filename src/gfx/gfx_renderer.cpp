@@ -37,6 +37,16 @@ void Renderer::InitRenderGraph()
     m_DebugView = reinterpret_cast<PassDebugView*>(m_PassQueue.back().get());
 }
 
+void Renderer::SetDebugViewEnabled(bool value)
+{
+    m_DebugView->SetEnabled(value);
+}
+
+bool Renderer::GetDebugViewEnabled() const
+{
+    return m_DebugView->GetEnabled();
+}
+
 void Renderer::Update(float dt)
 {
     bgfx_touch(0);

@@ -18,7 +18,12 @@ public:
 
     virtual void Render(Scene* scene) override;
 
+    void SetEnabled(bool value);
+    bool GetEnabled() const;
+
 private:
+    bool                m_Enabled;
+
     SharedShaderProgram m_RectDrawProgram;
     SharedUniformProxy  m_DebugTextureUniformProxy;
     SharedVertexLayout  m_QuadVertexLayout;

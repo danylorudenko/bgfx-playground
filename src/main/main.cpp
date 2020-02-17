@@ -111,6 +111,7 @@ int main()
     input::InputSystem::CreateInstance(application->GetMainWindow()->NativeHandle());
     gfx::Renderer::CreateInstance();
     gfx::Renderer::GetInstance()->InitRenderGraph();
+    gfx::Renderer::GetInstance()->SetDebugViewEnabled(true);
     Scene* scene = Scene::CreateInstance();
 
     {
@@ -165,11 +166,11 @@ int main()
 
         /////////////////
 
-        Entity* sponzaRoot = scene->LoadFromFile("J:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
+        Entity* sponzaRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\Sponza\\glTF\\Sponza.gltf");
         sponzaRoot->SetPosition({ 0.0f, 0.0f, 0.0f });
         sponzaRoot->SetScale({ 0.03f, 0.03f, 0.03f });
 
-        Entity* pbrHelmetRoot = scene->LoadFromFile("J:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
+        Entity* pbrHelmetRoot = scene->LoadFromFile("D:\\Assets\\glTF-Sample-Models-master\\glTF-Sample-Models-master\\2.0\\SciFiHelmet\\glTF\\SciFiHelmet.gltf");
 
         /////////////////
 
@@ -232,6 +233,11 @@ void checkShaderReloadInput()
         assert(0 == system("..\\process_user_shaders_dx11_internal.bat") && "Failed to hot-reload shaders.");
         gfx::Renderer::GetInstance()->ReloadAllShaders();
 
+    }
+
+    if (InputSystem::GetInstance()->GetKeyboardButtonJustReleased(Keys::F11))
+    {
+        gfx::Renderer::GetInstance()->SetDebugViewEnabled(!gfx::Renderer::GetInstance()->GetDebugViewEnabled());
     }
 }
 

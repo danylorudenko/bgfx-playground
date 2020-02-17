@@ -12,21 +12,23 @@ namespace pg::gfx
 
 float g_QuadVertices[] = 
 {
-    1.0f,  1.0f, 0.0f,
-   -1.0f,  1.0f, 0.0f,
-   -1.0f, -1.0f, 0.0f,
-   -1.0f, -1.0f, 0.0f,
-    1.0f, -1.0f, 0.0f,
-    1.0f,  1.0f, 0.0f
+    1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+   -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+   -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+   -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+    1.0f,  1.0f, 0.0f, 1.0f, 1.0f
 };
 
 PassDebugView::PassDebugView(PassId passId)
     : PassBase{ passId }
+    , m_Enabled{ false }
     , m_RectDrawProgram{ std::make_shared<ShaderProgram>("shaders\\vs_draw_fullscreen_quad.bin", "shaders\\fs_draw_fullscreen_quad.bin") }
     , m_DebugTextureUniformProxy{ std::make_shared<UniformProxy>("u_DebugTexture", BGFX_UNIFORM_TYPE_SAMPLER) }
 {
     m_QuadVertexLayout = std::make_shared<VertexLayout>();
     m_QuadVertexLayout->AddAtribute(BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false);
+    m_QuadVertexLayout->AddAtribute(BGFX_ATTRIB_TEXCOORD0, 2, BGFX_ATTRIB_TYPE_FLOAT, false);
     m_QuadVertexLayout->Bake();
 
     m_QuadVertexBuffer = std::make_shared<VertexBuffer>(m_QuadVertexLayout, 6, g_QuadVertices, (std::uint32_t)sizeof(g_QuadVertices));
@@ -38,8 +40,21 @@ PassDebugView& PassDebugView::operator=(PassDebugView&& rhs) = default;
 
 PassDebugView::~PassDebugView() = default;
 
+void PassDebugView::SetEnabled(bool value)
+{
+    m_Enabled = value;
+}
+
+bool PassDebugView::GetEnabled() const
+{
+    return m_Enabled;
+}
+
 void PassDebugView::Render(Scene* scene)
 {
+    if (!m_Enabled)
+        return;
+
     PassBase::Render(scene);
 
     ////////////////////////////////
@@ -49,18 +64,13 @@ void PassDebugView::Render(Scene* scene)
 
     ////////////////////////////////
 
-    //std::uint16_t C_DEBUG_RECT[4] = { 
-    //    static_cast<std::uint16_t>(gfx::settings::g_MainResolutionX - 100), 
-    //    static_cast<std::uint16_t>(gfx::settings::g_MainResolutionY - 100), 
-    //    0, 
-    //    gfx::settings::g_MainResolutionY, 
-    //};
-    
+    std::uint16_t C_DEBUG_RECT_EXTENT = 200;
+
     std::uint16_t C_DEBUG_RECT[4] = { 
-        static_cast<std::uint16_t>(gfx::settings::g_MainResolutionX - 200),
-        static_cast<std::uint16_t>(gfx::settings::g_MainResolutionY - 200),
-        static_cast<std::uint16_t>(gfx::settings::g_MainResolutionX), 
-        static_cast<std::uint16_t>(gfx::settings::g_MainResolutionY), 
+        static_cast<std::uint16_t>(gfx::settings::g_MainResolutionX - C_DEBUG_RECT_EXTENT),
+        static_cast<std::uint16_t>(gfx::settings::g_MainResolutionY - C_DEBUG_RECT_EXTENT),
+        C_DEBUG_RECT_EXTENT,
+        C_DEBUG_RECT_EXTENT,
     };
 
     bgfx_set_view_rect(passId, C_DEBUG_RECT[0], C_DEBUG_RECT[1], C_DEBUG_RECT[2], C_DEBUG_RECT[3]);
