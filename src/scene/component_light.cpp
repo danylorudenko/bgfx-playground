@@ -21,19 +21,18 @@ DirectionalLightComponent::DirectionalLightComponent()
 glm::mat4 DirectionalLightComponent::GetViewMatrix(glm::vec3 const& pos) const
 {
     glm::vec3 constexpr upVector{ 0.0f, 1.0f, 0.0f };
-    glm::vec3 const direction = glm::normalize(m_GlobalDirection);
-    return glm::lookAtLH(pos - (direction * m_ViewWidth), pos + direction, upVector);
+    return glm::lookAtLH(pos - (m_GlobalDirection * m_ViewWidth), pos + m_GlobalDirection, upVector);
 }
 
 glm::mat4 DirectionalLightComponent::GetProjectionMatrix() const
 {
     float const viewExpansion = m_ViewWidth;
-    return glm::orthoLH(-viewExpansion, viewExpansion, -viewExpansion, viewExpansion, -viewExpansion, viewExpansion);
+    return glm::orthoLH(-viewExpansion, viewExpansion, -viewExpansion, viewExpansion, -viewExpansion, viewExpansion * 2);
 }
 
 void DirectionalLightComponent::SetDirection(glm::vec3 const& direction)
 {
-    m_GlobalDirection = direction;
+    m_GlobalDirection = glm::normalize(direction);
 }
 
 glm::vec3 const& DirectionalLightComponent::GetDirection() const

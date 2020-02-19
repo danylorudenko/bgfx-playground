@@ -46,6 +46,8 @@ target_sources(bgfx-application PUBLIC
 	src/io/io_helpers.cpp
 	src/math/math_helpers.hpp
 	src/math/math_helpers.cpp
+	src/math/transformable.h
+	src/math/transformable.cpp
 	src/scene/camera.h
 	src/scene/camera.cpp
 	src/scene/component_light.h

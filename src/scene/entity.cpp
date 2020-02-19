@@ -4,29 +4,25 @@
 #include <cassert>
 #include <utility>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
-
 namespace pg
 {
 
-Entity::Entity()
-    : m_Parent{ nullptr }
-{}
+Entity::Entity() = default;
 
 Entity::Entity(Entity* parent, std::string const& name, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
-    : m_Name{ name }
-    , m_Parent{ parent }
-    , m_RelativePos{ position }
-    , m_RelativeRotation{ rotation }
-    , m_RelativeScale{ scale }
+    : Transformable{ parent, position, rotation, scale }
+    , m_Name{ name }
 {
-
 }
 
 Entity* Entity::GetParent()
 {
-    return m_Parent;
+    return reinterpret_cast<Entity*>(GetTransformableParent());
+}
+
+Entity const* Entity::GetParent() const
+{
+    return reinterpret_cast<Entity const*>(GetTransformableParent());
 }
 
 Entity* Entity::GetChild(std::uint32_t child)
@@ -102,88 +98,6 @@ Entity* Entity::AddChild(std::string const& name, glm::vec3 const& pos, glm::qua
     Entity* ptr = entity.get();
     m_Children.emplace_back(std::move(entity));
     return ptr;
-}
-
-glm::vec3 const& Entity::GetPosition() const
-{
-    return m_RelativePos;
-}
-
-glm::quat const& Entity::GetRotation() const
-{
-    return m_RelativeRotation;
-}
-
-glm::vec3 const& Entity::GetScale() const
-{
-    return m_RelativeScale;
-}
-
-void Entity::SetPosition(glm::vec3 const& pos)
-{
-    m_RelativePos = pos;
-}
-
-void Entity::SetRotation(glm::quat const& rot)
-{
-    m_RelativeRotation = rot;
-}
-
-void Entity::SetScale(glm::vec3 const& scale)
-{
-    m_RelativeScale = scale;
-}
-
-glm::vec3 Entity::GetGlobalPosition() const
-{
-    return m_Parent 
-        ? (static_cast<glm::vec3>(glm::mat4_cast(m_Parent->GetGlobalRotation()) * glm::vec4{ m_RelativePos * m_Parent->GetGlobalScale(), 0.0f })) + m_Parent->GetGlobalPosition()
-        : m_RelativePos;
-}
-
-glm::quat Entity::GetGlobalRotation() const
-{
-    glm::quat result = m_RelativeRotation;
-    return m_Parent ? m_RelativeRotation * m_Parent->GetGlobalRotation() : m_RelativeRotation;
-}
-
-glm::vec3 Entity::GetGlobalScale() const
-{
-    glm::vec3 result = m_RelativeScale;
-    return m_Parent ? m_RelativeScale * m_Parent->GetGlobalScale() : m_RelativeScale;
-}
-
-void Entity::SetGlobalPosition(glm::vec3 const& globalPos)
-{
-    glm::vec3 const currentPos  = GetGlobalPosition();
-    glm::vec3 const diff        = globalPos - currentPos;
-
-    SetPosition(GetPosition() + diff);
-}
-
-void Entity::SetGlobalRotation(glm::quat const& globalRotation)
-{
-    glm::quat const currentRot  = GetGlobalRotation();
-    glm::quat const diff        = glm::inverse(currentRot) * globalRotation; 
-    
-    SetRotation(GetRotation() * diff);
-}
-
-void Entity::SetGlobalScale(glm::vec3 const& globalScale)
-{
-    glm::vec3 const currentScale    = GetGlobalScale();
-    glm::vec3 const diff            = globalScale / currentScale;
-
-    SetScale(GetScale() * diff);
-}
-
-glm::mat4 Entity::GetGlobalModelMatrix() const
-{
-    constexpr glm::mat4 identity = glm::identity<glm::mat4>();
-
-    glm::mat4 model = glm::translate(identity, GetGlobalPosition());
-    model =   model * glm::mat4_cast(GetGlobalRotation());
-    return    model * glm::scale(identity, GetGlobalScale());
 }
 
 void Entity::InitRenderableComponent(gfx::SharedShaderProgram const& shaderRef, gfx::SharedVertexBuffer const& vertexBuffer)

@@ -64,7 +64,7 @@ void PassDebugView::Render(Scene* scene)
 
     ////////////////////////////////
 
-    std::uint16_t C_DEBUG_RECT_EXTENT = 200;
+    std::uint16_t C_DEBUG_RECT_EXTENT = 400;
 
     std::uint16_t C_DEBUG_RECT[4] = { 
         static_cast<std::uint16_t>(gfx::settings::g_MainResolutionX - C_DEBUG_RECT_EXTENT),
