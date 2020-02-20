@@ -29,17 +29,29 @@ public:
 
     glm::vec3 const&                    GetPosition() const;
     glm::quat const&                    GetRotation() const;
+    glm::vec3                           GetOrientationEuler() const;
     glm::vec3 const&                    GetScale() const;
+
     void                                SetPosition(glm::vec3 const& pos);
     void                                SetRotation(glm::quat const& rot);
+    void                                SetOrientationEuler(glm::vec3 const& eulerOrientation);
     void                                SetScale(glm::vec3 const& scale);
 
     glm::vec3                           GetGlobalPosition() const;
     glm::quat                           GetGlobalRotation() const;
+    glm::vec3                           GetGlobalOrientationEuler() const;
     glm::vec3                           GetGlobalScale() const;
+
     void                                SetGlobalPosition(glm::vec3 const& pos);
     void                                SetGlobalRotation(glm::quat const& rot);
+    void                                SetGlobalOrientationEuler(glm::vec3 const& eulerOrientation);
     void                                SetGlobalScale(glm::vec3 const& scale);
+
+
+    glm::vec3                           GetForward() const;
+    glm::vec3                           GetBackward() const;
+    glm::vec3                           GetRight() const;
+    glm::vec3                           GetLeft() const;
 
     // Graphics
     glm::mat4                           GetGlobalModelMatrix() const;

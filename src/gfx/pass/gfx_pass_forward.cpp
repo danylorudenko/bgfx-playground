@@ -42,7 +42,7 @@ void PassForward::Render(Scene* scene)
 
         // in this call we can set camera data (and view and projection transforms)
         Camera const& camera = scene->GetMainCamera();
-        glm::mat4 const view = camera.GetDefaultViewMatrix();
+        glm::mat4 const view = camera.GetDefaultViewMatrix(camera.GetGlobalPosition(), camera.GetForward());
         glm::mat4 const proj = camera.GetDefaultProjectionMatrix();
 
         bgfx_set_view_transform(passId, glm::value_ptr(view), glm::value_ptr(proj));

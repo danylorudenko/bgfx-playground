@@ -43,6 +43,11 @@ glm::quat const& Transformable::GetRotation() const
     return m_RelativeRotation;
 }
 
+glm::vec3 Transformable::GetOrientationEuler() const
+{
+    return glm::eulerAngles(m_RelativeRotation);
+}
+
 glm::vec3 const& Transformable::GetScale() const
 {
     return m_RelativeScale;
@@ -56,6 +61,11 @@ void Transformable::SetPosition(glm::vec3 const& pos)
 void Transformable::SetRotation(glm::quat const& rot)
 {
     m_RelativeRotation = rot;
+}
+
+void Transformable::SetOrientationEuler(glm::vec3 const& eulerOrientation)
+{
+    m_RelativeRotation = glm::quat{ eulerOrientation };
 }
 
 void Transformable::SetScale(glm::vec3 const& scale)
@@ -74,6 +84,11 @@ glm::quat Transformable::GetGlobalRotation() const
 {
     glm::quat result = m_RelativeRotation;
     return m_Parent ? m_RelativeRotation * m_Parent->GetGlobalRotation() : m_RelativeRotation;
+}
+
+glm::vec3 Transformable::GetGlobalOrientationEuler() const
+{
+    return glm::eulerAngles(GetGlobalRotation());
 }
 
 glm::vec3 Transformable::GetGlobalScale() const
@@ -98,12 +113,37 @@ void Transformable::SetGlobalRotation(glm::quat const& globalRotation)
     SetRotation(GetRotation() * diff);
 }
 
+void Transformable::SetGlobalOrientationEuler(glm::vec3 const& eulerOrientation)
+{
+    SetGlobalRotation(glm::quat{ eulerOrientation });
+}
+
 void Transformable::SetGlobalScale(glm::vec3 const& globalScale)
 {
     glm::vec3 const currentScale = GetGlobalScale();
     glm::vec3 const diff = globalScale / currentScale;
 
     SetScale(GetScale() * diff);
+}
+
+glm::vec3 Transformable::GetForward() const
+{
+    return static_cast<glm::vec3>(glm::mat4_cast(GetRotation()) * glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f });
+}
+
+glm::vec3 Transformable::GetBackward() const
+{
+    return -GetForward();
+}
+
+glm::vec3 Transformable::GetRight() const
+{
+    return glm::cross({ 0.0f, 1.0f, 0.0f }, GetForward());
+}
+
+glm::vec3 Transformable::GetLeft() const
+{
+    return -GetRight();
 }
 
 glm::mat4 Transformable::GetGlobalModelMatrix() const
